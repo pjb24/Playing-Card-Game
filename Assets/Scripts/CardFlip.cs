@@ -15,10 +15,19 @@ public class CardFlip : MonoBehaviour
         Bottom,
     };
 
+    // Flip 크기 enum
+    public enum FlipSize
+    {
+        One,
+        Half
+    };
+
     // Flip을 할 방향 지정
     public FlipDirection flipDirection = FlipDirection.Left;
     // Flip에 소요될 시간
     public float duration = 1f;
+    // Flip을 할 크기
+    public FlipSize flipSize = FlipSize.One;
 
     // Flip 중복 동작 방지 플래그
     private bool isFlipping = false;
@@ -27,11 +36,11 @@ public class CardFlip : MonoBehaviour
     [ContextMenu("Test Flip Function")]
     private void TestFlipFunction()
     {
-        Flip(flipDirection);
+        Flip(flipDirection, flipSize);
     }
 
     // Flip 기능 구현 Right 방향 Flip이 기본 설정.
-    private void Flip(FlipDirection direction = FlipDirection.Right)
+    private void Flip(FlipDirection direction = FlipDirection.Right, FlipSize size = FlipSize.One)
     {
         if (isFlipping)
         {
@@ -44,19 +53,31 @@ public class CardFlip : MonoBehaviour
 
         Vector3 angle3 = new Vector3(0, 0, 0);
 
+        // angleSize의 값은 DOTween의 DORotateQuaternion을 수행했을 때 나타나는 결과를 보고 설정한 값이다.
+        float angleSize = 0;
+        switch (size)
+        {
+            case FlipSize.One:
+                angleSize = 180f;
+                break;
+            case FlipSize.Half:
+                angleSize = -90f;
+                break;
+        }
+
         switch (direction)
         {
             case FlipDirection.Left:
-                angle3.y = -180f;
+                angle3.y = -angleSize;
                 break;
             case FlipDirection.Right:
-                angle3.y = 180f;
+                angle3.y = angleSize;
                 break;
             case FlipDirection.Top:
-                angle3.x = -180f;
+                angle3.x = -angleSize;
                 break;
             case FlipDirection.Bottom:
-                angle3.x = 180f;
+                angle3.x = angleSize;
                 break;
         }
 
