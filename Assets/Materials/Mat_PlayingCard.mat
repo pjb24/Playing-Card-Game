@@ -42,7 +42,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CardFront:
-        m_Texture: {fileID: 2800000, guid: bd83b17b35bb0b14bb9b3f48f955e4b0, type: 3}
+        m_Texture: {fileID: 2800000, guid: 215b0d5049a9c3e40bf92f27b40a2856, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:

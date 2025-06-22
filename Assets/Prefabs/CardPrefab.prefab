@@ -139,4 +139,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardRenderer: {fileID: 4988580210111439768}
+  cardMaterialTemplate: {fileID: 2100000, guid: bfc8148446f97fb45b834a2010445ab0, type: 2}
   textureProperty: _CardFront

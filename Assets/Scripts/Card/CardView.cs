@@ -4,31 +4,53 @@ using UnityEngine;
 
 public class CardView : MonoBehaviour
 {
-    public Card cardData;
+    [SerializeField] private Renderer cardRenderer;
+    [SerializeField] private Material cardMaterialTemplate;
 
-    public Renderer cardRenderer;   // Inspector에서 설정.
+    public Card card;
+
+    private Material runtimeMaterial;
+
     public string textureProperty = "_CardFront";   // 사용된 Shader Graph의 Property에서 지정한 Reference 이름.
 
-    public void Initialize(Card card, Texture2D texture)
+    public void SetCard(Card card, bool isHidden = false)
     {
-        cardData = card;
-        SetCardTexture(texture);
+        this.card = card;
+        UpdateVisual(isHidden);
     }
 
-    public void SetCardTexture(Texture2D newTexture)
+    public void UpdateVisual(bool isHidden)
     {
-        if (cardRenderer == null
-            && newTexture == null)
+        if (card == null)
         {
-            Debug.LogWarning("Renderer or texture missing!");
             return;
         }
 
-        cardRenderer.material.SetTexture(textureProperty, newTexture);
+        if (runtimeMaterial == null)
+        {
+            runtimeMaterial = new Material(cardMaterialTemplate);
+            cardRenderer.material = runtimeMaterial;
+        }
+
+        Texture2D tex = isHidden ? GetBackTexture() : GetCardTexture(card);
+        runtimeMaterial.SetTexture(textureProperty, tex);
+    }
+
+    private Texture2D GetCardTexture(Card card)
+    {
+        string textureName = $"{card.Rank}_of_{card.Suit}";
+        // Resources 폴더 아래에서 검색
+        return Resources.Load<Texture2D>($"Textures/PlayingCards/{textureName}");
+    }
+
+    private Texture2D GetBackTexture()
+    {
+        // Resources 폴더 아래에서 검색
+        return Resources.Load<Texture2D>($"Textures/PlayingCards/Back");
     }
 
     public override string ToString()
     {
-        return cardData.ToString(); // "Ace_of_Diamonds" 처럼 출력됨.
+        return card.ToString(); // "Ace_of_Diamonds" 처럼 출력됨.
     }
 }
