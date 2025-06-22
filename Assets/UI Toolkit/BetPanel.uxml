@@ -1,0 +1,15 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/BetPanelStyle.uss?fileID=7433441132597879392&amp;guid=ebad820787d58224fb6adeaa30eda489&amp;type=3#BetPanelStyle" />
+    <engine:VisualElement style="flex-grow: 1; justify-content: flex-end;">
+        <engine:Button text="참가" name="Button_Join" class="button_Join" />
+        <engine:VisualElement name="Section_BottomButtons" style="flex-grow: 0; flex-direction: row; background-color: rgba(0, 0, 0, 0.27); border-top-color: rgb(0, 0, 0); border-top-width: 5px; flex-basis: 20%;">
+            <engine:Button text="리셋" name="Button_BetReset" class="button" />
+            <engine:Button text="500" name="Button_Bet1" class="button_Bet" style="background-image: url(&quot;project://database/Assets/Sprites/Chip/Chips.png?fileID=-1855471266&amp;guid=440fa16eef9da2c4d91bb487d147cb5b&amp;type=3#Chips_Green&quot;);" />
+            <engine:Button text="2000" name="Button_Bet2" class="button_Bet" style="background-image: url(&quot;project://database/Assets/Sprites/Chip/Chips.png?fileID=1937271848&amp;guid=440fa16eef9da2c4d91bb487d147cb5b&amp;type=3#Chips_Red&quot;);" />
+            <engine:Button text="1만" name="Button_Bet3" class="button_Bet" style="background-image: url(&quot;project://database/Assets/Sprites/Chip/Chips.png?fileID=57113695&amp;guid=440fa16eef9da2c4d91bb487d147cb5b&amp;type=3#Chips_Blue&quot;);" />
+            <engine:Button text="5만" name="Button_Bet4" class="button_Bet" style="background-image: url(&quot;project://database/Assets/Sprites/Chip/Chips.png?fileID=893029612&amp;guid=440fa16eef9da2c4d91bb487d147cb5b&amp;type=3#Chips_Purple&quot;);" />
+            <engine:Button text="MAX" name="Button_BetMax" class="button_Bet" style="background-image: url(&quot;project://database/Assets/Sprites/Chip/Chips.png?fileID=-1953454913&amp;guid=440fa16eef9da2c4d91bb487d147cb5b&amp;type=3#Chips_Black&quot;);" />
+            <engine:Button text="베팅" name="Button_BetConfirm" class="button" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

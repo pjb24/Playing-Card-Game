@@ -1,0 +1,29 @@
+.button {
+    flex-grow: 1;
+    font-size: 30px;
+    -unity-font-style: bold;
+    background-color: rgba(224, 195, 92, 0.72);
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    height: 100%;
+}
+
+.section_Bottom {
+    flex-direction: row;
+    flex-basis: 20%;
+    align-items: center;
+    justify-content: space-around;
+    background-color: rgba(0, 0, 0, 0.27);
+    border-top-color: rgb(0, 0, 0);
+    border-top-width: 5px;
+}
