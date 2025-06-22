@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class DealingState : IGameState
 {
-    private GameManager gameManager;
-
-    public DealingState(GameManager gameManager)
-    {
-        this.gameManager = gameManager;
-    }
-
     public void Enter()
     {
         throw new System.NotImplementedException();

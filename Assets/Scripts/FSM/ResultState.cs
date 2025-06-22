@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class ResultState : IGameState
 {
-    private GameManager gameManager;
-
-    public ResultState(GameManager gameManager)
-    {
-        this.gameManager = gameManager;
-    }
-
     public void Enter()
     {
         throw new System.NotImplementedException();

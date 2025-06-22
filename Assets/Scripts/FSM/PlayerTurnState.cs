@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class PlayerTurnState : IGameState
 {
-    private GameManager gameManager;
-
-    public PlayerTurnState(GameManager gameManager)
-    {
-        this.gameManager = gameManager;
-    }
-
     public void Enter()
     {
         throw new System.NotImplementedException();

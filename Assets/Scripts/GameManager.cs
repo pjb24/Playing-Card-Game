@@ -14,13 +14,13 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
-
+        
         stateMachine = new GameStateMachine();
     }
 
     private void Start()
     {
-        stateMachine.ChangeState(new GameStartState(Instance));
+        stateMachine.ChangeState(new GameStartState());
     }
 
     private void Update()

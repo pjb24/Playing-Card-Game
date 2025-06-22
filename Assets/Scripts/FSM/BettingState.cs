@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class BettingState : IGameState
 {
-    private GameManager gameManager;
-
-    public BettingState(GameManager gameManager)
-    {
-        this.gameManager = gameManager;
-    }
-
     public void Enter()
     {
         throw new System.NotImplementedException();
