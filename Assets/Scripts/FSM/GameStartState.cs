@@ -9,11 +9,14 @@ public class GameStartState : IGameState
         // Deck Shuffle
 
         // UI Reset
+        GameManager.Instance.uiManager.ChangeToBetPanel();
 
+        GameManager.Instance.uiManager.button_Join.clicked += TestCardInstancingAndMove;
     }
 
     public void Exit()
     {
+        GameManager.Instance.uiManager.button_Join.clicked -= TestCardInstancingAndMove;
     }
 
     public void Update()
@@ -26,5 +29,10 @@ public class GameStartState : IGameState
 
         // Change state to BettingState
         GameManager.Instance.ChangeState(new BettingState());
+    }
+
+    private void TestCardInstancingAndMove()
+    {
+        GameManager.Instance.InstancingCardToPlayer(GameManager.Instance.deckManager.DrawCard());
     }
 }

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,12 @@ public class GameManager : MonoBehaviour
 
     public GameStateMachine stateMachine;
 
+    public UIManager uiManager;
     public DeckManager deckManager;
+
+    public GameObject cardPrefab;
+    public Transform deckPosition;
+    public Transform playerHandPosition;
 
     private void Awake()
     {
@@ -34,5 +40,20 @@ public class GameManager : MonoBehaviour
     public void ChangeState(IGameState newState)
     {
         stateMachine.ChangeState(newState);
+    }
+
+    public void InstancingCardToPlayer(Card card)
+    {
+        GameObject cardObj = Instantiate(cardPrefab, deckPosition.position, deckPosition.rotation);
+        CardView view = cardObj.GetComponent<CardView>();
+
+        view.SetCard(card);
+
+        MoveCardToHand(view, playerHandPosition.position);
+    }
+
+    private void MoveCardToHand(CardView cardView, Vector3 handPosition)
+    {
+        cardView.transform.DOMove(handPosition, 1f);
     }
 }
