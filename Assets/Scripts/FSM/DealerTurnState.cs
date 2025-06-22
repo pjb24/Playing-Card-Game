@@ -6,6 +6,7 @@ public class DealerTurnState : IGameState
 {
     public void Enter()
     {
+        GameManager.Instance.ChangeState(new ResultState());
     }
 
     public void Exit()

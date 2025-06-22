@@ -6,6 +6,10 @@ public class GameStartState : IGameState
 {
     public void Enter()
     {
+        // Deck Shuffle
+
+        // UI Reset
+
     }
 
     public void Exit()
@@ -14,5 +18,13 @@ public class GameStartState : IGameState
 
     public void Update()
     {
+    }
+
+    private void HandleJoin()
+    {
+        // Player Add
+
+        // Change state to BettingState
+        GameManager.Instance.ChangeState(new BettingState());
     }
 }

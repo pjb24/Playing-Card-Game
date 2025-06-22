@@ -6,6 +6,7 @@ public class DealingState : IGameState
 {
     public void Enter()
     {
+        GameManager.Instance.ChangeState(new PlayerTurnState());
     }
 
     public void Exit()
