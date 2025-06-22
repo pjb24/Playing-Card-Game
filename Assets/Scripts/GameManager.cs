@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public Transform deckPosition;
     public Transform playerHandPosition;
 
+    public ChipFactory chipFactory;
+    
     private void Awake()
     {
         if (Instance == null)
