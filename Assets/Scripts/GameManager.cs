@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 
     public GameStateMachine stateMachine;
 
+    public DeckManager deckManager;
+
     private void Awake()
     {
         if (Instance == null)
@@ -16,6 +18,7 @@ public class GameManager : MonoBehaviour
         }
         
         stateMachine = new GameStateMachine();
+        deckManager = new DeckManager();
     }
 
     private void Start()
