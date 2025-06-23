@@ -1,0 +1,8 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/PlayerInfoStyle.uss?fileID=7433441132597879392&amp;guid=e828aacaea913a0409495032ad0022a4&amp;type=3#PlayerInfoStyle" />
+    <engine:VisualElement name="Section_Labels" style="flex-grow: 0; translate: 0 355px;">
+        <engine:Label text="0,000,000 Chip" name="Label_BetAmount" class="label" />
+        <engine:Label text="Player 1" name="Label_PlayerName" class="label" />
+        <engine:Label text="0,000,000 Chip" name="Label_PlayerChip" class="label" />
+    </engine:VisualElement>
+</engine:UXML>
