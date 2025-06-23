@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
         stateMachine = new GameStateMachine();
         deckManager = new DeckManager();
         characterManager = new CharacterManager();
+
+        uiManager.SetPlayerInfos();
     }
 
     private void Start()

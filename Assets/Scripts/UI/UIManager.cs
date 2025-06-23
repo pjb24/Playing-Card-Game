@@ -26,6 +26,12 @@ public class UIManager : MonoBehaviour
     public Button button_Split;
     public Button button_DoubleDown;
 
+    [Header("Player Infos")]
+    public UIDocument uiPlayerInfo;
+    public Label label_BetAmount;
+    public Label label_PlayerName;
+    public Label label_PlayerChip;
+
     public void ChangeToBetPanel()
     {
         if (uiPanel.visualTreeAsset != betPanel)
@@ -68,5 +74,15 @@ public class UIManager : MonoBehaviour
         button_Stand = section_Bottom.Q<Button>("Button_Stand");
         button_Split = section_Bottom.Q<Button>("Button_Split");
         button_DoubleDown = section_Bottom.Q<Button>("Button_DoubleDown");
+    }
+
+    public void SetPlayerInfos()
+    {
+        VisualElement root = uiPlayerInfo.rootVisualElement;
+        VisualElement section_Labels = root.Q<VisualElement>("Section_Labels");
+
+        label_BetAmount = section_Labels.Q<Label>("Label_BetAmount");
+        label_PlayerName = section_Labels.Q<Label>("Label_PlayerName");
+        label_PlayerChip = section_Labels.Q<Label>("Label_PlayerChip");
     }
 }
