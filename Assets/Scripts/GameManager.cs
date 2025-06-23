@@ -11,13 +11,14 @@ public class GameManager : MonoBehaviour
 
     public UIManager uiManager;
     public DeckManager deckManager;
+    public CharacterManager characterManager;
 
     public GameObject cardPrefab;
     public Transform deckPosition;
     public Transform playerHandPosition;
 
     public ChipFactory chipFactory;
-    
+
     private void Awake()
     {
         if (Instance == null)
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
         
         stateMachine = new GameStateMachine();
         deckManager = new DeckManager();
+        characterManager = new CharacterManager();
     }
 
     private void Start()
