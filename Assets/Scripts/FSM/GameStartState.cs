@@ -68,7 +68,7 @@ public class GameStartState : IGameState
 
     private void TestCardInstancingAndMove()
     {
-        GameManager.Instance.InstancingCardToPlayer(GameManager.Instance.deckManager.DrawCard());
+        GameManager.Instance.InstancingCardToPlayer(GameManager.Instance.deckManager.DrawCard(), 0);
     }
 
     private void TestResetChips()

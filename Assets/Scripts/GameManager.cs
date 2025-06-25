@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
     public GameObject cardPrefab;
     public Transform deckPosition;
     public Transform playerHandPosition;
+    public Transform dealerHandPosition;
+
+    public float cardOffsetX = 0.2f;
+    public float cardOffsetY = 0.01f;
 
     public ChipFactory chipFactory;
 
@@ -50,18 +54,30 @@ public class GameManager : MonoBehaviour
         stateMachine.ChangeState(newState);
     }
 
-    public void InstancingCardToPlayer(Card card)
+    public void InstancingCardToPlayer(Card card, int cardCount)
     {
         GameObject cardObj = Instantiate(cardPrefab, deckPosition.position, deckPosition.rotation);
         CardView view = cardObj.GetComponent<CardView>();
 
         view.SetCard(card);
 
-        MoveCardToHand(view, playerHandPosition.position);
+        cardCount -= 1;
+
+        MoveCardToHand(view, playerHandPosition.position + new Vector3(cardCount * cardOffsetX, cardCount * cardOffsetY, 0));
     }
 
     private void MoveCardToHand(CardView cardView, Vector3 handPosition)
     {
         cardView.transform.DOMove(handPosition, 1f);
+    }
+
+    public void InstancingCardToDealer(Card card, int cardCount, bool hidden = false)
+    {
+        GameObject cardObj = Instantiate(cardPrefab, deckPosition.position, deckPosition.rotation);
+        CardView view = cardObj.GetComponent<CardView>();
+
+        view.SetCard(card, hidden);
+
+        MoveCardToHand(view, dealerHandPosition.position + new Vector3(cardCount * cardOffsetX, cardCount * cardOffsetY, 0));
     }
 }
