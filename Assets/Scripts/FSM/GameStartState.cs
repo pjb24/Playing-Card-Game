@@ -14,6 +14,10 @@ public class GameStartState : IGameState
         // Players Bet, Turn Complete, Hand Reset
         GameManager.Instance.characterManager.ResetAllPlayers();
 
+        GameManager.Instance.characterManager.dealer.ResetHand();
+
+        GameManager.Instance.chipFactory.ResetChips();
+
         UpdateUI_PlayerInfos();
 
         if (GameManager.Instance.PlayerJoined)
@@ -44,6 +48,8 @@ public class GameStartState : IGameState
         // Player Add
         GameManager.Instance.characterManager.AddPlayer(new Player("ID_1", "DisplayName_1", 1_000_000));
         UpdateUI_PlayerInfos();
+
+        GameManager.Instance.PlayerJoined = true;
 
         // Change state to BettingState
         GameManager.Instance.ChangeState(new BettingState());

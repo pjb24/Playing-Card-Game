@@ -16,6 +16,12 @@ public class Hand
     public void Clear()
     {
         cards.Clear();
+
+        foreach (var cardObj in cardObjects)
+        {
+            Object.Destroy(cardObj);
+        }
+        cardObjects.Clear();
     }
 
     // 핸드의 점수 계산

@@ -22,6 +22,8 @@ public class DealerTurnState : IGameState
         // µô·¯ÀÇ È÷µç Ä«µå ¿ÀÇÂ
         GameManager.Instance.RevealHoleCard();
 
+        yield return new WaitForSeconds(1f);
+
         while (GameManager.Instance.characterManager.dealer.ShouldHit())
         {
             Card card = GameManager.Instance.deckManager.DrawCard();
