@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
         characterManager = new CharacterManager();
 
         uiManager.SetPlayerInfos();
+        uiManager.SetCardValues();
     }
 
     private void Start()

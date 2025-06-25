@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,15 @@ public class DealerTurnState : IGameState
         // µô·¯ÀÇ È÷µç Ä«µå ¿ÀÇÂ
         GameManager.Instance.RevealHoleCard();
 
+        if (GameManager.Instance.characterManager.dealer.Hand.IsBlackjack())
+        {
+            GameManager.Instance.uiManager.label_CardValue_Dealer.text = "Blackjack";
+        }
+        else
+        {
+            GameManager.Instance.uiManager.label_CardValue_Dealer.text = GameManager.Instance.characterManager.dealer.Hand.GetValue().ToString();
+        }
+
         yield return new WaitForSeconds(1f);
 
         while (GameManager.Instance.characterManager.dealer.ShouldHit())
@@ -31,6 +41,8 @@ public class DealerTurnState : IGameState
             GameManager.Instance.InstancingCardToDealer(card, GameManager.Instance.characterManager.dealer.Hand);
 
             yield return new WaitForSeconds(1f);
+
+            GameManager.Instance.uiManager.label_CardValue_Dealer.text = GameManager.Instance.characterManager.dealer.Hand.GetValue().ToString();
         }
 
         GameManager.Instance.ChangeState(new ResultState());

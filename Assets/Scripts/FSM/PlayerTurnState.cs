@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,6 +58,8 @@ public class PlayerTurnState : IGameState
         Card card = GameManager.Instance.deckManager.DrawCard();
         currentHand.AddCard(card);
         GameManager.Instance.InstancingCardToPlayer(card, currentHand);
+
+        GameManager.Instance.uiManager.label_CardValue_Player_01.text = currentHand.GetValue().ToString();
 
         if (currentHand.IsBust())
         {

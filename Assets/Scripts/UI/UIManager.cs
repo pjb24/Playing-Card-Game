@@ -32,6 +32,11 @@ public class UIManager : MonoBehaviour
     public Label label_PlayerName;
     public Label label_PlayerChip;
 
+    [Header("Card Values")]
+    public UIDocument uiCardValue;
+    public Label label_CardValue_Dealer;
+    public Label label_CardValue_Player_01;
+
     public void ChangeToBetPanel()
     {
         if (uiPanel.visualTreeAsset != betPanel)
@@ -84,5 +89,13 @@ public class UIManager : MonoBehaviour
         label_BetAmount = section_Labels.Q<Label>("Label_BetAmount");
         label_PlayerName = section_Labels.Q<Label>("Label_PlayerName");
         label_PlayerChip = section_Labels.Q<Label>("Label_PlayerChip");
+    }
+
+    public void SetCardValues()
+    {
+        VisualElement root = uiCardValue.rootVisualElement;
+
+        label_CardValue_Dealer = root.Q<Label>("Label_CardValue_Dealer");
+        label_CardValue_Player_01 = root.Q<Label>("Label_CardValue_Player_01");
     }
 }

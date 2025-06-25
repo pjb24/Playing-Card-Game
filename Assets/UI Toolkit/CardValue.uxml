@@ -1,0 +1,5 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/CardValueStyle.uss?fileID=7433441132597879392&amp;guid=7d43687319f859543b9254a469179126&amp;type=3#CardValueStyle" />
+    <engine:Label text="@@" name="Label_CardValue_Dealer" class="label_CardValue" style="translate: 0 135px;" />
+    <engine:Label text="Blackjack" name="Label_CardValue_Player_01" class="label_CardValue" style="translate: 0 225px;" />
+</engine:UXML>

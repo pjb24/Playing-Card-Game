@@ -7,6 +7,7 @@ public class GameStartState : IGameState
     public void Enter()
     {
         // Deck Shuffle
+        GameManager.Instance.deckManager.PrepareNextRound();
 
         // UI Reset
         GameManager.Instance.uiManager.ChangeToBetPanel();
@@ -19,13 +20,13 @@ public class GameStartState : IGameState
         GameManager.Instance.chipFactory.ResetChips();
 
         UpdateUI_PlayerInfos();
+        UpdateUI_CardValues();
 
         if (GameManager.Instance.PlayerJoined)
         {
             GameManager.Instance.uiManager.button_Join.visible = false;
 
             GameManager.Instance.ChangeState(new BettingState());
-
         }
         else
         {
@@ -79,5 +80,11 @@ public class GameStartState : IGameState
                 GameManager.Instance.uiManager.label_PlayerChip.text = player.Chips.ToString("N0");
             }
         }
+    }
+
+    private void UpdateUI_CardValues()
+    {
+        GameManager.Instance.uiManager.label_CardValue_Dealer.visible = false;
+        GameManager.Instance.uiManager.label_CardValue_Player_01.visible = false;
     }
 }

@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,6 +36,9 @@ public class DealingState : IGameState
                 GameManager.Instance.InstancingCardToPlayer(card, hand);
 
                 yield return new WaitForSeconds(0.3f);
+
+                GameManager.Instance.uiManager.label_CardValue_Player_01.visible = true;
+                GameManager.Instance.uiManager.label_CardValue_Player_01.text = hand.GetValue().ToString();
             }
         }
 
@@ -44,6 +48,9 @@ public class DealingState : IGameState
         GameManager.Instance.InstancingCardToDealer(dealerCard1, dealer.Hand);
 
         yield return new WaitForSeconds(0.3f);
+
+        GameManager.Instance.uiManager.label_CardValue_Dealer.visible = true;
+        GameManager.Instance.uiManager.label_CardValue_Dealer.text = dealer.Hand.GetValue().ToString();
 
         // Player Second Card
         foreach (var player in players)
@@ -55,10 +62,19 @@ public class DealingState : IGameState
                 GameManager.Instance.InstancingCardToPlayer(card, hand);
 
                 yield return new WaitForSeconds(0.3f);
+
+                if (hand.IsBlackjack())
+                {
+                    GameManager.Instance.uiManager.label_CardValue_Player_01.text = "Blackjack";
+                }
+                else
+                {
+                    GameManager.Instance.uiManager.label_CardValue_Player_01.text = hand.GetValue().ToString();
+                }
             }
         }
 
-        // Dealer Second Card
+        // Dealer Second Card - Hidden Card
         Card dealerCard2 = GameManager.Instance.deckManager.DrawCard();
         dealer.Hand.AddCard(dealerCard2);
         GameManager.Instance.InstancingCardToDealer(dealerCard2, dealer.Hand, true);
