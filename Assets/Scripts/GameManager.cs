@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     public ChipFactory chipFactory;
 
+    public bool PlayerJoined { get; set; } = false;
+
     private void Awake()
     {
         if (Instance == null)

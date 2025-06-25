@@ -16,15 +16,27 @@ public class GameStartState : IGameState
 
         UpdateUI_PlayerInfos();
 
-        GameManager.Instance.uiManager.button_Join.clicked += HandleJoin;
+        if (GameManager.Instance.PlayerJoined)
+        {
+            GameManager.Instance.uiManager.button_Join.visible = false;
+
+            GameManager.Instance.ChangeState(new BettingState());
+
+        }
+        else
+        {
+            GameManager.Instance.uiManager.button_Join.visible = true;
+            GameManager.Instance.uiManager.button_Join.clicked += HandleJoin;
+        }
+
 
         //GameManager.Instance.uiManager.button_Join.clicked += TestCardInstancingAndMove;
-        GameManager.Instance.uiManager.button_BetReset.clicked += TestResetChips;
-        GameManager.Instance.uiManager.button_Bet1.clicked += TestCreateChipType1;
-        GameManager.Instance.uiManager.button_Bet2.clicked += TestCreateChipType2;
-        GameManager.Instance.uiManager.button_Bet3.clicked += TestCreateChipType3;
-        GameManager.Instance.uiManager.button_Bet4.clicked += TestCreateChipType4;
-        GameManager.Instance.uiManager.button_BetMax.clicked += TestCreateChipType5;
+        //GameManager.Instance.uiManager.button_BetReset.clicked += TestResetChips;
+        //GameManager.Instance.uiManager.button_Bet1.clicked += TestCreateChipType1;
+        //GameManager.Instance.uiManager.button_Bet2.clicked += TestCreateChipType2;
+        //GameManager.Instance.uiManager.button_Bet3.clicked += TestCreateChipType3;
+        //GameManager.Instance.uiManager.button_Bet4.clicked += TestCreateChipType4;
+        //GameManager.Instance.uiManager.button_BetMax.clicked += TestCreateChipType5;
     }
 
     public void Exit()
@@ -32,12 +44,12 @@ public class GameStartState : IGameState
         GameManager.Instance.uiManager.button_Join.clicked -= HandleJoin;
 
         //GameManager.Instance.uiManager.button_Join.clicked -= TestCardInstancingAndMove;
-        GameManager.Instance.uiManager.button_BetReset.clicked -= TestResetChips;
-        GameManager.Instance.uiManager.button_Bet1.clicked -= TestCreateChipType1;
-        GameManager.Instance.uiManager.button_Bet2.clicked -= TestCreateChipType2;
-        GameManager.Instance.uiManager.button_Bet3.clicked -= TestCreateChipType3;
-        GameManager.Instance.uiManager.button_Bet4.clicked -= TestCreateChipType4;
-        GameManager.Instance.uiManager.button_BetMax.clicked -= TestCreateChipType5;
+        //GameManager.Instance.uiManager.button_BetReset.clicked -= TestResetChips;
+        //GameManager.Instance.uiManager.button_Bet1.clicked -= TestCreateChipType1;
+        //GameManager.Instance.uiManager.button_Bet2.clicked -= TestCreateChipType2;
+        //GameManager.Instance.uiManager.button_Bet3.clicked -= TestCreateChipType3;
+        //GameManager.Instance.uiManager.button_Bet4.clicked -= TestCreateChipType4;
+        //GameManager.Instance.uiManager.button_BetMax.clicked -= TestCreateChipType5;
     }
 
     public void Update()
