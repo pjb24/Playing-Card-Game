@@ -717,6 +717,72 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1001 &432687635
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2082232776277006348, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_Name
+      value: DealerHandPosition
+      objectReference: {fileID: 0}
+    - target: {fileID: 4988580210111439768, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+--- !u!4 &432687636 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+  m_PrefabInstance: {fileID: 432687635}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &579005013
 GameObject:
   m_ObjectHideFlags: 0
@@ -1123,6 +1189,9 @@ MonoBehaviour:
   cardPrefab: {fileID: 2082232776277006348, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
   deckPosition: {fileID: 2072246776}
   playerHandPosition: {fileID: 1984353915}
+  dealerHandPosition: {fileID: 432687636}
+  cardOffsetX: 0.2
+  cardOffsetY: 0.01
   chipFactory: {fileID: 248488723}
 --- !u!4 &1243415206
 Transform:
@@ -1911,6 +1980,7 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 174961998}
+  - {fileID: 432687635}
   - {fileID: 1984353914}
   - {fileID: 2072246775}
   - {fileID: 238617257}
