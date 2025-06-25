@@ -32,7 +32,7 @@ public class DealingState : IGameState
             {
                 Card card = GameManager.Instance.deckManager.DrawCard();
                 hand.AddCard(card);
-                GameManager.Instance.InstancingCardToPlayer(card, hand.Cards.Count);
+                GameManager.Instance.InstancingCardToPlayer(card, hand);
 
                 yield return new WaitForSeconds(0.3f);
             }
@@ -41,7 +41,7 @@ public class DealingState : IGameState
         // Dealer First Card
         Card dealerCard1 = GameManager.Instance.deckManager.DrawCard();
         dealer.Hand.AddCard(dealerCard1);
-        GameManager.Instance.InstancingCardToDealer(dealerCard1, dealer.Hand.Cards.Count);
+        GameManager.Instance.InstancingCardToDealer(dealerCard1, dealer.Hand);
 
         yield return new WaitForSeconds(0.3f);
 
@@ -52,7 +52,7 @@ public class DealingState : IGameState
             {
                 Card card = GameManager.Instance.deckManager.DrawCard();
                 hand.AddCard(card);
-                GameManager.Instance.InstancingCardToPlayer(card, hand.Cards.Count);
+                GameManager.Instance.InstancingCardToPlayer(card, hand);
 
                 yield return new WaitForSeconds(0.3f);
             }
@@ -61,7 +61,7 @@ public class DealingState : IGameState
         // Dealer Second Card
         Card dealerCard2 = GameManager.Instance.deckManager.DrawCard();
         dealer.Hand.AddCard(dealerCard2);
-        GameManager.Instance.InstancingCardToDealer(dealerCard2, dealer.Hand.Cards.Count, true);
+        GameManager.Instance.InstancingCardToDealer(dealerCard2, dealer.Hand, true);
 
         yield return new WaitForSeconds(0.3f);
 

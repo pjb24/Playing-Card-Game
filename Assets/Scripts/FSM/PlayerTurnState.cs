@@ -56,7 +56,7 @@ public class PlayerTurnState : IGameState
     {
         Card card = GameManager.Instance.deckManager.DrawCard();
         currentHand.AddCard(card);
-        GameManager.Instance.InstancingCardToPlayer(card, currentHand.Cards.Count);
+        GameManager.Instance.InstancingCardToPlayer(card, currentHand);
 
         if (currentHand.IsBust())
         {

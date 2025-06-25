@@ -6,6 +6,7 @@ public class Hand
 {
     protected List<Card> cards = new();
     public IReadOnlyList<Card> Cards => cards;
+    public List<GameObject> cardObjects = new();
 
     public void AddCard(Card card)
     {

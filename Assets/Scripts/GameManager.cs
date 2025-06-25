@@ -54,16 +54,17 @@ public class GameManager : MonoBehaviour
         stateMachine.ChangeState(newState);
     }
 
-    public void InstancingCardToPlayer(Card card, int cardCount)
+    public void InstancingCardToPlayer(Card card, Hand hand)
     {
         GameObject cardObj = Instantiate(cardPrefab, deckPosition.position, deckPosition.rotation);
         CardView view = cardObj.GetComponent<CardView>();
 
         view.SetCard(card);
 
-        cardCount -= 1;
+        int cardObjCount = hand.cardObjects.Count;
+        hand.cardObjects.Add(cardObj);
 
-        MoveCardToHand(view, playerHandPosition.position + new Vector3(cardCount * cardOffsetX, cardCount * cardOffsetY, 0));
+        MoveCardToHand(view, playerHandPosition.position + new Vector3(cardObjCount * cardOffsetX, cardObjCount * cardOffsetY, 0));
     }
 
     private void MoveCardToHand(CardView cardView, Vector3 handPosition)
@@ -71,13 +72,25 @@ public class GameManager : MonoBehaviour
         cardView.transform.DOMove(handPosition, 1f);
     }
 
-    public void InstancingCardToDealer(Card card, int cardCount, bool hidden = false)
+    public void InstancingCardToDealer(Card card, Hand hand, bool hidden = false)
     {
         GameObject cardObj = Instantiate(cardPrefab, deckPosition.position, deckPosition.rotation);
         CardView view = cardObj.GetComponent<CardView>();
 
         view.SetCard(card, hidden);
 
-        MoveCardToHand(view, dealerHandPosition.position + new Vector3(cardCount * cardOffsetX, cardCount * cardOffsetY, 0));
+        int cardObjCount = hand.cardObjects.Count;
+        hand.cardObjects.Add(cardObj);
+
+        MoveCardToHand(view, dealerHandPosition.position + new Vector3(cardObjCount * cardOffsetX, cardObjCount * cardOffsetY, 0));
+    }
+
+    public void RevealHoleCard()
+    {
+        foreach (GameObject cardObj in characterManager.dealer.Hand.cardObjects)
+        {
+            CardView view = cardObj.GetComponent<CardView>();
+            view.UpdateVisual(false);
+        }
     }
 }
