@@ -1,8 +1,6 @@
-using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Rendering.ShadowCascadeGUI;
 
 public class PlayerTurnState : IGameState
 {
@@ -79,12 +77,74 @@ public class PlayerTurnState : IGameState
 
     public void HandleDoubleDown()
     {
+        // Check player chip
+        if (currentPlayer.Chips < currentHand.BetAmount)
+        {
+            return;
+        }
 
+        // Increase betting chips
+        currentPlayer.DoubleDown(currentHand);
+
+        // Animate chip
+        GameManager.Instance.chipFactory.ResetChips();
+
+        int tempChips = currentHand.BetAmount;
+        int countType5 = tempChips / (int)E_ChipValue.BetMax;
+        tempChips -= countType5 * (int)E_ChipValue.BetMax;
+        int countType4 = tempChips / (int)E_ChipValue.Bet4;
+        tempChips -= countType4 * (int)E_ChipValue.Bet4;
+        int countType3 = tempChips / (int)E_ChipValue.Bet3;
+        tempChips -= countType3 * (int)E_ChipValue.Bet3;
+        int countType2 = tempChips / (int)E_ChipValue.Bet2;
+        tempChips -= countType2 * (int)E_ChipValue.Bet2;
+        int countType1 = tempChips / (int)E_ChipValue.Bet1;
+
+        for (int i = 0; i < countType1; i++)
+        {
+            GameManager.Instance.chipFactory.CreateChipType1();
+        }
+        for (int i = 0; i < countType2; i++)
+        {
+            GameManager.Instance.chipFactory.CreateChipType2();
+        }
+        for (int i = 0; i < countType3; i++)
+        {
+            GameManager.Instance.chipFactory.CreateChipType3();
+        }
+        for (int i = 0; i < countType4; i++)
+        {
+            GameManager.Instance.chipFactory.CreateChipType4();
+        }
+        for (int i = 0; i < countType5; i++)
+        {
+            GameManager.Instance.chipFactory.CreateChipType5();
+        }
+
+        GameManager.Instance.chipFactory.UpdateChipPosition();
+
+        UpdateUIChips();
+
+        // Draw card
+        Card card = GameManager.Instance.deckManager.DrawCard();
+        currentHand.AddCard(card);
+        GameManager.Instance.InstancingCardToPlayer(card, currentHand);
+
+        GameManager.Instance.uiManager.label_CardValue_Player_01.text = currentHand.GetValue().ToString();
+
+        // Move to next hand
+        NextHand();
     }
 
     private void NextHand()
     {
         currentPlayer.Stand(currentHand);
         GameManager.Instance.ChangeState(new PlayerTurnState());
+    }
+
+    public void UpdateUIChips()
+    {
+        GameManager.Instance.uiManager.label_BetAmount.text = currentHand.BetAmount.ToString("N0");
+        GameManager.Instance.uiManager.label_PlayerChip.text = currentPlayer.Chips.ToString("N0");
     }
 }

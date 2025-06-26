@@ -20,7 +20,7 @@ public class GameEndState : IGameState
 
     private IEnumerator WaitAndTransition()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         GameManager.Instance.ChangeState(new GameStartState());
     }
 }

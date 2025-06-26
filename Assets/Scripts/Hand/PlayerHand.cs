@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerHand : Hand
 {
-    public int BetAmount { get; set; }
+    public int BetAmount { get; private set; }
     public bool IsCompleted { get; set; } = false;
     public bool IsBetConfirmed { get; set; } = false;
 

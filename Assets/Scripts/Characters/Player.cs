@@ -88,4 +88,17 @@ public class Player
     {
 
     }
+
+    public void DoubleDown(PlayerHand hand)
+    {
+        if (hand.BetAmount > Chips)
+        {
+            Debug.Log("Not enough chips to double down.");
+            return;
+        }
+
+        Chips -= hand.BetAmount;
+
+        hand.Bet(hand.BetAmount * 2);
+    }
 }
