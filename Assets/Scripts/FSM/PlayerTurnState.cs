@@ -112,8 +112,10 @@ public class PlayerTurnState : IGameState
         GameManager.Instance.UpdateAllPlayerHandPositions();
 
         // 새 핸드에 칩 생성
+        GameManager.Instance.chipFactory.CreateChipsToFitValue(newHand.BetAmount, newHand);
 
         // 모든 칩의 위치를 갱신
+        GameManager.Instance.chipFactory.UpdateAllChipsPosition();
 
         // UI 업데이트. Player Info, Card Value
 
@@ -133,41 +135,11 @@ public class PlayerTurnState : IGameState
         currentPlayer.DoubleDown(currentHand);
 
         // Animate chip
-        GameManager.Instance.chipFactory.ResetChips();
+        GameManager.Instance.chipFactory.ResetChips(currentHand);
 
-        int tempChips = currentHand.BetAmount;
-        int countType5 = tempChips / (int)E_ChipValue.BetMax;
-        tempChips -= countType5 * (int)E_ChipValue.BetMax;
-        int countType4 = tempChips / (int)E_ChipValue.Bet4;
-        tempChips -= countType4 * (int)E_ChipValue.Bet4;
-        int countType3 = tempChips / (int)E_ChipValue.Bet3;
-        tempChips -= countType3 * (int)E_ChipValue.Bet3;
-        int countType2 = tempChips / (int)E_ChipValue.Bet2;
-        tempChips -= countType2 * (int)E_ChipValue.Bet2;
-        int countType1 = tempChips / (int)E_ChipValue.Bet1;
+        GameManager.Instance.chipFactory.CreateChipsToFitValue(currentHand.BetAmount, currentHand);
 
-        for (int i = 0; i < countType1; i++)
-        {
-            GameManager.Instance.chipFactory.CreateChipType1();
-        }
-        for (int i = 0; i < countType2; i++)
-        {
-            GameManager.Instance.chipFactory.CreateChipType2();
-        }
-        for (int i = 0; i < countType3; i++)
-        {
-            GameManager.Instance.chipFactory.CreateChipType3();
-        }
-        for (int i = 0; i < countType4; i++)
-        {
-            GameManager.Instance.chipFactory.CreateChipType4();
-        }
-        for (int i = 0; i < countType5; i++)
-        {
-            GameManager.Instance.chipFactory.CreateChipType5();
-        }
-
-        GameManager.Instance.chipFactory.UpdateChipPosition();
+        GameManager.Instance.chipFactory.UpdateHandChipPosition(currentHand);
 
         UpdateUIChips();
 

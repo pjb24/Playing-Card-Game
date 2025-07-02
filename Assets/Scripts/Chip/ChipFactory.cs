@@ -9,334 +9,220 @@ public class ChipFactory : MonoBehaviour
 
     public Transform spawnPosition;
 
-    public Transform bettingPositionSingle;
-    public List<Transform> bettingPositionDouble;
-    public List<Transform> bettingPositionTriple;
-    public List<Transform> bettingPositionQuadruple;
+    [SerializeField] private Transform bettingPositionRoot;
+    [SerializeField] private float bettingPositionSpacing = 0.5f;
 
-    private List<ChipView> chipsType1 = new();
-    private List<ChipView> chipsType2 = new();
-    private List<ChipView> chipsType3 = new();
-    private List<ChipView> chipsType4 = new();
-    private List<ChipView> chipsType5 = new();
+    [SerializeField] private float chipOffsetY = 0.1f;
 
     // 각각의 타입에 맞는 칩을 생성한다.
     // 하위 타입의 칩들이 모여서 상위 타입의 칩의 가치를 넘기면
     // 하위 타입의 칩들을 제거하고 상위 타입의 칩을 1개 생성한다.
 
-    public void CreateChipType1()
+    public void CreateChipType1(PlayerHand hand)
     {
         var chipObj = Instantiate(chipPrefabs[0], spawnPosition.position, chipPrefabs[0].transform.rotation);
         var chipView = chipObj.GetComponent<ChipView>();
         chipView.SetValue((int)E_ChipValue.Bet1);
 
-        chipsType1.Add(chipView);
+        hand.AddChip(chipView);
 
-        if (chipsType1.Count >= (int)E_ChipValue.Bet2 / (int)E_ChipValue.Bet1)
+        if (hand.GetChipCount(chipView) >= (int)E_ChipValue.Bet2 / (int)E_ChipValue.Bet1)
         {
-            ResetChipType1();
-            CreateChipType2();
+            ResetChipType1(hand);
+            CreateChipType2(hand);
         }
     }
 
-    public void CreateChipType2()
+    public void CreateChipType2(PlayerHand hand)
     {
         var chipObj = Instantiate(chipPrefabs[1], spawnPosition.position, chipPrefabs[1].transform.rotation);
         var chipView = chipObj.GetComponent<ChipView>();
         chipView.SetValue((int)E_ChipValue.Bet2);
 
-        chipsType2.Add(chipView);
+        hand.AddChip(chipView);
 
-        if (chipsType2.Count >= (int)E_ChipValue.Bet3 / (int)E_ChipValue.Bet2)
+        if (hand.GetChipCount(chipView) >= (int)E_ChipValue.Bet3 / (int)E_ChipValue.Bet2)
         {
-            ResetChipType2();
-            CreateChipType3();
+            ResetChipType2(hand);
+            CreateChipType3(hand);
         }
     }
 
-    public void CreateChipType3()
+    public void CreateChipType3(PlayerHand hand)
     {
         var chipObj = Instantiate(chipPrefabs[2], spawnPosition.position, chipPrefabs[2].transform.rotation);
         var chipView = chipObj.GetComponent<ChipView>();
         chipView.SetValue((int)E_ChipValue.Bet3);
 
-        chipsType3.Add(chipView);
+        hand.AddChip(chipView);
 
-        if (chipsType3.Count >= (int)E_ChipValue.Bet4 / (int)E_ChipValue.Bet3)
+        if (hand.GetChipCount(chipView) >= (int)E_ChipValue.Bet4 / (int)E_ChipValue.Bet3)
         {
-            ResetChipType3();
-            CreateChipType4();
+            ResetChipType3(hand);
+            CreateChipType4(hand);
         }
     }
 
-    public void CreateChipType4()
+    public void CreateChipType4(PlayerHand hand)
     {
         var chipObj = Instantiate(chipPrefabs[3], spawnPosition.position, chipPrefabs[3].transform.rotation);
         var chipView = chipObj.GetComponent<ChipView>();
         chipView.SetValue((int)E_ChipValue.Bet4);
 
-        chipsType4.Add(chipView);
+        hand.AddChip(chipView);
 
-        if (chipsType4.Count >= (int)E_ChipValue.BetMax / (int)E_ChipValue.Bet4)
+        if (hand.GetChipCount(chipView) >= (int)E_ChipValue.BetMax / (int)E_ChipValue.Bet4)
         {
-            ResetChipType4();
-            CreateChipType5();
+            ResetChipType4(hand);
+            CreateChipType5(hand);
         }
     }
 
-    public void CreateChipType5()
+    public void CreateChipType5(PlayerHand hand)
     {
         var chipObj = Instantiate(chipPrefabs[4], spawnPosition.position, chipPrefabs[4].transform.rotation);
         var chipView = chipObj.GetComponent<ChipView>();
         chipView.SetValue((int)E_ChipValue.BetMax);
 
-        chipsType5.Add(chipView);
+        hand.AddChip(chipView);
     }
 
     // 칩들의 위치를 조정한다.
-    public void UpdateChipPosition()
+    public void UpdateHandChipPosition(PlayerHand hand)
     {
-        int typeCount = 0;
-        if (chipsType1.Count > 0)
-        {
-            typeCount++;
-        }
-        if (chipsType2.Count > 0)
-        {
-            typeCount++;
-        }
-        if (chipsType3.Count > 0)
-        {
-            typeCount++;
-        }
-        if (chipsType4.Count > 0)
-        {
-            typeCount++;
-        }
-        if (chipsType5.Count > 0)
-        {
-            typeCount++;
-        }
+        int typeCount = hand.GetChipTypeCount();
 
-        switch (typeCount)
+        float handPosition = GameManager.Instance.GetHandPosition(hand);
+
+        List<E_ChipType> tempListChipType = new();
+
+        foreach (var chip in hand.ListChips)
         {
-            case 1:
+            int index = hand.GetChipTypeIndex(chip);
+
+            Vector3 destination;
+            destination.x = GetChipPosition(index, typeCount, bettingPositionSpacing);
+            destination.y = bettingPositionRoot.position.y;
+            destination.z = bettingPositionRoot.position.z;
+
+            destination.x += handPosition;
+
+            int chipTypeCount = 0;
+            foreach (var chipType in tempListChipType)
+            {
+                if (chipType == chip.chipType)
                 {
-                    if (chipsType1.Count > 0)
-                    {
-                        MoveChipsToBettingAreaSingle(chipsType1);
-                    }
-                    if (chipsType2.Count > 0)
-                    {
-                        MoveChipsToBettingAreaSingle(chipsType2);
-                    }
-                    if (chipsType3.Count > 0)
-                    {
-                        MoveChipsToBettingAreaSingle(chipsType3);
-                    }
-                    if (chipsType4.Count > 0)
-                    {
-                        MoveChipsToBettingAreaSingle(chipsType4);
-                    }
-                    if (chipsType5.Count > 0)
-                    {
-                        MoveChipsToBettingAreaSingle(chipsType5);
-                    }
+                    chipTypeCount++;
                 }
-                break;
-            case 2:
-                {
-                    if (chipsType1.Count == 0 && chipsType2.Count == 0)
-                    {
-                        MoveChipsToBettingAreaDouble(chipsType3, chipsType4);
-                    }
-                    if (chipsType1.Count == 0 && chipsType3.Count == 0)
-                    {
-                        MoveChipsToBettingAreaDouble(chipsType2, chipsType4);
-                    }
-                    if (chipsType1.Count == 0 && chipsType4.Count == 0)
-                    {
-                        MoveChipsToBettingAreaDouble(chipsType2, chipsType3);
-                    }
+            }
 
-                    if (chipsType2.Count == 0 && chipsType3.Count == 0)
-                    {
-                        MoveChipsToBettingAreaDouble(chipsType1, chipsType4);
-                    }
-                    if (chipsType2.Count == 0 && chipsType4.Count == 0)
-                    {
-                        MoveChipsToBettingAreaDouble(chipsType1, chipsType3);
-                    }
+            tempListChipType.Add(chip.chipType);
 
-                    if (chipsType3.Count == 0 && chipsType4.Count == 0)
-                    {
-                        MoveChipsToBettingAreaDouble(chipsType1, chipsType2);
-                    }
-                }
-                break;
-            case 3:
-                {
-                    if (chipsType1.Count == 0)
-                    {
-                        MoveChipsToBettingAreaTriple(chipsType2, chipsType3, chipsType4);
-                    }
-                    if (chipsType2.Count == 0)
-                    {
-                        MoveChipsToBettingAreaTriple(chipsType1, chipsType3, chipsType4);
-                    }
-                    if (chipsType3.Count == 0)
-                    {
-                        MoveChipsToBettingAreaTriple(chipsType1, chipsType2, chipsType4);
-                    }
-                    if (chipsType4.Count == 0)
-                    {
-                        MoveChipsToBettingAreaTriple(chipsType1, chipsType2, chipsType3);
-                    }
-                }
-                break;
-            case 4:
-                {
-                    MoveChipsToBettingAreaQuadruple(chipsType1, chipsType2, chipsType3, chipsType4);
-                }
-                break;
-        }
-    }
+            destination.y += chipTypeCount * chipOffsetY;
 
-    // 칩의 종류의 개수에 따라 위치를 조정한다.
-    public void MoveChipsToBettingAreaSingle(List<ChipView> chips)
-    {
-        int count = 0;
-        foreach (ChipView chip in chips)
-        {
-            chip.transform.DOMove(bettingPositionSingle.position + new Vector3(0, 0.1f * count, 0), 1f);
-            count++;
-        }
-    }
-
-    public void MoveChipsToBettingAreaDouble(List<ChipView> chips1, List<ChipView> chips2)
-    {
-        int count = 0;
-        foreach (ChipView chip in chips1)
-        {
-            chip.transform.DOMove(bettingPositionDouble[0].position + new Vector3(0, 0.1f * count, 0), 1f);
-            count++;
+            MoveChip(destination, chip);
         }
 
-        count = 0;
-        foreach (ChipView chip in chips2)
-        {
-            chip.transform.DOMove(bettingPositionDouble[1].position + new Vector3(0, 0.1f * count, 0), 1f);
-            count++;
-        }
-    }
-
-    public void MoveChipsToBettingAreaTriple(List<ChipView> chips1, List<ChipView> chips2, List<ChipView> chips3)
-    {
-        int count = 0;
-        foreach (ChipView chip in chips1)
-        {
-            chip.transform.DOMove(bettingPositionTriple[0].position + new Vector3(0, 0.1f * count, 0), 1f);
-            count++;
-        }
-
-        count = 0;
-        foreach (ChipView chip in chips2)
-        {
-            chip.transform.DOMove(bettingPositionTriple[1].position + new Vector3(0, 0.1f * count, 0), 1f);
-            count++;
-        }
-
-        count = 0;
-        foreach (ChipView chip in chips3)
-        {
-            chip.transform.DOMove(bettingPositionTriple[2].position + new Vector3(0, 0.1f * count, 0), 1f);
-            count++;
-        }
-    }
-
-    public void MoveChipsToBettingAreaQuadruple(List<ChipView> chips1, List<ChipView> chips2, List<ChipView> chips3, List<ChipView> chips4)
-    {
-        int count = 0;
-        foreach (ChipView chip in chips1)
-        {
-            chip.transform.DOMove(bettingPositionQuadruple[0].position + new Vector3(0, 0.1f * count, 0), 1f);
-            count++;
-        }
-
-        count = 0;
-        foreach (ChipView chip in chips2)
-        {
-            chip.transform.DOMove(bettingPositionQuadruple[1].position + new Vector3(0, 0.1f * count, 0), 1f);
-            count++;
-        }
-
-        count = 0;
-        foreach (ChipView chip in chips3)
-        {
-            chip.transform.DOMove(bettingPositionQuadruple[2].position + new Vector3(0, 0.1f * count, 0), 1f);
-            count++;
-        }
-
-        count = 0;
-        foreach (ChipView chip in chips4)
-        {
-            chip.transform.DOMove(bettingPositionQuadruple[3].position + new Vector3(0, 0.1f * count, 0), 1f);
-            count++;
-        }
+        tempListChipType.Clear();
     }
 
     // 칩들을 제거한다.
-    public void ResetChips()
+    public void ResetChips(PlayerHand hand)
     {
-        ResetChipType1();
-        ResetChipType2();
-        ResetChipType3();
-        ResetChipType4();
-        ResetChipType5();
+        ResetChipType1(hand);
+        ResetChipType2(hand);
+        ResetChipType3(hand);
+        ResetChipType4(hand);
+        ResetChipType5(hand);
     }
 
-    public void ResetChipType1()
+    public void ResetChipType1(PlayerHand hand)
     {
-        foreach (var chipView in chipsType1)
-        {
-            Destroy(chipView.gameObject);
-        }
-        chipsType1.Clear();
+        hand.ResetChip(E_ChipType.Green);
     }
 
-    public void ResetChipType2()
+    public void ResetChipType2(PlayerHand hand)
     {
-        foreach (var chipView in chipsType2)
-        {
-            Destroy(chipView.gameObject);
-        }
-        chipsType2.Clear();
+        hand.ResetChip(E_ChipType.Red);
     }
 
-    public void ResetChipType3()
+    public void ResetChipType3(PlayerHand hand)
     {
-        foreach (var chipView in chipsType3)
-        {
-            Destroy(chipView.gameObject);
-        }
-        chipsType3.Clear();
+        hand.ResetChip(E_ChipType.Blue);
     }
 
-    public void ResetChipType4()
+    public void ResetChipType4(PlayerHand hand)
     {
-        foreach (var chipView in chipsType4)
-        {
-            Destroy(chipView.gameObject);
-        }
-        chipsType4.Clear();
+        hand.ResetChip(E_ChipType.Purple);
     }
 
-    public void ResetChipType5()
+    public void ResetChipType5(PlayerHand hand)
     {
-        foreach (var chipView in chipsType5)
+        hand.ResetChip(E_ChipType.Black);
+    }
+
+    public int CreateChipsToFitValue(int value, PlayerHand hand)
+    {
+        int tempChips = value;
+        int countType5 = tempChips / (int)E_ChipValue.BetMax;
+        tempChips -= countType5 * (int)E_ChipValue.BetMax;
+        int countType4 = tempChips / (int)E_ChipValue.Bet4;
+        tempChips -= countType4 * (int)E_ChipValue.Bet4;
+        int countType3 = tempChips / (int)E_ChipValue.Bet3;
+        tempChips -= countType3 * (int)E_ChipValue.Bet3;
+        int countType2 = tempChips / (int)E_ChipValue.Bet2;
+        tempChips -= countType2 * (int)E_ChipValue.Bet2;
+        int countType1 = tempChips / (int)E_ChipValue.Bet1;
+
+        for (int i = 0; i < countType1; i++)
         {
-            Destroy(chipView.gameObject);
+            CreateChipType1(hand);
         }
-        chipsType5.Clear();
+        for (int i = 0; i < countType2; i++)
+        {
+            CreateChipType2(hand);
+        }
+        for (int i = 0; i < countType3; i++)
+        {
+            CreateChipType3(hand);
+        }
+        for (int i = 0; i < countType4; i++)
+        {
+            CreateChipType4(hand);
+        }
+        for (int i = 0; i < countType5; i++)
+        {
+            CreateChipType5(hand);
+        }
+
+        int betAmount = countType5 * (int)E_ChipValue.BetMax
+                + countType4 * (int)E_ChipValue.Bet4
+                + countType3 * (int)E_ChipValue.Bet3
+                + countType2 * (int)E_ChipValue.Bet2
+                + countType1 * (int)E_ChipValue.Bet1;
+
+        return betAmount;
+    }
+
+    private void MoveChip(Vector3 chipsDestination, ChipView moveTargetChip)
+    {
+        moveTargetChip.transform.DOMove(chipsDestination, 1f);
+    }
+
+    private float GetChipPosition(int index, int totalChipTypes, float spacing = 0.5f)
+    {
+        float centerOffset = (totalChipTypes - 1) * spacing * 0.5f;
+        return index * spacing - centerOffset;
+    }
+
+    public void UpdateAllChipsPosition()
+    {
+        foreach (var player in GameManager.Instance.characterManager.Players)
+        {
+            foreach(var hand in player.Hands)
+            {
+                UpdateHandChipPosition(hand);
+            }
+        }
     }
 }

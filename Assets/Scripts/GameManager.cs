@@ -129,4 +129,13 @@ public class GameManager : MonoBehaviour
         float centerOffset = (totalHands - 1) * spacing * 0.5f;
         return index * spacing - centerOffset;
     }
+
+    public float GetHandPosition(PlayerHand hand)
+    {
+        int handIndex = characterManager.GetHandIndex(hand);
+        int handCount = characterManager.GetHandCount();
+
+        float centerOffset = (handCount - 1) * playerHandPositionSpacing * 0.5f;
+        return handIndex * playerHandPositionSpacing - centerOffset;
+    }
 }

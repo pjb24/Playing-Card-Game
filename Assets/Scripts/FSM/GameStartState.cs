@@ -12,12 +12,10 @@ public class GameStartState : IGameState
         // UI Reset
         GameManager.Instance.uiManager.ChangeToBetPanel();
 
-        // Players Bet, Turn Complete, Hand Reset
+        // Players Bet, Turn Complete, Hand Reset, Chips Reset
         GameManager.Instance.characterManager.ResetAllPlayers();
 
         GameManager.Instance.characterManager.dealer.ResetHand();
-
-        GameManager.Instance.chipFactory.ResetChips();
 
         UpdateUI_PlayerInfos();
         UpdateUI_CardValues();
@@ -49,7 +47,7 @@ public class GameStartState : IGameState
         // Player Add
         string id = "ID_1";
         string name = "DisplayName_1";
-        int chips = 1_000_000;
+        int chips = 100_000_000;
         GameManager.Instance.characterManager.AddPlayer(new Player(id, name, chips));
         UpdateUI_PlayerInfos();
 

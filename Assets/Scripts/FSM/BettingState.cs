@@ -77,7 +77,7 @@ public class BettingState : IGameState
     public void HandleBetReset()
     {
         betAmount = 0;
-        GameManager.Instance.chipFactory.ResetChips();
+        GameManager.Instance.chipFactory.ResetChips(currentHand);
         UpdateUI();
     }
 
@@ -101,8 +101,8 @@ public class BettingState : IGameState
         betAmount += (int)E_ChipValue.Bet1;
 
         // Animate chips
-        GameManager.Instance.chipFactory.CreateChipType1();
-        GameManager.Instance.chipFactory.UpdateChipPosition();
+        GameManager.Instance.chipFactory.CreateChipType1(currentHand);
+        GameManager.Instance.chipFactory.UpdateHandChipPosition(currentHand);
 
         UpdateUI();
     }
@@ -127,8 +127,8 @@ public class BettingState : IGameState
         betAmount += (int)E_ChipValue.Bet2;
 
         // Animate chips
-        GameManager.Instance.chipFactory.CreateChipType2();
-        GameManager.Instance.chipFactory.UpdateChipPosition();
+        GameManager.Instance.chipFactory.CreateChipType2(currentHand);
+        GameManager.Instance.chipFactory.UpdateHandChipPosition(currentHand);
 
         UpdateUI();
     }
@@ -153,8 +153,8 @@ public class BettingState : IGameState
         betAmount += (int)E_ChipValue.Bet3;
 
         // Animate chips
-        GameManager.Instance.chipFactory.CreateChipType3();
-        GameManager.Instance.chipFactory.UpdateChipPosition();
+        GameManager.Instance.chipFactory.CreateChipType3(currentHand);
+        GameManager.Instance.chipFactory.UpdateHandChipPosition(currentHand);
 
         UpdateUI();
     }
@@ -179,8 +179,8 @@ public class BettingState : IGameState
         betAmount += (int)E_ChipValue.Bet4;
 
         // Animate chips
-        GameManager.Instance.chipFactory.CreateChipType4();
-        GameManager.Instance.chipFactory.UpdateChipPosition();
+        GameManager.Instance.chipFactory.CreateChipType4(currentHand);
+        GameManager.Instance.chipFactory.UpdateHandChipPosition(currentHand);
 
         UpdateUI();
     }
@@ -192,49 +192,20 @@ public class BettingState : IGameState
             return;
         }
 
-        GameManager.Instance.chipFactory.ResetChips();
+        GameManager.Instance.chipFactory.ResetChips(currentHand);
 
         if (currentPlayer.Chips < (int)E_ChipValue.BetMax)
         {
-            int tempChips = currentPlayer.Chips;
-            int countType4 = tempChips / (int)E_ChipValue.Bet4;
-            tempChips -= countType4 * (int)E_ChipValue.Bet4;
-            int countType3 = tempChips / (int)E_ChipValue.Bet3;
-            tempChips -= countType3 * (int)E_ChipValue.Bet3;
-            int countType2 = tempChips / (int)E_ChipValue.Bet2;
-            tempChips -= countType2 * (int)E_ChipValue.Bet2;
-            int countType1 = tempChips / (int)E_ChipValue.Bet1;
-
-            betAmount = countType4 * (int)E_ChipValue.Bet4
-                + countType3 * (int)E_ChipValue.Bet3
-                + countType2 * (int)E_ChipValue.Bet2
-                + countType1 * (int)E_ChipValue.Bet1;
-
-            for (int i = 0; i < countType1; i++)
-            {
-                GameManager.Instance.chipFactory.CreateChipType1();
-            }
-            for (int i = 0; i < countType2; i++)
-            {
-                GameManager.Instance.chipFactory.CreateChipType2();
-            }
-            for (int i = 0; i < countType3; i++)
-            {
-                GameManager.Instance.chipFactory.CreateChipType3();
-            }
-            for (int i = 0; i < countType4; i++)
-            {
-                GameManager.Instance.chipFactory.CreateChipType4();
-            }
+            betAmount = GameManager.Instance.chipFactory.CreateChipsToFitValue(currentPlayer.Chips, currentHand);
         }
         else
         {
             betAmount = (int)E_ChipValue.BetMax;
-            GameManager.Instance.chipFactory.CreateChipType5();
+            GameManager.Instance.chipFactory.CreateChipType5(currentHand);
         }
 
         // Animate chips
-        GameManager.Instance.chipFactory.UpdateChipPosition();
+        GameManager.Instance.chipFactory.UpdateHandChipPosition(currentHand);
 
         UpdateUI();
     }

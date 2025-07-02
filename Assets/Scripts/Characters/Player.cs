@@ -60,6 +60,7 @@ public class Player
         IsFinishedBetting = false;
         foreach (var hand in Hands)
         {
+            hand.ResetChipAll();
             hand.Clear();
         }
         Hands.Clear();
