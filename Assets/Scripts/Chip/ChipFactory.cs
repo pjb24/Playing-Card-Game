@@ -219,7 +219,7 @@ public class ChipFactory : MonoBehaviour
     {
         foreach (var player in GameManager.Instance.characterManager.Players)
         {
-            foreach(var hand in player.Hands)
+            foreach (var hand in player.Hands)
             {
                 UpdateHandChipPosition(hand);
             }
