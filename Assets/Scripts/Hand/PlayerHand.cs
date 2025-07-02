@@ -12,4 +12,19 @@ public class PlayerHand : Hand
     {
         BetAmount = amount;
     }
+
+    public bool CanSplit()
+    {
+        if (Cards.Count != 2)
+        {
+            return false;
+        }
+
+        if (Cards[0].Rank != Cards[1].Rank)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }

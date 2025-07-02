@@ -13,6 +13,11 @@ public class Hand
         cards.Add(card);
     }
 
+    public void RemoveCard(Card card)
+    {
+        cards.Remove(card);
+    }
+
     public void Clear()
     {
         cards.Clear();

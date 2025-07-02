@@ -5,7 +5,7 @@ using UnityEngine;
 public class CharacterManager
 {
     public List<Player> Players { get; private set; } = new();
-    private int currentPlayerIndex = -1;
+    private int currentPlayerIndex = 0;
     public Dealer dealer = new();
 
     public void AddPlayer(Player player)
@@ -27,12 +27,12 @@ public class CharacterManager
         {
             player.ResetForNextRound();
         }
-        currentPlayerIndex = -1;
+        currentPlayerIndex = 0;
     }
 
     public Player GetNextBettingPlayer()
     {
-        for (int i = currentPlayerIndex + 1; i < Players.Count; i++)
+        for (int i = currentPlayerIndex; i < Players.Count; i++)
         {
             if (!Players[i].IsFinishedBetting)
             {
@@ -46,7 +46,7 @@ public class CharacterManager
 
     public Player GetNextActivePlayer()
     {
-        for (int i = currentPlayerIndex + 1; i < Players.Count; i++)
+        for (int i = currentPlayerIndex; i < Players.Count; i++)
         {
             if (!Players[i].IsFinishedTurn)
             {
@@ -70,6 +70,6 @@ public class CharacterManager
 
     public void ResetTurnOrder()
     {
-        currentPlayerIndex = -1;
+        currentPlayerIndex = 0;
     }
 }

@@ -29,6 +29,14 @@ public class PlayerTurnState : IGameState
             return;
         }
 
+        // 핸드의 행동을 시작할 때 카드가 2장 보다 적으면 카드를 받음
+        if (currentHand.Cards.Count < 2)
+        {
+            Card currentHandCard = GameManager.Instance.deckManager.DrawCard();
+            currentHand.AddCard(currentHandCard);
+            GameManager.Instance.InstancingCardToPlayer(currentHandCard, currentHand);
+        }
+
         GameManager.Instance.uiManager.ChangeToPlayerActionPanel();
 
         // Button subscribe function
@@ -72,7 +80,44 @@ public class PlayerTurnState : IGameState
 
     public void HandleSplit()
     {
+        // 베팅에 사용한 칩과 동일한 양의 칩이 필요
+        if (currentPlayer.Chips < currentHand.BetAmount)
+        {
+            return;
+        }
 
+        // 핸드에 카드가 2장, 카드의 숫자 또는 문자가 같아야 함
+        if (!currentHand.CanSplit())
+        {
+            //return;
+        }
+
+        // 새로운 핸드를 현재 핸드의 오른편에 추가
+        PlayerHand newHand = currentPlayer.InsertHand(currentPlayer.Hands.IndexOf(currentHand) + 1);
+
+        // 새로운 핸드에 베팅 입력
+        currentPlayer.PlaceBet(newHand, currentHand.BetAmount);
+
+        // 현재 핸드의 2번째 카드를 새로운 핸드로 나눔
+        Card splitCard = currentHand.Cards[1];
+        currentHand.RemoveCard(splitCard);
+        newHand.AddCard(splitCard);
+
+        // 카드 오브젝트 나눔
+        GameObject splitCardObj = currentHand.cardObjects[1];
+        currentHand.cardObjects.Remove(splitCardObj);
+        newHand.cardObjects.Add(splitCardObj);
+
+        // 모든 카드 위치 갱신
+
+        // 새 핸드에 칩 생성
+
+        // 모든 칩의 위치를 갱신
+
+        // UI 업데이트. Player Info, Card Value
+
+        // PlayerTurnState 다시 진입
+        GameManager.Instance.ChangeState(new PlayerTurnState());
     }
 
     public void HandleDoubleDown()

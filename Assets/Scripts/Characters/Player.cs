@@ -101,4 +101,18 @@ public class Player
 
         hand.Bet(hand.BetAmount * 2);
     }
+
+    public PlayerHand AppendHand()
+    {
+        PlayerHand hand = new PlayerHand();
+        Hands.Add(hand);
+        return hand;
+    }
+
+    public PlayerHand InsertHand(int index)
+    {
+        PlayerHand hand = new PlayerHand();
+        Hands.Insert(index, hand);
+        return hand;
+    }
 }
