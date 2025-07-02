@@ -1288,8 +1288,9 @@ MonoBehaviour:
   uiManager: {fileID: 620660599}
   cardPrefab: {fileID: 2082232776277006348, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
   deckPosition: {fileID: 2072246776}
-  playerHandPosition: {fileID: 1984353915}
   dealerHandPosition: {fileID: 432687636}
+  playerHandPositionRoot: {fileID: 1984353915}
+  playerHandPositionSpacing: 3
   cardOffsetX: 0.2
   cardOffsetY: 0.01
   chipFactory: {fileID: 248488723}
@@ -1950,7 +1951,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2082232776277006348, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
       propertyPath: m_Name
-      value: PlayerHandPosition
+      value: PlayerHandPositionRoot
       objectReference: {fileID: 0}
     - target: {fileID: 4988580210111439768, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
       propertyPath: m_Enabled

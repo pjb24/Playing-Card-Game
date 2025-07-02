@@ -8,6 +8,37 @@ public class CharacterManager
     private int currentPlayerIndex = 0;
     public Dealer dealer = new();
 
+    public int GetHandIndex(PlayerHand hand)
+    {
+        int index = 0;
+
+        foreach (Player p in Players)
+        {
+            int result = p.Hands.FindIndex((PlayerHand x) => { return x == hand; });
+            if (result == -1)
+            {
+                index += p.Hands.Count;
+            }
+            else
+            {
+                index += result;
+            }
+        }
+
+        return index;
+    }
+
+    public int GetHandCount()
+    {
+        int count = 0;
+        foreach (Player p in Players)
+        {
+            count += p.Hands.Count;
+        }
+
+        return count;
+    }
+
     public void AddPlayer(Player player)
     {
         if (!Players.Contains(player))

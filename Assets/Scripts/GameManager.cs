@@ -15,8 +15,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject cardPrefab;
     public Transform deckPosition;
-    public Transform playerHandPosition;
     public Transform dealerHandPosition;
+    [SerializeField] private Transform playerHandPositionRoot;
+    [SerializeField] private float playerHandPositionSpacing = 3f;
 
     public float cardOffsetX = 0.2f;
     public float cardOffsetY = 0.01f;
@@ -55,22 +56,50 @@ public class GameManager : MonoBehaviour
         stateMachine.ChangeState(newState);
     }
 
-    public void InstancingCardToPlayer(Card card, Hand hand)
+    public void UpdateAllPlayerHandPositions()
+    {
+        foreach (var player in characterManager.Players)
+        {
+            foreach (var hand in player.Hands)
+            {
+                foreach (var cardObj in hand.cardObjects)
+                {
+                    MoveCardToPlayer(cardObj, hand);
+                }
+            }
+        }
+    }
+
+    public void MoveCardToPlayer(GameObject cardObj, PlayerHand hand)
+    {
+        int cardObjIndex = hand.cardObjects.IndexOf(cardObj);
+
+        int handIndex = characterManager.GetHandIndex(hand);
+        int handCount = characterManager.GetHandCount();
+
+        Vector3 targetPosition;
+        targetPosition.x = GetHandPosition(handIndex, handCount, playerHandPositionSpacing);
+        targetPosition.y = playerHandPositionRoot.position.y;
+        targetPosition.z = playerHandPositionRoot.position.z;
+
+        MoveCardToHand(cardObj, targetPosition + new Vector3(cardObjIndex * cardOffsetX, cardObjIndex * cardOffsetY, 0));
+    }
+
+    public void InstancingCardToPlayer(Card card, PlayerHand hand)
     {
         GameObject cardObj = Instantiate(cardPrefab, deckPosition.position, deckPosition.rotation);
         CardView view = cardObj.GetComponent<CardView>();
 
         view.SetCard(card);
 
-        int cardObjCount = hand.cardObjects.Count;
         hand.cardObjects.Add(cardObj);
 
-        MoveCardToHand(view, playerHandPosition.position + new Vector3(cardObjCount * cardOffsetX, cardObjCount * cardOffsetY, 0));
+        MoveCardToPlayer(cardObj, hand);
     }
 
-    private void MoveCardToHand(CardView cardView, Vector3 handPosition)
+    private void MoveCardToHand(GameObject cardObj, Vector3 handPosition)
     {
-        cardView.transform.DOMove(handPosition, 1f);
+        cardObj.transform.DOMove(handPosition, 1f);
     }
 
     public void InstancingCardToDealer(Card card, Hand hand, bool hidden = false)
@@ -80,10 +109,10 @@ public class GameManager : MonoBehaviour
 
         view.SetCard(card, hidden);
 
-        int cardObjCount = hand.cardObjects.Count;
         hand.cardObjects.Add(cardObj);
+        int cardObjIndex = hand.cardObjects.IndexOf(cardObj);
 
-        MoveCardToHand(view, dealerHandPosition.position + new Vector3(cardObjCount * cardOffsetX, cardObjCount * cardOffsetY, 0));
+        MoveCardToHand(cardObj, dealerHandPosition.position + new Vector3(cardObjIndex * cardOffsetX, cardObjIndex * cardOffsetY, 0));
     }
 
     public void RevealHoleCard()
@@ -93,5 +122,11 @@ public class GameManager : MonoBehaviour
             CardView view = cardObj.GetComponent<CardView>();
             view.UpdateVisual(false);
         }
+    }
+
+    private float GetHandPosition(int index, int totalHands, float spacing = 3f)
+    {
+        float centerOffset = (totalHands - 1) * spacing * 0.5f;
+        return index * spacing - centerOffset;
     }
 }

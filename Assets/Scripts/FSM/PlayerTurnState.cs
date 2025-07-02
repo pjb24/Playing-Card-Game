@@ -109,6 +109,7 @@ public class PlayerTurnState : IGameState
         newHand.cardObjects.Add(splitCardObj);
 
         // 모든 카드 위치 갱신
+        GameManager.Instance.UpdateAllPlayerHandPositions();
 
         // 새 핸드에 칩 생성
 
