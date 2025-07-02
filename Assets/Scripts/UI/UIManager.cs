@@ -39,20 +39,14 @@ public class UIManager : MonoBehaviour
 
     public void ChangeToBetPanel()
     {
-        if (uiPanel.visualTreeAsset != betPanel)
-        {
-            uiPanel.visualTreeAsset = betPanel;
-            OnChangeToBetPanel();
-        }
+        uiPanel.visualTreeAsset = betPanel;
+        OnChangeToBetPanel();
     }
 
     public void ChangeToPlayerActionPanel()
     {
-        if (uiPanel.visualTreeAsset != playerActionPanel)
-        {
-            uiPanel.visualTreeAsset = playerActionPanel;
-            OnChangeToPlayerActionPanel();
-        }
+        uiPanel.visualTreeAsset = playerActionPanel;
+        OnChangeToPlayerActionPanel();
     }
 
     private void OnChangeToBetPanel()
