@@ -6,3 +6,8 @@
     font-size: 24px;
     -unity-text-align: middle-center;
 }
+
+.section_text {
+    position: absolute;
+    top: 737px;
+}

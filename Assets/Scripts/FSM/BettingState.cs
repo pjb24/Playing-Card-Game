@@ -70,8 +70,10 @@ public class BettingState : IGameState
 
     public void UpdateUI()
     {
-        GameManager.Instance.uiManager.label_BetAmount.text = betAmount.ToString("N0");
-        GameManager.Instance.uiManager.label_PlayerChip.text = (currentPlayer.Chips - betAmount).ToString("N0");
+        int handIndex = GameManager.Instance.characterManager.GetHandIndex(currentHand);
+
+        GameManager.Instance.uiManager.PlayerInfoBetAmountSetText(betAmount.ToString("N0"), handIndex);
+        GameManager.Instance.uiManager.PlayerInfoChipSetText((currentPlayer.Chips - betAmount).ToString("N0"), handIndex);
     }
 
     public void HandleBetReset()

@@ -29,9 +29,11 @@ public class UIManager : MonoBehaviour
 
     [Header("Player Infos")]
     public UIDocument uiPlayerInfo;
-    public Label label_BetAmount;
-    public Label label_PlayerName;
-    public Label label_PlayerChip;
+
+    private List<VisualElement> list_section_text = new();
+    private List<Label> list_label_BetAmount = new();
+    private List<Label> list_label_PlayerName = new();
+    private List<Label> list_label_PlayerChip = new();
 
     [Header("Card Values")]
     public UIDocument uiCardValue;
@@ -74,16 +76,6 @@ public class UIManager : MonoBehaviour
         button_Stand = section_Bottom.Q<Button>("Button_Stand");
         button_Split = section_Bottom.Q<Button>("Button_Split");
         button_DoubleDown = section_Bottom.Q<Button>("Button_DoubleDown");
-    }
-
-    public void SetPlayerInfos()
-    {
-        VisualElement root = uiPlayerInfo.rootVisualElement;
-        VisualElement section_Labels = root.Q<VisualElement>("Section_Labels");
-
-        label_BetAmount = section_Labels.Q<Label>("Label_BetAmount");
-        label_PlayerName = section_Labels.Q<Label>("Label_PlayerName");
-        label_PlayerChip = section_Labels.Q<Label>("Label_PlayerChip");
     }
 
     public void SetCardValues()
@@ -155,5 +147,113 @@ public class UIManager : MonoBehaviour
     public void RequestCardValueUIPositionUpdate(Vector3 objectPosition, int index)
     {
         list_label_CardValue_Player[index].schedule.Execute(() => UpdateCardValueUIPosition(objectPosition, index)).ExecuteLater(0);
+    }
+
+    private void CreatePlayerInfo()
+    {
+        VisualElement section = new VisualElement();
+        section.AddToClassList("section_text");
+        section.visible = false;
+        uiPlayerInfo.rootVisualElement.Add(section);
+        list_section_text.Add(section);
+
+        Label label_BetAmount = new Label();
+        label_BetAmount.AddToClassList("label");
+        section.Add(label_BetAmount);
+        list_label_BetAmount.Add(label_BetAmount);
+
+        Label label_PlayerName = new Label();
+        label_PlayerName.AddToClassList("label");
+        section.Add(label_PlayerName);
+        list_label_PlayerName.Add(label_PlayerName);
+
+        Label label_PlayerChip = new Label();
+        label_PlayerChip.AddToClassList("label");
+        section.Add(label_PlayerChip);
+        list_label_PlayerChip.Add(label_PlayerChip);
+    }
+
+    public void PlayerInfoBetAmountSetText(string text, int index)
+    {
+        if (list_label_BetAmount.Count < index + 1)
+        {
+            return;
+        }
+
+        list_label_BetAmount[index].text = text;
+    }
+
+    public void PlayerInfoNameSetText(string text, int index)
+    {
+        if (list_label_PlayerName.Count < index + 1)
+        {
+            return;
+        }
+
+        list_label_PlayerName[index].text = text;
+    }
+
+    public void PlayerInfoChipSetText(string text, int index)
+    {
+        if (list_label_PlayerChip.Count < index + 1)
+        {
+            return;
+        }
+
+        list_label_PlayerChip[index].text = text;
+    }
+
+    public void PlayerInfoAllInvisible()
+    {
+        foreach (var section in list_section_text)
+        {
+            section.visible = false;
+        }
+    }
+
+    public void PlayerInfoInvisible(int index)
+    {
+        if (list_section_text.Count < index + 1)
+        {
+            return;
+        }
+
+        list_section_text[index].visible = false;
+    }
+
+    public void PlayerInfoVisible(int index)
+    {
+        if (list_section_text.Count < index + 1)
+        {
+            for (int i = list_section_text.Count; i < index + 1; i++)
+            {
+                CreatePlayerInfo();
+            }
+        }
+
+        list_section_text[index].visible = true;
+    }
+
+    private void UpdatePlayerInfoPosition(Vector3 objectPosition, int index)
+    {
+        if (list_section_text.Count < index + 1)
+        {
+            return;
+        }
+
+        float xPos = Camera.main.WorldToScreenPoint(objectPosition).x;
+
+        float panelWidth = uiPlayerInfo.rootVisualElement.resolvedStyle.width;
+
+        float widthRatio = panelWidth / Screen.width;
+
+        float sectionWidthHalf = list_section_text[index].resolvedStyle.width / 2;
+
+        list_section_text[index].style.left = xPos * widthRatio - sectionWidthHalf;
+    }
+
+    public void RequestPlayerInfoPositionUpdate(Vector3 objectPosition, int index)
+    {
+        list_section_text[index].schedule.Execute(() => UpdatePlayerInfoPosition(objectPosition, index)).ExecuteLater(0);
     }
 }

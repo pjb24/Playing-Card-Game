@@ -124,6 +124,7 @@ public class PlayerTurnState : IGameState
 
         // UI 업데이트. Player Info, Card Value
         UpdateUICardValue();
+        UpdateUIChips();
 
         // PlayerTurnState 다시 진입
         GameManager.Instance.ChangeState(new PlayerTurnState());
@@ -167,10 +168,28 @@ public class PlayerTurnState : IGameState
         GameManager.Instance.ChangeState(new PlayerTurnState());
     }
 
-    public void UpdateUIChips()
+    private void UpdateUIChips()
     {
-        GameManager.Instance.uiManager.label_BetAmount.text = currentHand.BetAmount.ToString("N0");
-        GameManager.Instance.uiManager.label_PlayerChip.text = currentPlayer.Chips.ToString("N0");
+        foreach (var player in GameManager.Instance.characterManager.Players)
+        {
+            foreach (var hand in player.Hands)
+            {
+                UpdateUiChips(hand);
+            }
+        }
+    }
+
+    private void UpdateUiChips(PlayerHand hand)
+    {
+        int handIndex = GameManager.Instance.characterManager.GetHandIndex(hand);
+        GameManager.Instance.uiManager.PlayerInfoVisible(handIndex);
+
+        Vector3 targetPosition = GameManager.Instance.GetHandPosition(hand);
+        GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
+
+        GameManager.Instance.uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), handIndex);
+        GameManager.Instance.uiManager.PlayerInfoNameSetText(currentPlayer.DisplayName, handIndex);
+        GameManager.Instance.uiManager.PlayerInfoChipSetText(currentPlayer.Chips.ToString("N0"), handIndex);
     }
 
     private void UpdateUICardValue()

@@ -38,7 +38,6 @@ public class GameManager : MonoBehaviour
         deckManager = new DeckManager();
         characterManager = new CharacterManager();
 
-        uiManager.SetPlayerInfos();
         uiManager.SetCardValues();
     }
 

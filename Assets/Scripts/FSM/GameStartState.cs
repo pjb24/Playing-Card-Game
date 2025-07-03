@@ -59,26 +59,21 @@ public class GameStartState : IGameState
 
     private void UpdateUI_PlayerInfos()
     {
-        if (GameManager.Instance.characterManager.Players.Count <= 0)
-        {
-            GameManager.Instance.uiManager.label_BetAmount.visible = false;
-            GameManager.Instance.uiManager.label_PlayerName.visible = false;
-            GameManager.Instance.uiManager.label_PlayerChip.visible = false;
-        }
-        else
-        {
-            GameManager.Instance.uiManager.label_BetAmount.visible = true;
-            GameManager.Instance.uiManager.label_PlayerName.visible = true;
-            GameManager.Instance.uiManager.label_PlayerChip.visible = true;
-        }
+        GameManager.Instance.uiManager.PlayerInfoAllInvisible();
 
         foreach (var player in GameManager.Instance.characterManager.Players)
         {
             foreach (var hand in player.Hands)
             {
-                GameManager.Instance.uiManager.label_BetAmount.text = hand.BetAmount.ToString("N0");
-                GameManager.Instance.uiManager.label_PlayerName.text = player.DisplayName;
-                GameManager.Instance.uiManager.label_PlayerChip.text = player.Chips.ToString("N0");
+                int handIndex = GameManager.Instance.characterManager.GetHandIndex(hand);
+                GameManager.Instance.uiManager.PlayerInfoVisible(handIndex);
+
+                GameManager.Instance.uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), handIndex);
+                GameManager.Instance.uiManager.PlayerInfoNameSetText(player.DisplayName, handIndex);
+                GameManager.Instance.uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), handIndex);
+
+                Vector3 targetPosition = GameManager.Instance.GetHandPosition(hand);
+                GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
             }
         }
     }
