@@ -1,8 +1,7 @@
-.label_CardValue {
+.label_CardValue_Dealer {
     align-self: center;
     width: 200px;
     font-size: 40px;
-    -unity-font-style: normal;
     color: rgb(255, 255, 255);
     -unity-text-align: middle-center;
     background-color: rgb(0, 0, 0);
@@ -18,4 +17,26 @@
     border-right-color: rgb(0, 0, 0);
     border-top-color: rgb(0, 0, 0);
     border-bottom-color: rgb(0, 0, 0);
+}
+
+.label_CardValue_Player {
+    width: 200px;
+    font-size: 40px;
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-center;
+    background-color: rgb(0, 0, 0);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    top: 387px;
+    position: absolute;
 }

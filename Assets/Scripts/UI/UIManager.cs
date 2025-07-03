@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,7 +36,7 @@ public class UIManager : MonoBehaviour
     [Header("Card Values")]
     public UIDocument uiCardValue;
     public Label label_CardValue_Dealer;
-    public Label label_CardValue_Player_01;
+    private List<Label> list_label_CardValue_Player = new();
 
     public void ChangeToBetPanel()
     {
@@ -90,6 +91,69 @@ public class UIManager : MonoBehaviour
         VisualElement root = uiCardValue.rootVisualElement;
 
         label_CardValue_Dealer = root.Q<Label>("Label_CardValue_Dealer");
-        label_CardValue_Player_01 = root.Q<Label>("Label_CardValue_Player_01");
+    }
+
+    private void UpdateCardValueUIPosition(Vector3 objectPosition, int index)
+    {
+        if (list_label_CardValue_Player.Count < index + 1)
+        {
+            return;
+        }
+
+        float xPos = Camera.main.WorldToScreenPoint(objectPosition).x;
+
+        float panelWidth = uiCardValue.rootVisualElement.resolvedStyle.width;
+
+        float widthRatio = panelWidth / Screen.width;
+
+        float labelWidthHalf = list_label_CardValue_Player[index].resolvedStyle.width / 2;
+
+        list_label_CardValue_Player[index].style.left = xPos * widthRatio - labelWidthHalf;
+    }
+
+    private void CreateLabelCardValuePlayer()
+    {
+        Label label = new Label();
+        label.AddToClassList("label_CardValue_Player");
+        label.visible = false;
+        uiCardValue.rootVisualElement.Add(label);
+
+        list_label_CardValue_Player.Add(label);
+    }
+
+    public void CardValuePlayerAllInvisible()
+    {
+        foreach (var label in list_label_CardValue_Player)
+        {
+            label.visible = false;
+        }
+    }
+
+    public void CardValuePlayerSetText(string text, int index)
+    {
+        if (list_label_CardValue_Player.Count < index + 1)
+        {
+            return;
+        }
+
+        list_label_CardValue_Player[index].text = text;
+    }
+
+    public void CardValuePlayerVisible(int index)
+    {
+        if (list_label_CardValue_Player.Count < index + 1)
+        {
+            for (int i = list_label_CardValue_Player.Count; i < index + 1; i++)
+            {
+                CreateLabelCardValuePlayer();
+            }
+        }
+
+        list_label_CardValue_Player[index].visible = true;
+    }
+
+    public void RequestCardValueUIPositionUpdate(Vector3 objectPosition, int index)
+    {
+        list_label_CardValue_Player[index].schedule.Execute(() => UpdateCardValueUIPosition(objectPosition, index)).ExecuteLater(0);
     }
 }

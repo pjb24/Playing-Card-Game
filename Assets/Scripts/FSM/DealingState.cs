@@ -34,10 +34,15 @@ public class DealingState : IGameState
                 hand.AddCard(card);
                 GameManager.Instance.InstancingCardToPlayer(card, hand);
 
-                yield return new WaitForSeconds(0.3f);
+                int handIndex = GameManager.Instance.characterManager.GetHandIndex(hand);
+                GameManager.Instance.uiManager.CardValuePlayerVisible(handIndex);
 
-                GameManager.Instance.uiManager.label_CardValue_Player_01.visible = true;
-                GameManager.Instance.uiManager.label_CardValue_Player_01.text = hand.GetValue().ToString();
+                Vector3 targetPosition = GameManager.Instance.GetHandPosition(hand);
+                GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate(targetPosition, handIndex);
+
+                GameManager.Instance.uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
+
+                yield return new WaitForSeconds(0.3f);
             }
         }
 
@@ -46,10 +51,10 @@ public class DealingState : IGameState
         dealer.Hand.AddCard(dealerCard1);
         GameManager.Instance.InstancingCardToDealer(dealerCard1, dealer.Hand);
 
-        yield return new WaitForSeconds(0.3f);
-
         GameManager.Instance.uiManager.label_CardValue_Dealer.visible = true;
         GameManager.Instance.uiManager.label_CardValue_Dealer.text = dealer.Hand.GetValue().ToString();
+        
+        yield return new WaitForSeconds(0.3f);
 
         // Player Second Card
         foreach (var player in players)
@@ -60,16 +65,18 @@ public class DealingState : IGameState
                 hand.AddCard(card);
                 GameManager.Instance.InstancingCardToPlayer(card, hand);
 
-                yield return new WaitForSeconds(0.3f);
+                int handIndex = GameManager.Instance.characterManager.GetHandIndex(hand);
 
                 if (hand.IsBlackjack())
                 {
-                    GameManager.Instance.uiManager.label_CardValue_Player_01.text = "Blackjack";
+                    GameManager.Instance.uiManager.CardValuePlayerSetText("Blackjack", handIndex);
                 }
                 else
                 {
-                    GameManager.Instance.uiManager.label_CardValue_Player_01.text = hand.GetValue().ToString();
+                    GameManager.Instance.uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
                 }
+
+                yield return new WaitForSeconds(0.3f);
             }
         }
 

@@ -86,6 +86,6 @@ public class GameStartState : IGameState
     private void UpdateUI_CardValues()
     {
         GameManager.Instance.uiManager.label_CardValue_Dealer.visible = false;
-        GameManager.Instance.uiManager.label_CardValue_Player_01.visible = false;
+        GameManager.Instance.uiManager.CardValuePlayerAllInvisible();
     }
 }

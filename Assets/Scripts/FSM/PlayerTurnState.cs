@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class PlayerTurnState : IGameState
 {
@@ -35,6 +36,9 @@ public class PlayerTurnState : IGameState
             Card currentHandCard = GameManager.Instance.deckManager.DrawCard();
             currentHand.AddCard(currentHandCard);
             GameManager.Instance.InstancingCardToPlayer(currentHandCard, currentHand);
+
+            int handIndex = GameManager.Instance.characterManager.GetHandIndex(currentHand);
+            GameManager.Instance.uiManager.CardValuePlayerSetText(currentHand.GetValue().ToString(), handIndex);
         }
 
         GameManager.Instance.uiManager.ChangeToPlayerActionPanel();
@@ -65,7 +69,8 @@ public class PlayerTurnState : IGameState
         currentHand.AddCard(card);
         GameManager.Instance.InstancingCardToPlayer(card, currentHand);
 
-        GameManager.Instance.uiManager.label_CardValue_Player_01.text = currentHand.GetValue().ToString();
+        int handIndex = GameManager.Instance.characterManager.GetHandIndex(currentHand);
+        GameManager.Instance.uiManager.CardValuePlayerSetText(currentHand.GetValue().ToString(), handIndex);
 
         if (currentHand.IsBust())
         {
@@ -118,6 +123,7 @@ public class PlayerTurnState : IGameState
         GameManager.Instance.chipFactory.UpdateAllChipsPosition();
 
         // UI 업데이트. Player Info, Card Value
+        UpdateUICardValue();
 
         // PlayerTurnState 다시 진입
         GameManager.Instance.ChangeState(new PlayerTurnState());
@@ -148,7 +154,8 @@ public class PlayerTurnState : IGameState
         currentHand.AddCard(card);
         GameManager.Instance.InstancingCardToPlayer(card, currentHand);
 
-        GameManager.Instance.uiManager.label_CardValue_Player_01.text = currentHand.GetValue().ToString();
+        int handIndex = GameManager.Instance.characterManager.GetHandIndex(currentHand);
+        GameManager.Instance.uiManager.CardValuePlayerSetText(currentHand.GetValue().ToString(), handIndex);
 
         // Move to next hand
         NextHand();
@@ -164,5 +171,27 @@ public class PlayerTurnState : IGameState
     {
         GameManager.Instance.uiManager.label_BetAmount.text = currentHand.BetAmount.ToString("N0");
         GameManager.Instance.uiManager.label_PlayerChip.text = currentPlayer.Chips.ToString("N0");
+    }
+
+    private void UpdateUICardValue()
+    {
+        foreach (var player in GameManager.Instance.characterManager.Players)
+        {
+            foreach (var hand in player.Hands)
+            {
+                UpdateUICardValue(hand);
+            }
+        }
+    }
+
+    private void UpdateUICardValue(PlayerHand hand)
+    {
+        int handIndex = GameManager.Instance.characterManager.GetHandIndex(hand);
+        GameManager.Instance.uiManager.CardValuePlayerVisible(handIndex);
+
+        Vector3 targetPosition = GameManager.Instance.GetHandPosition(hand);
+        GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate(targetPosition, handIndex);
+
+        GameManager.Instance.uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
     }
 }
