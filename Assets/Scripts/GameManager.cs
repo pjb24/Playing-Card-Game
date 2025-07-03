@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public Transform deckPosition;
     public Transform dealerHandPosition;
     [SerializeField] private Transform playerHandPositionRoot;
+    public Transform PlayerHandPositionRoot => playerHandPositionRoot;
     [SerializeField] private float playerHandPositionSpacing = 3f;
 
     public float cardOffsetX = 0.2f;
@@ -74,13 +75,7 @@ public class GameManager : MonoBehaviour
     {
         int cardObjIndex = hand.cardObjects.IndexOf(cardObj);
 
-        int handIndex = characterManager.GetHandIndex(hand);
-        int handCount = characterManager.GetHandCount();
-
-        Vector3 targetPosition;
-        targetPosition.x = GetHandPosition(handIndex, handCount, playerHandPositionSpacing);
-        targetPosition.y = playerHandPositionRoot.position.y;
-        targetPosition.z = playerHandPositionRoot.position.z;
+        Vector3 targetPosition = GetHandPosition(hand);
 
         MoveCardToHand(cardObj, targetPosition + new Vector3(cardObjIndex * cardOffsetX, cardObjIndex * cardOffsetY, 0));
     }
@@ -124,18 +119,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private float GetHandPosition(int index, int totalHands, float spacing = 3f)
-    {
-        float centerOffset = (totalHands - 1) * spacing * 0.5f;
-        return index * spacing - centerOffset;
-    }
-
-    public float GetHandPosition(PlayerHand hand)
+    public Vector3 GetHandPosition(PlayerHand hand)
     {
         int handIndex = characterManager.GetHandIndex(hand);
         int handCount = characterManager.GetHandCount();
 
         float centerOffset = (handCount - 1) * playerHandPositionSpacing * 0.5f;
-        return handIndex * playerHandPositionSpacing - centerOffset;
+
+        float xPos = handIndex * playerHandPositionSpacing - centerOffset;
+
+        Vector3 handPosition;
+        handPosition.x = xPos;
+        handPosition.y = playerHandPositionRoot.position.y;
+        handPosition.z = playerHandPositionRoot.position.z;
+
+        return handPosition;
     }
 }

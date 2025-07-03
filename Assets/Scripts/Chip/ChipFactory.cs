@@ -92,7 +92,7 @@ public class ChipFactory : MonoBehaviour
     {
         int typeCount = hand.GetChipTypeCount();
 
-        float handPosition = GameManager.Instance.GetHandPosition(hand);
+        Vector3 handPosition = GameManager.Instance.GetHandPosition(hand);
 
         List<E_ChipType> tempListChipType = new();
 
@@ -105,7 +105,7 @@ public class ChipFactory : MonoBehaviour
             destination.y = bettingPositionRoot.position.y;
             destination.z = bettingPositionRoot.position.z;
 
-            destination.x += handPosition;
+            destination.x += handPosition.x;
 
             int chipTypeCount = 0;
             foreach (var chipType in tempListChipType)
