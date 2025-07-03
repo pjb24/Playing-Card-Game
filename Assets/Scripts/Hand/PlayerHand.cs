@@ -32,6 +32,16 @@ public class PlayerHand : Hand
         return true;
     }
 
+    public bool CanDoubleDown()
+    {
+        if (Cards.Count != 2)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public void AddChip(ChipView chip)
     {
         listChips.Add(chip);

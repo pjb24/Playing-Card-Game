@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class PlayerTurnState : IGameState
 {
@@ -134,6 +133,11 @@ public class PlayerTurnState : IGameState
     {
         // Check player chip
         if (currentPlayer.Chips < currentHand.BetAmount)
+        {
+            return;
+        }
+
+        if (!currentHand.CanDoubleDown())
         {
             return;
         }
