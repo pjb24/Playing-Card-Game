@@ -16,14 +16,21 @@ public class FOVManager : MonoBehaviour
     [SerializeField] private float targetAspect = 20f / 9f;
 
     [SerializeField] private E_AspectOption aspectOption = E_AspectOption.FixedHorizontal;
+    public E_AspectOption AspectOption => aspectOption;
+
+    private float currentAspect;
+    private float scaleHeight;
+    public float ScaleHeight => scaleHeight;
+    private float scaledY = 0f;
+    public float ScaledY => scaledY;
 
     private void Start()
     {
-        float currentAspect = (float)Screen.width / Screen.height;
+        currentAspect = (float)Screen.width / Screen.height;
 
         if (aspectOption == E_AspectOption.FixedHorizontal)
         {
-            float scaleHeight = currentAspect / targetAspect;
+            scaleHeight = currentAspect / targetAspect;
 
             if (scaleHeight < 1.0f)
             {
@@ -32,6 +39,7 @@ public class FOVManager : MonoBehaviour
                 rect.height = scaleHeight;
                 rect.x = 0;
                 rect.y = (1.0f - scaleHeight) / 2.0f;
+                scaledY = rect.y;
                 cam.rect = rect;
             }
             else

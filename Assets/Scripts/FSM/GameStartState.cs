@@ -59,13 +59,14 @@ public class GameStartState : IGameState
 
     private void UpdateUI_PlayerInfos()
     {
-        GameManager.Instance.uiManager.PlayerInfoAllInvisible();
+        GameManager.Instance.uiManager.RemoveAllPlayerInfos();
 
         foreach (var player in GameManager.Instance.characterManager.Players)
         {
             foreach (var hand in player.Hands)
             {
                 int handIndex = GameManager.Instance.characterManager.GetHandIndex(hand);
+                GameManager.Instance.uiManager.CreatePlayerInfo(handIndex);
                 GameManager.Instance.uiManager.PlayerInfoVisible(handIndex);
 
                 GameManager.Instance.uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), handIndex);
@@ -73,14 +74,15 @@ public class GameStartState : IGameState
                 GameManager.Instance.uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), handIndex);
 
                 Vector3 targetPosition = GameManager.Instance.GetHandPosition(hand);
-                GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
+                GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate_Register(targetPosition, handIndex);
+                GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate_Y_Register(handIndex);
             }
         }
     }
 
     private void UpdateUI_CardValues()
     {
-        GameManager.Instance.uiManager.label_CardValue_Dealer.visible = false;
-        GameManager.Instance.uiManager.CardValuePlayerAllInvisible();
+        GameManager.Instance.uiManager.RemoveDealerCardValue();
+        GameManager.Instance.uiManager.RemoveAllLabelCardValue();
     }
 }

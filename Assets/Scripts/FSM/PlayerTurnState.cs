@@ -99,6 +99,11 @@ public class PlayerTurnState : IGameState
         // 새로운 핸드를 현재 핸드의 오른편에 추가
         PlayerHand newHand = currentPlayer.InsertHand(currentPlayer.Hands.IndexOf(currentHand) + 1);
 
+        // 핸드에 맞는 UI Insert
+        int newHandIndex = GameManager.Instance.characterManager.GetHandIndex(newHand);
+        GameManager.Instance.uiManager.CreateLabelCardValuePlayer(newHandIndex);
+        GameManager.Instance.uiManager.CreatePlayerInfo(newHandIndex);
+
         // 새로운 핸드에 베팅 입력
         currentPlayer.PlaceBet(newHand, currentHand.BetAmount);
 
@@ -124,6 +129,9 @@ public class PlayerTurnState : IGameState
         // UI 업데이트. Player Info, Card Value
         UpdateUICardValue();
         UpdateUIChips();
+
+        GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate_Y_Register(newHandIndex);
+        GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate_Y_Register(newHandIndex);
 
         // PlayerTurnState 다시 진입
         GameManager.Instance.ChangeState(new PlayerTurnState());
@@ -152,14 +160,16 @@ public class PlayerTurnState : IGameState
 
         GameManager.Instance.chipFactory.UpdateHandChipPosition(currentHand);
 
+        int handIndex = GameManager.Instance.characterManager.GetHandIndex(currentHand);
+
         UpdateUIChips();
+        GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate_Y(handIndex);
 
         // Draw card
         Card card = GameManager.Instance.deckManager.DrawCard();
         currentHand.AddCard(card);
         GameManager.Instance.InstancingCardToPlayer(card, currentHand);
 
-        int handIndex = GameManager.Instance.characterManager.GetHandIndex(currentHand);
         GameManager.Instance.uiManager.CardValuePlayerSetText(currentHand.GetValue().ToString(), handIndex);
 
         // Move to next hand

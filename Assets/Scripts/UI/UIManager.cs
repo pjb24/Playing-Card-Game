@@ -6,6 +6,8 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] private FOVManager fovManager;
+
     [Header("Panels")]
     public UIDocument uiPanel;
     public VisualTreeAsset betPanel;
@@ -36,8 +38,8 @@ public class UIManager : MonoBehaviour
     private List<Label> list_label_PlayerChip = new();
 
     [Header("Card Values")]
-    public UIDocument uiCardValue;
-    public Label label_CardValue_Dealer;
+    [SerializeField] private UIDocument uiCardValue;
+    private Label label_CardValue_Dealer;
     private List<Label> list_label_CardValue_Player = new();
 
     public void ChangeToBetPanel()
@@ -78,13 +80,6 @@ public class UIManager : MonoBehaviour
         button_DoubleDown = section_Bottom.Q<Button>("Button_DoubleDown");
     }
 
-    public void SetCardValues()
-    {
-        VisualElement root = uiCardValue.rootVisualElement;
-
-        label_CardValue_Dealer = root.Q<Label>("Label_CardValue_Dealer");
-    }
-
     private void UpdateCardValueUIPosition(Vector3 objectPosition, int index)
     {
         if (list_label_CardValue_Player.Count < index + 1)
@@ -103,22 +98,42 @@ public class UIManager : MonoBehaviour
         list_label_CardValue_Player[index].style.left = xPos * widthRatio - labelWidthHalf;
     }
 
-    private void CreateLabelCardValuePlayer()
+    private void UpdateCardValueUIPosition_Y(int index)
+    {
+        float panelHeight = uiCardValue.rootVisualElement.resolvedStyle.height;
+        float scaledPanelY = panelHeight * fovManager.ScaledY;
+
+        float heightRatio;
+        if (fovManager.ScaleHeight <= 1.0f)
+        {
+            heightRatio = 1.0f;
+        }
+        else
+        {
+            heightRatio = panelHeight / Screen.height;
+        }
+        float yPos = list_label_CardValue_Player[index].resolvedStyle.top;
+        list_label_CardValue_Player[index].style.top = yPos * heightRatio + scaledPanelY;
+    }
+
+    public void CreateLabelCardValuePlayer(int index)
     {
         Label label = new Label();
         label.AddToClassList("label_CardValue_Player");
         label.visible = false;
         uiCardValue.rootVisualElement.Add(label);
 
-        list_label_CardValue_Player.Add(label);
+        list_label_CardValue_Player.Insert(index, label);
     }
 
-    public void CardValuePlayerAllInvisible()
+    public void RemoveAllLabelCardValue()
     {
         foreach (var label in list_label_CardValue_Player)
         {
-            label.visible = false;
+            uiCardValue.rootVisualElement.Remove(label);
         }
+
+        list_label_CardValue_Player.Clear();
     }
 
     public void CardValuePlayerSetText(string text, int index)
@@ -135,10 +150,7 @@ public class UIManager : MonoBehaviour
     {
         if (list_label_CardValue_Player.Count < index + 1)
         {
-            for (int i = list_label_CardValue_Player.Count; i < index + 1; i++)
-            {
-                CreateLabelCardValuePlayer();
-            }
+            CreateLabelCardValuePlayer(index);
         }
 
         list_label_CardValue_Player[index].visible = true;
@@ -149,28 +161,43 @@ public class UIManager : MonoBehaviour
         list_label_CardValue_Player[index].schedule.Execute(() => UpdateCardValueUIPosition(objectPosition, index)).ExecuteLater(0);
     }
 
-    private void CreatePlayerInfo()
+    public void RequestCardValueUIPositionUpdate_Y(int index)
+    {
+        list_label_CardValue_Player[index].schedule.Execute(() => UpdateCardValueUIPosition_Y(index)).ExecuteLater(0);
+    }
+
+    public void RequestCardValueUIPositionUpdate_Register(Vector3 objectPosition, int index)
+    {
+        list_label_CardValue_Player[index].RegisterCallbackOnce<GeometryChangedEvent>((evt) => UpdateCardValueUIPosition(objectPosition, index));
+    }
+
+    public void RequestCardValueUIPositionUpdate_Y_Register(int index)
+    {
+        list_label_CardValue_Player[index].RegisterCallbackOnce<GeometryChangedEvent>((evt) => UpdateCardValueUIPosition_Y(index));
+    }
+
+    public void CreatePlayerInfo(int index)
     {
         VisualElement section = new VisualElement();
         section.AddToClassList("section_text");
         section.visible = false;
         uiPlayerInfo.rootVisualElement.Add(section);
-        list_section_text.Add(section);
+        list_section_text.Insert(index, section);
 
         Label label_BetAmount = new Label();
         label_BetAmount.AddToClassList("label");
         section.Add(label_BetAmount);
-        list_label_BetAmount.Add(label_BetAmount);
+        list_label_BetAmount.Insert(index, label_BetAmount);
 
         Label label_PlayerName = new Label();
         label_PlayerName.AddToClassList("label");
         section.Add(label_PlayerName);
-        list_label_PlayerName.Add(label_PlayerName);
+        list_label_PlayerName.Insert(index, label_PlayerName);
 
         Label label_PlayerChip = new Label();
         label_PlayerChip.AddToClassList("label");
         section.Add(label_PlayerChip);
-        list_label_PlayerChip.Add(label_PlayerChip);
+        list_label_PlayerChip.Insert(index, label_PlayerChip);
     }
 
     public void PlayerInfoBetAmountSetText(string text, int index)
@@ -203,32 +230,25 @@ public class UIManager : MonoBehaviour
         list_label_PlayerChip[index].text = text;
     }
 
-    public void PlayerInfoAllInvisible()
+    public void RemoveAllPlayerInfos()
     {
         foreach (var section in list_section_text)
         {
-            section.visible = false;
-        }
-    }
-
-    public void PlayerInfoInvisible(int index)
-    {
-        if (list_section_text.Count < index + 1)
-        {
-            return;
+            uiPlayerInfo.rootVisualElement.Remove(section);
         }
 
-        list_section_text[index].visible = false;
+        list_label_BetAmount.Clear();
+        list_label_PlayerName.Clear();
+        list_label_PlayerChip.Clear();
+
+        list_section_text.Clear();
     }
 
     public void PlayerInfoVisible(int index)
     {
         if (list_section_text.Count < index + 1)
         {
-            for (int i = list_section_text.Count; i < index + 1; i++)
-            {
-                CreatePlayerInfo();
-            }
+            CreatePlayerInfo(index);
         }
 
         list_section_text[index].visible = true;
@@ -252,8 +272,96 @@ public class UIManager : MonoBehaviour
         list_section_text[index].style.left = xPos * widthRatio - sectionWidthHalf;
     }
 
+    private void UpdatePlayerInfoPosition_Y(int index)
+    {
+        float panelHeight = uiPlayerInfo.rootVisualElement.resolvedStyle.height;
+        float scaledPanelY = panelHeight * fovManager.ScaledY;
+
+        float heightRatio;
+        if (fovManager.ScaleHeight <= 1.0f)
+        {
+            heightRatio = 1.0f;
+        }
+        else
+        {
+            heightRatio = panelHeight / Screen.height;
+        }
+        float yPos = list_section_text[index].resolvedStyle.top;
+        list_section_text[index].style.top = yPos * heightRatio + scaledPanelY;
+    }
+
     public void RequestPlayerInfoPositionUpdate(Vector3 objectPosition, int index)
     {
         list_section_text[index].schedule.Execute(() => UpdatePlayerInfoPosition(objectPosition, index)).ExecuteLater(0);
+    }
+
+    public void RequestPlayerInfoPositionUpdate_Y(int index)
+    {
+        list_section_text[index].schedule.Execute(() => UpdatePlayerInfoPosition_Y(index)).ExecuteLater(0);
+    }
+
+    public void RequestPlayerInfoPositionUpdate_Register(Vector3 objectPosition, int index)
+    {
+        list_section_text[index].RegisterCallbackOnce<GeometryChangedEvent>((evt) => UpdatePlayerInfoPosition(objectPosition, index));
+    }
+
+    public void RequestPlayerInfoPositionUpdate_Y_Register(int index)
+    {
+        list_section_text[index].RegisterCallbackOnce<GeometryChangedEvent>((evt) => UpdatePlayerInfoPosition_Y(index));
+    }
+
+    public void RemoveDealerCardValue()
+    {
+        if (label_CardValue_Dealer == null)
+        {
+            return;
+        }
+
+        uiCardValue.rootVisualElement.Remove(label_CardValue_Dealer);
+
+        label_CardValue_Dealer = null;
+    }
+    
+    public void CreateLabelCardValueDealer()
+    {
+        label_CardValue_Dealer = new Label();
+        label_CardValue_Dealer.AddToClassList("label_CardValue_Dealer");
+        label_CardValue_Dealer.visible = false;
+        uiCardValue.rootVisualElement.Add(label_CardValue_Dealer);
+    }
+
+    private void UpdateCardValueDealerPosition()
+    {
+        label_CardValue_Dealer.visible = true;
+
+        float panelHeight = uiCardValue.rootVisualElement.resolvedStyle.height;
+        float scaledPanelY = panelHeight * fovManager.ScaledY;
+
+        float heightRatio;
+        if (fovManager.ScaleHeight <= 1.0f)
+        {
+            heightRatio = 1.0f;
+        }
+        else
+        {
+            heightRatio = panelHeight / Screen.height;
+        }
+        float yPos = label_CardValue_Dealer.resolvedStyle.top;
+        label_CardValue_Dealer.style.top = yPos * heightRatio + scaledPanelY;
+    }
+
+    public void RequestUpdateCardValueDealerPosition()
+    {
+        label_CardValue_Dealer.RegisterCallbackOnce<GeometryChangedEvent>((evt) => UpdateCardValueDealerPosition());
+    }
+
+    public void CardValueDealerSetText(string text)
+    {
+        if (label_CardValue_Dealer == null)
+        {
+            return;
+        }
+
+        label_CardValue_Dealer.text = text;
     }
 }

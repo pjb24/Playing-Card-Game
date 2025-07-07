@@ -24,11 +24,11 @@ public class DealerTurnState : IGameState
 
         if (GameManager.Instance.characterManager.dealer.Hand.IsBlackjack())
         {
-            GameManager.Instance.uiManager.label_CardValue_Dealer.text = "Blackjack";
+            GameManager.Instance.uiManager.CardValueDealerSetText("Blackjack");
         }
         else
         {
-            GameManager.Instance.uiManager.label_CardValue_Dealer.text = GameManager.Instance.characterManager.dealer.Hand.GetValue().ToString();
+            GameManager.Instance.uiManager.CardValueDealerSetText(GameManager.Instance.characterManager.dealer.Hand.GetValue().ToString());
         }
 
         yield return new WaitForSeconds(1f);
@@ -41,7 +41,7 @@ public class DealerTurnState : IGameState
 
             yield return new WaitForSeconds(1f);
 
-            GameManager.Instance.uiManager.label_CardValue_Dealer.text = GameManager.Instance.characterManager.dealer.Hand.GetValue().ToString();
+            GameManager.Instance.uiManager.CardValueDealerSetText(GameManager.Instance.characterManager.dealer.Hand.GetValue().ToString());
         }
 
         GameManager.Instance.ChangeState(new ResultState());

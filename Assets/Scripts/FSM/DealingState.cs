@@ -35,10 +35,12 @@ public class DealingState : IGameState
                 GameManager.Instance.InstancingCardToPlayer(card, hand);
 
                 int handIndex = GameManager.Instance.characterManager.GetHandIndex(hand);
+                GameManager.Instance.uiManager.CreateLabelCardValuePlayer(handIndex);
                 GameManager.Instance.uiManager.CardValuePlayerVisible(handIndex);
 
                 Vector3 targetPosition = GameManager.Instance.GetHandPosition(hand);
-                GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate(targetPosition, handIndex);
+                GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate_Register(targetPosition, handIndex);
+                GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate_Y_Register(handIndex);
 
                 GameManager.Instance.uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
 
@@ -51,8 +53,9 @@ public class DealingState : IGameState
         dealer.Hand.AddCard(dealerCard1);
         GameManager.Instance.InstancingCardToDealer(dealerCard1, dealer.Hand);
 
-        GameManager.Instance.uiManager.label_CardValue_Dealer.visible = true;
-        GameManager.Instance.uiManager.label_CardValue_Dealer.text = dealer.Hand.GetValue().ToString();
+        GameManager.Instance.uiManager.CreateLabelCardValueDealer();
+        GameManager.Instance.uiManager.RequestUpdateCardValueDealerPosition();
+        GameManager.Instance.uiManager.CardValueDealerSetText(dealer.Hand.GetValue().ToString());
         
         yield return new WaitForSeconds(0.3f);
 
