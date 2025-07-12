@@ -10,4 +10,5 @@
 .section_text {
     position: absolute;
     top: 737px;
+    left: -500px;
 }
