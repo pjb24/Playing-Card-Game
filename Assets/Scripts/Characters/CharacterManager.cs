@@ -8,6 +8,11 @@ public class CharacterManager
     private int currentPlayerIndex = 0;
     public Dealer dealer = new();
 
+    public Player GetPlayerByGuid(string guid)
+    {
+        return Players.Find(p => p.Id == guid);
+    }
+
     public PlayerHand GetHandFromIndex(int index)
     {
         PlayerHand hand = null;

@@ -1,5 +1,7 @@
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
+// Server To Client DTO
+
 public class WelcomeDTO
 {
     public string message { get; set; }
@@ -33,6 +35,7 @@ public class OnUserJoinedDTO
 
 public class OnPlayerRemainChipsDTO
 {
+    public string playerGuid { get; set; }
     public string chips { get; set; }
 }
 
@@ -43,6 +46,7 @@ public class OnGameStateChangedDTO
 
 public class OnBetPlacedDTO
 {
+    public string playerGuid { get; set; }
     public string playerName { get; set; }
     public int betAmount { get; set; }
     public string handId { get; set; }
@@ -55,20 +59,23 @@ public class UserLeftDTO
 
 public class OnTimeToBettingDTO
 {
+    public string playerGuid { get; set; }
     public string handId { get; set; }
 }
 
 public class OnPayoutDTO
 {
+    public string playerGuid { get; set; }
     public string handId { get; set; }
-    public string evaluationResult { get; set; }
+    public E_EvaluateResult evaluationResult { get; set; }
 }
 
 public class OnCardDealtDTO
 {
     public string playerGuid { get; set; }
     public string playerName { get; set; }
-    public string cardString { get; set; }
+    public E_Rank cardRank { get; set; }
+    public E_Suit cardSuit { get; set; }    
     public string handId { get; set; }
 }
 
@@ -88,6 +95,7 @@ public class OnActionDoneDTO
 
 public class OnHandSplitDTO
 {
+    public string playerGuid { get; set; }
     public string playerName { get; set; }
     public string handId { get; set; }
     public string newHandId { get; set; }
@@ -95,12 +103,14 @@ public class OnHandSplitDTO
 
 public class OnDealerHoleCardRevealedDTO
 {
-    public string cardString { get; set; }
+    public E_Rank cardRank { get; set; }
+    public E_Suit cardSuit { get; set; }
 }
 
 public class OnDealerCardDealtDTO
 {
-    public string cardString { get; set; }
+    public E_Rank cardRank { get; set; }
+    public E_Suit cardSuit { get; set; }
 }
 
 public class OnDealerHiddenCardDealtDTO
@@ -114,12 +124,61 @@ public class OnTimeToActionDTO
     public string playerName { get; set; }
 }
 
-public class OnHandEvaluationDTO
+public class OnAddHandToPlayerDTO
 {
     public string playerGuid { get; set; }
-    public string playerName { get; set; }
     public string handId { get; set; }
-    public string evaluationResult { get; set; }
 }
+
+public class OnGameEndDTO
+{
+}
+
+// Server To Client DTO
+
+
+// Client To Server DTO
+
+public class JoinGameDTO
+{
+    public string userName { get; set; }
+}
+
+public class StartGameDTO
+{
+}
+
+public class PlaceBetDTO
+{
+    public int amount { get; set; }
+    public string handId { get; set; }
+}
+
+public class HitDTO
+{
+    public string handId { get; set; }
+}
+
+public class StandDTO
+{
+    public string handId { get; set; }
+}
+
+public class SplitDTO
+{
+    public string handId { get; set; }
+}
+
+public class DoubleDownDTO
+{
+    public string handId { get; set; }
+}
+
+public class LeaveGameDTO
+{
+    public string gameId { get; set; }
+}
+
+// Client To Server DTO
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.

@@ -90,6 +90,6 @@ public class DealingState : IGameState
 
         yield return new WaitForSeconds(0.3f);
 
-        GameManager.Instance.stateMachine.ChangeState(new PlayerTurnState());
+        GameManager.Instance.ChangeState(new PlayerTurnState());
     }
 }

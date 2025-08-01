@@ -9,5 +9,7 @@ public class OnGameStateChangedCommand : IGameCommand
         OnGameStateChangedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnGameStateChangedDTO>(payload);
 
         Debug.Log("OnGameStateChanged, " + "게임의 State가 " + dto.state + "로 변경되었습니다.");
+
+        GameManager.Instance.ChangeState(GameStateFactory.Create(dto.state));
     }
 }

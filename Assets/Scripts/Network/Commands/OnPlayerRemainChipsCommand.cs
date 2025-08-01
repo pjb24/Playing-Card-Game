@@ -8,6 +8,10 @@ public class OnPlayerRemainChipsCommand : IGameCommand
     {
         OnPlayerRemainChipsDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnPlayerRemainChipsDTO>(payload);
 
-        Debug.Log("OnPlayerRemainChips, " + "플레이어가 소지한 칩: " + dto.chips);
+        Debug.Log("OnPlayerRemainChips, " + "플레이어 Guid: " + dto.playerGuid + "가 소지한 칩: " + dto.chips);
+
+        Player player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
+
+        player.SetPlayerChips(int.Parse(dto.chips));
     }
 }

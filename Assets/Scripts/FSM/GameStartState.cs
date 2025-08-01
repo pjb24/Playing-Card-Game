@@ -47,8 +47,7 @@ public class GameStartState : IGameState
         // Player Add
         string id = "ID_1";
         string name = "DisplayName_1";
-        int chips = 100_000_000;
-        GameManager.Instance.characterManager.AddPlayer(new Player(id, name, chips));
+        GameManager.Instance.characterManager.AddPlayer(new Player(id, name));
         UpdateUI_PlayerInfos();
 
         GameManager.Instance.PlayerJoined = true;

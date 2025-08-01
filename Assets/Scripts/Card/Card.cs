@@ -9,11 +9,13 @@ public enum E_Suit
     Hearts,
     Diamonds,
     Clovers,
+    Back,
 }
 
 // 카드 숫자
 public enum E_Rank
 {
+    Back = 0,
     Ace = 1,
     Two = 2,
     Three = 3,
@@ -32,7 +34,7 @@ public enum E_Rank
 public class Card
 {
     public E_Suit Suit { get; private set; }
-	public E_Rank Rank { get; private set; }
+    public E_Rank Rank { get; private set; }
 
 	public Card(E_Suit suit, E_Rank rank)
     {
@@ -59,5 +61,15 @@ public class Card
     public override string ToString()
     {
         return $"{Rank} of {Suit}";
+    }
+
+    public void SetRank(E_Rank rank)
+    {
+        Rank = rank;
+    }
+
+    public void SetSuit(E_Suit suit)
+    {
+        Suit = suit;
     }
 }

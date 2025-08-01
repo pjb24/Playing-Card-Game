@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
 using System.Linq;
 
-public class SignalRClient : MonoBehaviour
+public class SignalRClient
 {
     private HubConnection _connection;
     private CommandDispatcher _dispatcher;
 
-    async void Start()
+    public async void Start()
     {
         _dispatcher = new CommandDispatcher();
         RegisterCommands();
@@ -36,6 +36,11 @@ public class SignalRClient : MonoBehaviour
         {
             await _connection.StartAsync();
             Debug.Log("SignalR 연결 성공");
+
+            JoinGameDTO joinGameDTO = new JoinGameDTO();
+            joinGameDTO.userName = "DisplayName_1";
+            string joinGameJson = Newtonsoft.Json.JsonConvert.SerializeObject(joinGameDTO);
+            GameManager.Instance.SignalRClient.Execute("JoinGame", joinGameJson);
         }
         catch (System.Exception ex)
         {
@@ -51,7 +56,7 @@ public class SignalRClient : MonoBehaviour
         }
     }
 
-    private async void OnApplicationQuit()
+    public async void OnApplicationQuit()
     {
         if (_connection != null)
         {
@@ -81,7 +86,16 @@ public class SignalRClient : MonoBehaviour
         _dispatcher.RegisterCommand("OnDealerHoleCardRevealed", new OnDealerHoleCardRevealedCommand());
         _dispatcher.RegisterCommand("OnDealerCardDealt", new OnDealerCardDealtCommand());
         _dispatcher.RegisterCommand("OnDealerHiddenCardDealt", new OnDealerHiddenCardDealtCommand());
-        _dispatcher.RegisterCommand("OnTimeToAction", new OnTimeToActionCommand());
-        _dispatcher.RegisterCommand("OnHandEvaluation", new OnHandEvaluationCommand());
+        _dispatcher.RegisterCommand("OnAddHandToPlayer", new OnAddHandToPlayerCommand());
+        _dispatcher.RegisterCommand("OnGameEnd", new OnGameEndCommand());
+
+        OnTimeToActionCommand onTimeToActionCommand = new();
+        _dispatcher.RegisterCommand("OnTimeToAction", onTimeToActionCommand);
+        GameManager.Instance.SetOnTimeToActionCommandInstance(onTimeToActionCommand);
+    }
+
+    public async void Execute(string commandName, string payload)
+    {
+        await _connection.InvokeAsync("ExecuteCommand", commandName, payload);
     }
 }

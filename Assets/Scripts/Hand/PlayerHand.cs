@@ -11,6 +11,14 @@ public class PlayerHand : Hand
     private List<ChipView> listChips = new();
     public IReadOnlyList<ChipView> ListChips => listChips;
 
+    private string _id;
+    public string Id => _id;
+
+    public void SetHandId(string id)
+    {
+        _id = id;
+    }
+
     public void Bet(int amount)
     {
         BetAmount = amount;

@@ -17,13 +17,27 @@ public class Player
     public bool IsFinishedTurn { get; set; } = false;
     public bool IsFinishedBetting { get; set; } = false;
 
-    public Player(string id, string displayName, int initialChips)
+    public Player(string id, string displayName)
     {
         Id = id;
         DisplayName = displayName;
-        Chips = initialChips;
+    }
 
-        Hands.Add(new PlayerHand());
+    public PlayerHand GetHandByGuid(string guid)
+    {
+        return Hands.Find(h => h.Id == guid);
+    }
+
+    public void AddHand(string handId)
+    {
+        PlayerHand hand = new();
+        hand.SetHandId(handId);
+        Hands.Add(hand);
+    }
+
+    public void SetPlayerChips(int chips)
+    {
+        Chips = chips;
     }
 
     public PlayerHand GetActiveHand()
@@ -113,6 +127,14 @@ public class Player
     public PlayerHand InsertHand(int index)
     {
         PlayerHand hand = new PlayerHand();
+        Hands.Insert(index, hand);
+        return hand;
+    }
+
+    public PlayerHand InsertHand(int index, string handId)
+    {
+        PlayerHand hand = new PlayerHand();
+        hand.SetHandId(handId);
         Hands.Insert(index, hand);
         return hand;
     }

@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public GameStateMachine stateMachine;
+    private GameStateMachine stateMachine;
 
     public UIManager uiManager;
     public DeckManager deckManager;
@@ -25,6 +25,11 @@ public class GameManager : MonoBehaviour
 
     public ChipFactory chipFactory;
 
+    private SignalRClient _signalRClient;
+    public SignalRClient SignalRClient => _signalRClient;
+
+    private OnTimeToActionCommand _onTimeToActionCommand;
+
     public bool PlayerJoined { get; set; } = false;
 
     private void Awake()
@@ -37,16 +42,23 @@ public class GameManager : MonoBehaviour
         stateMachine = new GameStateMachine();
         deckManager = new DeckManager();
         characterManager = new CharacterManager();
+
+        _signalRClient = new SignalRClient();
     }
 
     private void Start()
     {
-        stateMachine.ChangeState(new GameStartState());
+        _signalRClient.Start();
     }
 
     private void Update()
     {
         stateMachine.Update();
+    }
+
+    private void OnApplicationQuit()
+    {
+        _signalRClient.OnApplicationQuit();
     }
 
     public void ChangeState(IGameState newState)
@@ -131,5 +143,15 @@ public class GameManager : MonoBehaviour
         handPosition.z = playerHandPositionRoot.position.z;
 
         return handPosition;
+    }
+
+    public void SetOnTimeToActionCommandInstance(OnTimeToActionCommand instance)
+    {
+        _onTimeToActionCommand = instance;
+    }
+
+    public void CallRemoveListenersOnTimeToActionCommandInstance()
+    {
+        _onTimeToActionCommand.RemoveListeners();
     }
 }
