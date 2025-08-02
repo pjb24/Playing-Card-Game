@@ -10,7 +10,7 @@ public class OnCardDealtCommand : IGameCommand
     {
         OnCardDealtDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnCardDealtDTO>(payload);
 
-        Debug.Log("OnCardDealt, " + "ÇÃ·¹ÀÌ¾î: " + dto.playerName + "ÀÇ " + "ÇÚµå ID: " + dto.handId + "¿¡ " + "Ä«µå " + dto.cardRank + " of " + dto.cardSuit + "À»/¸¦ ºĞ¹èÇÕ´Ï´Ù." + " ÇÃ·¹ÀÌ¾î Guid: " + dto.playerGuid);
+        Debug.Log("OnCardDealt, " + "í”Œë ˆì´ì–´: " + dto.playerName + "ì˜ " + "í•¸ë“œ ID: " + dto.handId + "ì— " + "ì¹´ë“œ " + dto.cardRank + " of " + dto.cardSuit + "ì„/ë¥¼ ë¶„ë°°í•©ë‹ˆë‹¤." + " í”Œë ˆì´ì–´ Guid: " + dto.playerGuid);
 
         Player player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
 

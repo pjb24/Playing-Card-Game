@@ -29,7 +29,7 @@ public class Hand
         cardObjects.Clear();
     }
 
-    // ÇÚµåÀÇ Á¡¼ö °è»ê
+    // í•¸ë“œì˜ ì ìˆ˜ ê³„ì‚°
     public int GetValue()
     {
         int total = 0;

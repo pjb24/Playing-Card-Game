@@ -8,7 +8,7 @@ public class OnAddHandToPlayerCommand : IGameCommand
     {
         OnAddHandToPlayerDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnAddHandToPlayerDTO>(payload);
 
-        Debug.Log("OnAddHandToPlayer, " + "ÇÃ·¹ÀÌ¾î Guid: " + dto.playerGuid + "¿¡ " + "ÇÚµå ID: " + dto.handId + "¸¦ Ãß°¡ÇÕ´Ï´Ù.");
+        Debug.Log("OnAddHandToPlayer, " + "í”Œë ˆì´ì–´ Guid: " + dto.playerGuid + "ì— " + "í•¸ë“œ ID: " + dto.handId + "ë¥¼ ì¶”ê°€í•©ë‹ˆë‹¤.");
 
         Player player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
         player.AddHand(dto.handId);

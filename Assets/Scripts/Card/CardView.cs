@@ -11,7 +11,7 @@ public class CardView : MonoBehaviour
 
     private Material runtimeMaterial;
 
-    public string textureProperty = "_CardFront";   // »ç¿ëµÈ Shader GraphÀÇ Property¿¡¼­ ÁöÁ¤ÇÑ Reference ÀÌ¸§.
+    public string textureProperty = "_CardFront";   // ì‚¬ìš©ëœ Shader Graphì˜ Propertyì—ì„œ ì§€ì •í•œ Reference ì´ë¦„.
 
     public void SetCard(Card card, bool isHidden = false)
     {
@@ -39,18 +39,18 @@ public class CardView : MonoBehaviour
     private Texture2D GetCardTexture(Card card)
     {
         string textureName = $"{card.Rank}_of_{card.Suit}";
-        // Resources Æú´õ ¾Æ·¡¿¡¼­ °Ë»ö
+        // Resources í´ë” ì•„ë˜ì—ì„œ ê²€ìƒ‰
         return Resources.Load<Texture2D>($"Textures/PlayingCards/{textureName}");
     }
 
     private Texture2D GetBackTexture()
     {
-        // Resources Æú´õ ¾Æ·¡¿¡¼­ °Ë»ö
+        // Resources í´ë” ì•„ë˜ì—ì„œ ê²€ìƒ‰
         return Resources.Load<Texture2D>($"Textures/PlayingCards/Back");
     }
 
     public override string ToString()
     {
-        return card.ToString(); // "Ace_of_Diamonds" Ã³·³ Ãâ·ÂµÊ.
+        return card.ToString(); // "Ace_of_Diamonds" ì²˜ëŸ¼ ì¶œë ¥ë¨.
     }
 }

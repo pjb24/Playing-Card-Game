@@ -8,6 +8,6 @@ public class OnUserJoinedCommand : IGameCommand
     {
         OnUserJoinedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnUserJoinedDTO>(payload);
 
-        Debug.Log("OnUserJoined, " + "À¯Àú°¡ °ÔÀÓ¿¡ ÀÔÀåÇÏ¿´½À´Ï´Ù." + " À¯Àú ÀÌ¸§: " + dto.userName);
+        Debug.Log("OnUserJoined, " + "ìœ ì €ê°€ ê²Œì„ì— ì…ì¥í•˜ì˜€ìŠµë‹ˆë‹¤." + " ìœ ì € ì´ë¦„: " + dto.userName);
     }
 }

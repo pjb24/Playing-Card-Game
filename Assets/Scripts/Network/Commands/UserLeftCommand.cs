@@ -8,6 +8,6 @@ public class UserLeftCommand : IGameCommand
     {
         UserLeftDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<UserLeftDTO>(payload);
 
-        Debug.Log("UserLeft, " + "ConnectionId: " + dto.connectionId + " À¯Àú°¡ °ÔÀÓ¿¡¼­ ÅğÀåÇÏ¿´½À´Ï´Ù.");
+        Debug.Log("UserLeft, " + "ConnectionId: " + dto.connectionId + " ìœ ì €ê°€ ê²Œì„ì—ì„œ í‡´ì¥í•˜ì˜€ìŠµë‹ˆë‹¤.");
     }
 }

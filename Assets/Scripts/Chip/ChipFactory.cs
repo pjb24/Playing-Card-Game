@@ -14,9 +14,9 @@ public class ChipFactory : MonoBehaviour
 
     [SerializeField] private float chipOffsetY = 0.1f;
 
-    // °¢°¢ÀÇ Å¸ÀÔ¿¡ ¸Â´Â Ä¨À» »ı¼ºÇÑ´Ù.
-    // ÇÏÀ§ Å¸ÀÔÀÇ Ä¨µéÀÌ ¸ğ¿©¼­ »óÀ§ Å¸ÀÔÀÇ Ä¨ÀÇ °¡Ä¡¸¦ ³Ñ±â¸é
-    // ÇÏÀ§ Å¸ÀÔÀÇ Ä¨µéÀ» Á¦°ÅÇÏ°í »óÀ§ Å¸ÀÔÀÇ Ä¨À» 1°³ »ı¼ºÇÑ´Ù.
+    // ê°ê°ì˜ íƒ€ì…ì— ë§ëŠ” ì¹©ì„ ìƒì„±í•œë‹¤.
+    // í•˜ìœ„ íƒ€ì…ì˜ ì¹©ë“¤ì´ ëª¨ì—¬ì„œ ìƒìœ„ íƒ€ì…ì˜ ì¹©ì˜ ê°€ì¹˜ë¥¼ ë„˜ê¸°ë©´
+    // í•˜ìœ„ íƒ€ì…ì˜ ì¹©ë“¤ì„ ì œê±°í•˜ê³  ìƒìœ„ íƒ€ì…ì˜ ì¹©ì„ 1ê°œ ìƒì„±í•œë‹¤.
 
     public void CreateChipType1(PlayerHand hand)
     {
@@ -87,7 +87,7 @@ public class ChipFactory : MonoBehaviour
         hand.AddChip(chipView);
     }
 
-    // Ä¨µéÀÇ À§Ä¡¸¦ Á¶Á¤ÇÑ´Ù.
+    // ì¹©ë“¤ì˜ ìœ„ì¹˜ë¥¼ ì¡°ì •í•œë‹¤.
     public void UpdateHandChipPosition(PlayerHand hand)
     {
         int typeCount = hand.GetChipTypeCount();
@@ -126,7 +126,7 @@ public class ChipFactory : MonoBehaviour
         tempListChipType.Clear();
     }
 
-    // Ä¨µéÀ» Á¦°ÅÇÑ´Ù.
+    // ì¹©ë“¤ì„ ì œê±°í•œë‹¤.
     public void ResetChips(PlayerHand hand)
     {
         ResetChipType1(hand);

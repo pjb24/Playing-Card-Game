@@ -9,9 +9,9 @@ public class OnDealerHoleCardRevealedCommand : IGameCommand
     {
         OnDealerHoleCardRevealedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnDealerHoleCardRevealedDTO>(payload);
 
-        Debug.Log("OnDealerHoleCardRevealed, " + "µô·¯ÀÇ ¼û°ÜÁø Ä«µå: " + dto.cardRank + " of " + dto.cardSuit + "À»/¸¦ °ø°³ÇÕ´Ï´Ù.");
+        Debug.Log("OnDealerHoleCardRevealed, " + "ë”œëŸ¬ì˜ ìˆ¨ê²¨ì§„ ì¹´ë“œ: " + dto.cardRank + " of " + dto.cardSuit + "ì„/ë¥¼ ê³µê°œí•©ë‹ˆë‹¤.");
 
-        // µô·¯ÀÇ È÷µç Ä«µå ¿ÀÇÂ
+        // ë”œëŸ¬ì˜ íˆë“  ì¹´ë“œ ì˜¤í”ˆ
         Card hiddenCard = GameManager.Instance.characterManager.dealer.Hand.Cards[1];
 
         hiddenCard.SetRank(dto.cardRank);

@@ -8,6 +8,6 @@ public class UserDisconnectedCommand : IGameCommand
     {
         UserDisconnectedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<UserDisconnectedDTO>(payload);
 
-        Debug.Log("UserDisconnected, " + "ConnectionId: " + dto.message + " À¯ÀúÀÇ ¿¬°áÀÌ ÇØÁ¦µÇ¾ú½À´Ï´Ù.");
+        Debug.Log("UserDisconnected, " + "ConnectionId: " + dto.message + " ìœ ì €ì˜ ì—°ê²°ì´ í•´ì œë˜ì—ˆìŠµë‹ˆë‹¤.");
     }
 }

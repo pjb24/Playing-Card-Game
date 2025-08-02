@@ -19,7 +19,7 @@ public class DealerTurnState : IGameState
 
     private IEnumerator DealerBehaviorCoroutine()
     {
-        // µô·¯ÀÇ È÷µç Ä«µå ¿ÀÇÂ
+        // ë”œëŸ¬ì˜ íˆë“  ì¹´ë“œ ì˜¤í”ˆ
         GameManager.Instance.RevealHoleCard();
 
         if (GameManager.Instance.characterManager.dealer.Hand.IsBlackjack())

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class DealerHand : Hand
 {
-    // ¼ÒÇÁÆ® 17ÀÏ ¶§ È÷Æ® ÇÒÁö ¿©ºÎ
+    // ì†Œí”„íŠ¸ 17ì¼ ë•Œ íˆíŠ¸ í• ì§€ ì—¬ë¶€
     public bool DealerHitOnSoftCount => true;
 
     public int SoftCount = 17;
 
-    // µô·¯°¡ È÷Æ®ÇØ¾ßÇÏ´ÂÁö È®ÀÎ
+    // ë”œëŸ¬ê°€ íˆíŠ¸í•´ì•¼í•˜ëŠ”ì§€ í™•ì¸
     public bool ShouldHit()
     {
         int value = GetValue();
@@ -27,8 +27,8 @@ public class DealerHand : Hand
         return false;
     }
 
-    // ÇÚµå°¡ Soft 17 ÀÎÁö È®ÀÎ
-    // Ace¸¦ 11·Î »ç¿ëÇÑ 17À» ÀÇ¹Ì
+    // í•¸ë“œê°€ Soft 17 ì¸ì§€ í™•ì¸
+    // Aceë¥¼ 11ë¡œ ì‚¬ìš©í•œ 17ì„ ì˜ë¯¸
     public bool IsSoftCount()
     {
         int total = 0;

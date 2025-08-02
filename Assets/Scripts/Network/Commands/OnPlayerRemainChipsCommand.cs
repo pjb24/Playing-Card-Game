@@ -8,7 +8,7 @@ public class OnPlayerRemainChipsCommand : IGameCommand
     {
         OnPlayerRemainChipsDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnPlayerRemainChipsDTO>(payload);
 
-        Debug.Log("OnPlayerRemainChips, " + "ÇÃ·¹ÀÌ¾î Guid: " + dto.playerGuid + "°¡ ¼ÒÁöÇÑ Ä¨: " + dto.chips);
+        Debug.Log("OnPlayerRemainChips, " + "í”Œë ˆì´ì–´ Guid: " + dto.playerGuid + "ê°€ ì†Œì§€í•œ ì¹©: " + dto.chips);
 
         Player player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
 

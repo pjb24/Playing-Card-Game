@@ -8,6 +8,6 @@ public class OnPayoutCommand : IGameCommand
     {
         OnPayoutDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnPayoutDTO>(payload);
 
-        Debug.Log("OnPayout, " + "ÇÃ·¹ÀÌ¾î Guid: " + dto.playerGuid + " ÇÚµå ID: " + dto.handId + "¿¡ " + "°á°ú: " + dto.evaluationResult.ToString() + "·Î Á¤»êÀ» ¼öÇàÇÕ´Ï´Ù.");
+        Debug.Log("OnPayout, " + "í”Œë ˆì´ì–´ Guid: " + dto.playerGuid + " í•¸ë“œ ID: " + dto.handId + "ì— " + "ê²°ê³¼: " + dto.evaluationResult.ToString() + "ë¡œ ì •ì‚°ì„ ìˆ˜í–‰í•©ë‹ˆë‹¤.");
     }
 }

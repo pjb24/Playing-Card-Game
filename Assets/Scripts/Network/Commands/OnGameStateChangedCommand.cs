@@ -8,7 +8,7 @@ public class OnGameStateChangedCommand : IGameCommand
     {
         OnGameStateChangedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnGameStateChangedDTO>(payload);
 
-        Debug.Log("OnGameStateChanged, " + "°ÔÀÓÀÇ State°¡ " + dto.state + "·Î º¯°æµÇ¾ú½À´Ï´Ù.");
+        Debug.Log("OnGameStateChanged, " + "ê²Œì„ì˜ Stateê°€ " + dto.state + "ë¡œ ë³€ê²½ë˜ì—ˆìŠµë‹ˆë‹¤.");
 
         GameManager.Instance.ChangeState(GameStateFactory.Create(dto.state));
     }

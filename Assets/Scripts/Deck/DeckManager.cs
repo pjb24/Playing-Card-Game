@@ -8,16 +8,16 @@ public class DeckManager
     private int numberOfDecks;
     private System.Random rng = new System.Random();
 
-    // ³²Àº Ä«µå°¡ 18% ÀÌÇÏÀÏ °æ¿ì ¼ÅÇÃ
+    // ë‚¨ì€ ì¹´ë“œê°€ 18% ì´í•˜ì¼ ê²½ìš° ì…”í”Œ
     private float reshuffleThreshold = 0.18f;
 
-    // shoe¿¡ ³²Àº Ä«µå °³¼ö È®ÀÎ
+    // shoeì— ë‚¨ì€ ì¹´ë“œ ê°œìˆ˜ í™•ì¸
     public int RemainingCardCount => shoe.Count;
     public float RemainingRatio => (float)RemainingCardCount / (numberOfDecks * 52);
     public bool ShouldReshuffle => RemainingRatio < reshuffleThreshold;
 
 
-    // ´ÙÀ½ ¶ó¿îµå ½ÃÀÛ Àü ¼ÅÇÃ È®ÀÎ
+    // ë‹¤ìŒ ë¼ìš´ë“œ ì‹œìž‘ ì „ ì…”í”Œ í™•ì¸
     public void PrepareNextRound()
     {
         if (ShouldReshuffle)
@@ -56,8 +56,8 @@ public class DeckManager
         return cards;
     }
 
-    // ±¸¼ºµÈ µ¦À» ¼¯´Â´Ù.
-    // Fisher-Yates ¹æ½Ä
+    // êµ¬ì„±ëœ ë±ì„ ì„žëŠ”ë‹¤.
+    // Fisher-Yates ë°©ì‹
     public void Shuffle()
     {
         int n = shoe.Count;
@@ -70,13 +70,13 @@ public class DeckManager
         }
     }
 
-    // ¸Ç À§ Ä«µå¸¦ ¹ÝÈ¯ÇÏ°í shoe¿¡¼­ Á¦°ÅÇÑ´Ù.
+    // ë§¨ ìœ„ ì¹´ë“œë¥¼ ë°˜í™˜í•˜ê³  shoeì—ì„œ ì œê±°í•œë‹¤.
     public Card DrawCard()
     {
         if (shoe.Count == 0)
         {
-            // ÀÚµ¿ ¸®¼Â
-            // º¸ÅëÀº ReshuffleCardCount ÀÌÇÏ·Î ³²À¸¸é ¼ÅÇÃ
+            // ìžë™ ë¦¬ì…‹
+            // ë³´í†µì€ ReshuffleCardCount ì´í•˜ë¡œ ë‚¨ìœ¼ë©´ ì…”í”Œ
             InitializeShoe();
         }
 

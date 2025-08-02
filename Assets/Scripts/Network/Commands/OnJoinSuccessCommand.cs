@@ -9,7 +9,7 @@ public class OnJoinSuccessCommand : IGameCommand
     {
         OnJoinSuccessDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnJoinSuccessDTO>(payload);
 
-        Debug.Log("OnJoinSuccess, " + "°ÔÀÓ¿¡ ÀÔÀåÇÏ¿´½À´Ï´Ù." + "À¯Àú ÀÌ¸§: " + dto.userName + " PlayerGuid: " + dto.playerGuid);
+        Debug.Log("OnJoinSuccess, " + "ê²Œì„ì— ì…ì¥í•˜ì˜€ìŠµë‹ˆë‹¤." + "ìœ ì € ì´ë¦„: " + dto.userName + " PlayerGuid: " + dto.playerGuid);
 
         GameManager.Instance.characterManager.AddPlayer(new Player(dto.playerGuid, dto.userName));
 

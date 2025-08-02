@@ -8,7 +8,7 @@ public class OnActionDoneCommand : IGameCommand
     {
         OnActionDoneDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnActionDoneDTO>(payload);
 
-        Debug.Log("OnActionDone, " + "ÇÃ·¹ÀÌ¾î: " + dto.playerName + "ÀÇ " + "ÇÚµå ID: " + dto.handId + "ÀÇ ActionÀ» ¿Ï·áÇÕ´Ï´Ù." + " ÇÃ·¹ÀÌ¾î Guid: " + dto.playerGuid);
+        Debug.Log("OnActionDone, " + "í”Œë ˆì´ì–´: " + dto.playerName + "ì˜ " + "í•¸ë“œ ID: " + dto.handId + "ì˜ Actionì„ ì™„ë£Œí•©ë‹ˆë‹¤." + " í”Œë ˆì´ì–´ Guid: " + dto.playerGuid);
 
         GameManager.Instance.CallRemoveListenersOnTimeToActionCommandInstance();
     }

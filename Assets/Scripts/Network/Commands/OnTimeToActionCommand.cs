@@ -13,7 +13,7 @@ public class OnTimeToActionCommand : IGameCommand
     {
         OnTimeToActionDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnTimeToActionDTO>(payload);
 
-        Debug.Log("OnTimeToAction, " + "ÇÃ·¹ÀÌ¾î: " + dto.playerName + "ÀÇ " + "ÇÚµå ID: " + dto.handId + "ÀÌ/°¡ µ¿ÀÛÀ» ¼öÇàÇÒ Â÷·ÊÀÔ´Ï´Ù." + " ÇÃ·¹ÀÌ¾î Guid: " + dto.playerGuid);
+        Debug.Log("OnTimeToAction, " + "í”Œë ˆì´ì–´: " + dto.playerName + "ì˜ " + "í•¸ë“œ ID: " + dto.handId + "ì´/ê°€ ë™ì‘ì„ ìˆ˜í–‰í•  ì°¨ë¡€ì…ë‹ˆë‹¤." + " í”Œë ˆì´ì–´ Guid: " + dto.playerGuid);
 
         _player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
 
@@ -54,13 +54,13 @@ public class OnTimeToActionCommand : IGameCommand
 
     private void HandleSplit()
     {
-        // º£ÆÃ¿¡ »ç¿ëÇÑ Ä¨°ú µ¿ÀÏÇÑ ¾çÀÇ Ä¨ÀÌ ÇÊ¿ä
+        // ë² íŒ…ì— ì‚¬ìš©í•œ ì¹©ê³¼ ë™ì¼í•œ ì–‘ì˜ ì¹©ì´ í•„ìš”
         if (_player.Chips < _hand.BetAmount)
         {
             return;
         }
 
-        // ÇÚµå¿¡ Ä«µå°¡ 2Àå, Ä«µåÀÇ ¼ıÀÚ ¶Ç´Â ¹®ÀÚ°¡ °°¾Æ¾ß ÇÔ
+        // í•¸ë“œì— ì¹´ë“œê°€ 2ì¥, ì¹´ë“œì˜ ìˆ«ì ë˜ëŠ” ë¬¸ìê°€ ê°™ì•„ì•¼ í•¨
         if (!_hand.CanSplit())
         {
             //return;

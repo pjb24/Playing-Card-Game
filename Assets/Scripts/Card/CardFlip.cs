@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CardFlip : MonoBehaviour
 {
-    // Flip ¹æÇâ enum
+    // Flip ë°©í–¥ enum
     public enum FlipDirection
     {
         Left,
@@ -15,31 +15,31 @@ public class CardFlip : MonoBehaviour
         Bottom,
     };
 
-    // Flip Å©±â enum
+    // Flip í¬ê¸° enum
     public enum FlipSize
     {
         One,
         Half
     };
 
-    // FlipÀ» ÇÒ ¹æÇâ ÁöÁ¤
+    // Flipì„ í•  ë°©í–¥ ì§€ì •
     public FlipDirection flipDirection = FlipDirection.Left;
-    // Flip¿¡ ¼Ò¿äµÉ ½Ã°£
+    // Flipì— ì†Œìš”ë  ì‹œê°„
     public float duration = 1f;
-    // FlipÀ» ÇÒ Å©±â
+    // Flipì„ í•  í¬ê¸°
     public FlipSize flipSize = FlipSize.One;
 
-    // Flip Áßº¹ µ¿ÀÛ ¹æÁö ÇÃ·¡±×
+    // Flip ì¤‘ë³µ ë™ìž‘ ë°©ì§€ í”Œëž˜ê·¸
     private bool isFlipping = false;
 
-    // Inspector¿¡¼­ Å×½ºÆ®¸¦ ¼öÇàÇÒ ¼ö ÀÖÀ½.
+    // Inspectorì—ì„œ í…ŒìŠ¤íŠ¸ë¥¼ ìˆ˜í–‰í•  ìˆ˜ ìžˆìŒ.
     [ContextMenu("Test Flip Function")]
     private void TestFlipFunction()
     {
         Flip(flipDirection, flipSize);
     }
 
-    // Flip ±â´É ±¸Çö Right ¹æÇâ FlipÀÌ ±âº» ¼³Á¤.
+    // Flip ê¸°ëŠ¥ êµ¬í˜„ Right ë°©í–¥ Flipì´ ê¸°ë³¸ ì„¤ì •.
     private void Flip(FlipDirection direction = FlipDirection.Right, FlipSize size = FlipSize.One)
     {
         if (isFlipping)
@@ -48,12 +48,12 @@ public class CardFlip : MonoBehaviour
         }
         isFlipping = true;
 
-        // ÇöÀç È¸Àü ÄõÅÍ´Ï¾ð
+        // í˜„ìž¬ íšŒì „ ì¿¼í„°ë‹ˆì–¸
         Quaternion currentRotation = transform.rotation;
 
         Vector3 angle3 = new Vector3(0, 0, 0);
 
-        // angleSizeÀÇ °ªÀº DOTweenÀÇ DORotateQuaternionÀ» ¼öÇàÇßÀ» ¶§ ³ªÅ¸³ª´Â °á°ú¸¦ º¸°í ¼³Á¤ÇÑ °ªÀÌ´Ù.
+        // angleSizeì˜ ê°’ì€ DOTweenì˜ DORotateQuaternionì„ ìˆ˜í–‰í–ˆì„ ë•Œ ë‚˜íƒ€ë‚˜ëŠ” ê²°ê³¼ë¥¼ ë³´ê³  ì„¤ì •í•œ ê°’ì´ë‹¤.
         float angleSize = 0;
         switch (size)
         {
@@ -81,16 +81,16 @@ public class CardFlip : MonoBehaviour
                 break;
         }
 
-        // Ãß°¡ È¸Àü ÄõÅÍ´Ï¾ð
+        // ì¶”ê°€ íšŒì „ ì¿¼í„°ë‹ˆì–¸
         Quaternion rotationDelta = Quaternion.Euler(angle3);
 
-        // ¸ñÇ¥ È¸Àü = ÇöÀç È¸Àü * Ãß°¡ È¸Àü
+        // ëª©í‘œ íšŒì „ = í˜„ìž¬ íšŒì „ * ì¶”ê°€ íšŒì „
         Quaternion targetRotation = currentRotation * rotationDelta;
 
-        // DOTweenÀ¸·Î duration µ¿¾È È¸Àü ¼öÇà.
+        // DOTweenìœ¼ë¡œ duration ë™ì•ˆ íšŒì „ ìˆ˜í–‰.
         transform.DORotateQuaternion(targetRotation, duration)
             .SetEase(Ease.InOutQuad)
-            // È¸ÀüÀÌ ³¡³ª¸é ÇÃ·¡±× ÇØÁ¦.
+            // íšŒì „ì´ ëë‚˜ë©´ í”Œëž˜ê·¸ í•´ì œ.
             .OnComplete(() => { isFlipping = false; });
     }
 }

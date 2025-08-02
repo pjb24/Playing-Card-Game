@@ -9,7 +9,7 @@ public class OnDealerCardDealtCommand : IGameCommand
     {
         OnDealerCardDealtDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnDealerCardDealtDTO>(payload);
 
-        Debug.Log("OnDealerCardDealt, " + "µô·¯¿¡°Ô Ä«µå: " + dto.cardRank + " of " + dto.cardSuit + "À»/¸¦ ºĞ¹èÇÕ´Ï´Ù.");
+        Debug.Log("OnDealerCardDealt, " + "ë”œëŸ¬ì—ê²Œ ì¹´ë“œ: " + dto.cardRank + " of " + dto.cardSuit + "ì„/ë¥¼ ë¶„ë°°í•©ë‹ˆë‹¤.");
 
         Dealer dealer = GameManager.Instance.characterManager.dealer;
 

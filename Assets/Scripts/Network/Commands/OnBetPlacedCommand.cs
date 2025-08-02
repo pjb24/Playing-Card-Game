@@ -11,7 +11,7 @@ public class OnBetPlacedCommand : IGameCommand
     {
         OnBetPlacedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnBetPlacedDTO>(payload);
 
-        Debug.Log("OnBetPlaced, " + "ÇÃ·¹ÀÌ¾î " + dto.playerName + "ÀÌ/°¡ ÇÚµå ID: " + dto.handId + "¿¡ " + dto.betAmount + "¸¦ º£ÆÃÇÏ¿´½À´Ï´Ù." + " ÇÃ·¹ÀÌ¾î Guid: " + dto.playerGuid);
+        Debug.Log("OnBetPlaced, " + "í”Œë ˆì´ì–´ " + dto.playerName + "ì´/ê°€ í•¸ë“œ ID: " + dto.handId + "ì— " + dto.betAmount + "ë¥¼ ë² íŒ…í•˜ì˜€ìŠµë‹ˆë‹¤." + " í”Œë ˆì´ì–´ Guid: " + dto.playerGuid);
 
         _player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
 
@@ -26,10 +26,10 @@ public class OnBetPlacedCommand : IGameCommand
         {
             GameManager.Instance.chipFactory.CreateChipsToFitValue(hand.BetAmount, hand);
 
-            // ¸ğµç Ä¨ÀÇ À§Ä¡¸¦ °»½Å
+            // ëª¨ë“  ì¹©ì˜ ìœ„ì¹˜ë¥¼ ê°±ì‹ 
             GameManager.Instance.chipFactory.UpdateAllChipsPosition();
 
-            // UI ¾÷µ¥ÀÌÆ®. Player Info, Card Value
+            // UI ì—…ë°ì´íŠ¸. Player Info, Card Value
             UpdateUIChips();
         });
     }

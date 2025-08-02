@@ -1,0 +1,8 @@
+# .editorconfig
+# 최상위 .editorconfig 파일임을 명시합니다.
+root = true
+
+# 모든 파일에 적용될 규칙
+[*]
+# 파일 인코딩을 UTF-8로 설정합니다.
+charset = utf-8

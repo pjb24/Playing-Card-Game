@@ -9,7 +9,7 @@ public class OnPlayerBustedCommand : IGameCommand
     {
         OnPlayerBustedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnPlayerBustedDTO>(payload);
 
-        Debug.Log("OnPlayerBusted, " + "ÇÃ·¹ÀÌ¾î: " + dto.playerName + "ÀÇ " + "ÇÚµå ID: " + dto.handId + "ÀÌ/°¡ Bust µÇ¾ú½À´Ï´Ù." + " ÇÃ·¹ÀÌ¾î Guid: " + dto.playerGuid);
+        Debug.Log("OnPlayerBusted, " + "í”Œë ˆì´ì–´: " + dto.playerName + "ì˜ " + "í•¸ë“œ ID: " + dto.handId + "ì´/ê°€ Bust ë˜ì—ˆìŠµë‹ˆë‹¤." + " í”Œë ˆì´ì–´ Guid: " + dto.playerGuid);
 
         Player player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
 

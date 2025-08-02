@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Ä«µå ¹®¾ç
+// ì¹´ë“œ ë¬¸ì–‘
 public enum E_Suit
 {
     Spades,
@@ -12,7 +12,7 @@ public enum E_Suit
     Back,
 }
 
-// Ä«µå ¼ıÀÚ
+// ì¹´ë“œ ìˆ«ì
 public enum E_Rank
 {
     Back = 0,

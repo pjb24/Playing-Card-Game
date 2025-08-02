@@ -12,7 +12,7 @@ public class PlayerTurnState : IGameState
         currentPlayer = GameManager.Instance.characterManager.GetNextActivePlayer();
         if (currentPlayer == null)
         {
-            // ¸ğµç ÇÃ·¹ÀÌ¾îÀÇ Çàµ¿ ¿Ï·á µô·¯ ÅÏÀ¸·Î ÀüÀÌ
+            // ëª¨ë“  í”Œë ˆì´ì–´ì˜ í–‰ë™ ì™„ë£Œ ë”œëŸ¬ í„´ìœ¼ë¡œ ì „ì´
             GameManager.Instance.ChangeState(new DealerTurnState());
 
             return;
@@ -21,15 +21,15 @@ public class PlayerTurnState : IGameState
         currentHand = currentPlayer.GetActiveHand();
         if (currentHand == null)
         {
-            // ÇöÀç ÇÃ·¹ÀÌ¾îÀÇ Çàµ¿ ¿Ï·á ÇÃ·¡±× ¼³Á¤
+            // í˜„ì¬ í”Œë ˆì´ì–´ì˜ í–‰ë™ ì™„ë£Œ í”Œë˜ê·¸ ì„¤ì •
             GameManager.Instance.characterManager.MarkCurrentPlayerDone();
-            // ÇöÀç ÇÃ·¹ÀÌ¾îÀÇ ¸ğµç ÇÚµå¿¡ ´ëÇÑ Çàµ¿ ¿Ï·á, ´ÙÀ½ ÇÃ·¹ÀÌ¾î ÅÏÀ¸·Î ÀüÀÌ
+            // í˜„ì¬ í”Œë ˆì´ì–´ì˜ ëª¨ë“  í•¸ë“œì— ëŒ€í•œ í–‰ë™ ì™„ë£Œ, ë‹¤ìŒ í”Œë ˆì´ì–´ í„´ìœ¼ë¡œ ì „ì´
             GameManager.Instance.ChangeState(new PlayerTurnState());
 
             return;
         }
 
-        // ÇÚµåÀÇ Çàµ¿À» ½ÃÀÛÇÒ ¶§ Ä«µå°¡ 2Àå º¸´Ù ÀûÀ¸¸é Ä«µå¸¦ ¹ŞÀ½
+        // í•¸ë“œì˜ í–‰ë™ì„ ì‹œì‘í•  ë•Œ ì¹´ë“œê°€ 2ì¥ ë³´ë‹¤ ì ìœ¼ë©´ ì¹´ë“œë¥¼ ë°›ìŒ
         if (currentHand.Cards.Count < 2)
         {
             Card currentHandCard = GameManager.Instance.deckManager.DrawCard();
@@ -84,56 +84,56 @@ public class PlayerTurnState : IGameState
 
     public void HandleSplit()
     {
-        // º£ÆÃ¿¡ »ç¿ëÇÑ Ä¨°ú µ¿ÀÏÇÑ ¾çÀÇ Ä¨ÀÌ ÇÊ¿ä
+        // ë² íŒ…ì— ì‚¬ìš©í•œ ì¹©ê³¼ ë™ì¼í•œ ì–‘ì˜ ì¹©ì´ í•„ìš”
         if (currentPlayer.Chips < currentHand.BetAmount)
         {
             return;
         }
 
-        // ÇÚµå¿¡ Ä«µå°¡ 2Àå, Ä«µåÀÇ ¼ıÀÚ ¶Ç´Â ¹®ÀÚ°¡ °°¾Æ¾ß ÇÔ
+        // í•¸ë“œì— ì¹´ë“œê°€ 2ì¥, ì¹´ë“œì˜ ìˆ«ì ë˜ëŠ” ë¬¸ìê°€ ê°™ì•„ì•¼ í•¨
         if (!currentHand.CanSplit())
         {
             //return;
         }
 
-        // »õ·Î¿î ÇÚµå¸¦ ÇöÀç ÇÚµåÀÇ ¿À¸¥Æí¿¡ Ãß°¡
+        // ìƒˆë¡œìš´ í•¸ë“œë¥¼ í˜„ì¬ í•¸ë“œì˜ ì˜¤ë¥¸í¸ì— ì¶”ê°€
         PlayerHand newHand = currentPlayer.InsertHand(currentPlayer.Hands.IndexOf(currentHand) + 1);
 
-        // ÇÚµå¿¡ ¸Â´Â UI Insert
+        // í•¸ë“œì— ë§ëŠ” UI Insert
         int newHandIndex = GameManager.Instance.characterManager.GetHandIndex(newHand);
         GameManager.Instance.uiManager.CreateLabelCardValuePlayer(newHandIndex);
         GameManager.Instance.uiManager.CreatePlayerInfo(newHandIndex);
 
-        // »õ·Î¿î ÇÚµå¿¡ º£ÆÃ ÀÔ·Â
+        // ìƒˆë¡œìš´ í•¸ë“œì— ë² íŒ… ì…ë ¥
         currentPlayer.PlaceBet(newHand, currentHand.BetAmount);
 
-        // ÇöÀç ÇÚµåÀÇ 2¹øÂ° Ä«µå¸¦ »õ·Î¿î ÇÚµå·Î ³ª´®
+        // í˜„ì¬ í•¸ë“œì˜ 2ë²ˆì§¸ ì¹´ë“œë¥¼ ìƒˆë¡œìš´ í•¸ë“œë¡œ ë‚˜ëˆ”
         Card splitCard = currentHand.Cards[1];
         currentHand.RemoveCard(splitCard);
         newHand.AddCard(splitCard);
 
-        // Ä«µå ¿ÀºêÁ§Æ® ³ª´®
+        // ì¹´ë“œ ì˜¤ë¸Œì íŠ¸ ë‚˜ëˆ”
         GameObject splitCardObj = currentHand.cardObjects[1];
         currentHand.cardObjects.Remove(splitCardObj);
         newHand.cardObjects.Add(splitCardObj);
 
-        // ¸ğµç Ä«µå À§Ä¡ °»½Å
+        // ëª¨ë“  ì¹´ë“œ ìœ„ì¹˜ ê°±ì‹ 
         GameManager.Instance.UpdateAllPlayerHandPositions();
 
-        // »õ ÇÚµå¿¡ Ä¨ »ı¼º
+        // ìƒˆ í•¸ë“œì— ì¹© ìƒì„±
         GameManager.Instance.chipFactory.CreateChipsToFitValue(newHand.BetAmount, newHand);
 
-        // ¸ğµç Ä¨ÀÇ À§Ä¡¸¦ °»½Å
+        // ëª¨ë“  ì¹©ì˜ ìœ„ì¹˜ë¥¼ ê°±ì‹ 
         GameManager.Instance.chipFactory.UpdateAllChipsPosition();
 
-        // UI ¾÷µ¥ÀÌÆ®. Player Info, Card Value
+        // UI ì—…ë°ì´íŠ¸. Player Info, Card Value
         UpdateUICardValue();
         UpdateUIChips();
 
         GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate_Y_Register(newHandIndex);
         GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate_Y_Register(newHandIndex);
 
-        // PlayerTurnState ´Ù½Ã ÁøÀÔ
+        // PlayerTurnState ë‹¤ì‹œ ì§„ì…
         GameManager.Instance.ChangeState(new PlayerTurnState());
     }
 

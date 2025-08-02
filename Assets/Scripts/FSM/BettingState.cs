@@ -21,7 +21,7 @@ public class BettingState : IGameState
         if (currentPlayer == null)
         {
             GameManager.Instance.characterManager.ResetTurnOrder();
-            // ¸ğµç ÇÃ·¹ÀÌ¾î º£ÆÃ ¿Ï·á, Ä«µå ºĞ¹è ÆäÀÌÁî·Î ÀüÀÌ
+            // ëª¨ë“  í”Œë ˆì´ì–´ ë² íŒ… ì™„ë£Œ, ì¹´ë“œ ë¶„ë°° í˜ì´ì¦ˆë¡œ ì „ì´
             GameManager.Instance.ChangeState(new DealingState());
 
             return;
@@ -31,7 +31,7 @@ public class BettingState : IGameState
         if (currentHand == null)
         {
             GameManager.Instance.characterManager.MarkCurrentPlayerDoneBetting();
-            // ÇöÀç ÇÃ·¹ÀÌ¾îÀÇ ÇÚµåµé¿¡ ´ëÇÑ ¸ğµç º£ÆÃÀÌ ¿Ï·á, ´ÙÀ½ ÇÃ·¹ÀÌ¾îÀÇ º£ÆÃ ÆäÀÌÁî·Î ÀüÀÌ
+            // í˜„ì¬ í”Œë ˆì´ì–´ì˜ í•¸ë“œë“¤ì— ëŒ€í•œ ëª¨ë“  ë² íŒ…ì´ ì™„ë£Œ, ë‹¤ìŒ í”Œë ˆì´ì–´ì˜ ë² íŒ… í˜ì´ì¦ˆë¡œ ì „ì´
             GameManager.Instance.ChangeState(new BettingState());
 
             return;
@@ -216,7 +216,7 @@ public class BettingState : IGameState
     {
         currentPlayer.PlaceBet(currentHand, betAmount);
 
-        // ´ÙÀ½ º£ÆÃ ÇÚµå·Î ÀÌµ¿
+        // ë‹¤ìŒ ë² íŒ… í•¸ë“œë¡œ ì´ë™
         GameManager.Instance.ChangeState(new BettingState());
     }
 }

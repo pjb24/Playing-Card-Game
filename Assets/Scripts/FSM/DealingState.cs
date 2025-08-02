@@ -6,7 +6,7 @@ public class DealingState : IGameState
 {
     public void Enter()
     {
-        // UI º¯°æ
+        // UI ë³€ê²½
         GameManager.Instance.uiManager.ChangeToPlayerActionPanel();
 
         GameManager.Instance.StartCoroutine(DealCardsCoroutine());

@@ -9,23 +9,23 @@ public class OnHandSplitCommand : IGameCommand
     {
         OnHandSplitDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnHandSplitDTO>(payload);
 
-        Debug.Log("OnHandSplit, " + "ÇÃ·¹ÀÌ¾î: " + dto.playerName + "ÀÇ " + "ÇÚµå ID: " + dto.handId + "¸¦ SplitÇÏ¿© »õÇÚµå ID: " + dto.newHandId + "¸¦ »ý¼ºÇÕ´Ï´Ù. " + "ÇÃ·¹ÀÌ¾î Guid: " + dto.playerGuid);
+        Debug.Log("OnHandSplit, " + "í”Œë ˆì´ì–´: " + dto.playerName + "ì˜ " + "í•¸ë“œ ID: " + dto.handId + "ë¥¼ Splití•˜ì—¬ ìƒˆí•¸ë“œ ID: " + dto.newHandId + "ë¥¼ ìƒì„±í•©ë‹ˆë‹¤. " + "í”Œë ˆì´ì–´ Guid: " + dto.playerGuid);
 
         Player player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
 
         PlayerHand hand = player.GetHandByGuid(dto.handId);
 
-        // »õ·Î¿î ÇÚµå¸¦ ÇöÀç ÇÚµåÀÇ ¿À¸¥Æí¿¡ Ãß°¡
+        // ìƒˆë¡œìš´ í•¸ë“œë¥¼ í˜„ìž¬ í•¸ë“œì˜ ì˜¤ë¥¸íŽ¸ì— ì¶”ê°€
         PlayerHand newHand = player.InsertHand(player.Hands.IndexOf(hand) + 1, dto.newHandId);
 
         WorkForUI(newHand);
 
-        // ÇöÀç ÇÚµåÀÇ 2¹øÂ° Ä«µå¸¦ »õ·Î¿î ÇÚµå·Î ³ª´®
+        // í˜„ìž¬ í•¸ë“œì˜ 2ë²ˆì§¸ ì¹´ë“œë¥¼ ìƒˆë¡œìš´ í•¸ë“œë¡œ ë‚˜ëˆ”
         Card splitCard = hand.Cards[1];
         hand.RemoveCard(splitCard);
         newHand.AddCard(splitCard);
 
-        // Ä«µå ¿ÀºêÁ§Æ® ³ª´®
+        // ì¹´ë“œ ì˜¤ë¸Œì íŠ¸ ë‚˜ëˆ”
         GameObject splitCardObj = hand.cardObjects[1];
         hand.cardObjects.Remove(splitCardObj);
         newHand.cardObjects.Add(splitCardObj);
@@ -33,7 +33,7 @@ public class OnHandSplitCommand : IGameCommand
 
     private void WorkForUI(PlayerHand hand)
     {
-        // ÇÚµå¿¡ ¸Â´Â UI Insert
+        // í•¸ë“œì— ë§žëŠ” UI Insert
         int newHandIndex = GameManager.Instance.characterManager.GetHandIndex(hand);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
@@ -41,7 +41,7 @@ public class OnHandSplitCommand : IGameCommand
             GameManager.Instance.uiManager.CreateLabelCardValuePlayer(newHandIndex);
             GameManager.Instance.uiManager.CreatePlayerInfo(newHandIndex);
 
-            // ¸ðµç Ä«µå À§Ä¡ °»½Å
+            // ëª¨ë“  ì¹´ë“œ ìœ„ì¹˜ ê°±ì‹ 
             GameManager.Instance.UpdateAllPlayerHandPositions();
 
             UpdateUICardValue();

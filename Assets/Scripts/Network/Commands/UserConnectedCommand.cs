@@ -8,6 +8,6 @@ public class UserConnectedCommand : IGameCommand
     {
         UserConnectedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<UserConnectedDTO>(payload);
 
-        Debug.Log("UserConnected, " + "ConnectionId: " + dto.message + " À¯Àú°¡ ¿¬°áµÇ¾ú½À´Ï´Ù.");
+        Debug.Log("UserConnected, " + "ConnectionId: " + dto.message + " ìœ ì €ê°€ ì—°ê²°ë˜ì—ˆìŠµë‹ˆë‹¤.");
     }
 }

@@ -25,7 +25,7 @@ public class SignalRClient
             .WithAutomaticReconnect()
             .Build();
 
-        // ºˆΩ≈ ¿Ã∫•∆Æ º≥¡§
+        // ÏàòÏã† Ïù¥Î≤§Ìä∏ ÏÑ§Ï†ï
         _connection.On<string, string>("ReceiveCommand", (commandName, payload) =>
         {
             Debug.Log($"Received command: {commandName}, payload: {payload}");
@@ -35,7 +35,7 @@ public class SignalRClient
         try
         {
             await _connection.StartAsync();
-            Debug.Log("SignalR ø¨∞· º∫∞¯");
+            Debug.Log("SignalR Ïó∞Í≤∞ ÏÑ±Í≥µ");
 
             JoinGameDTO joinGameDTO = new JoinGameDTO();
             joinGameDTO.userName = "DisplayName_1";
@@ -44,7 +44,7 @@ public class SignalRClient
         }
         catch (System.Exception ex)
         {
-            Debug.LogError("SignalR ø¨∞· Ω«∆–: " + ex.Message);
+            Debug.LogError("SignalR Ïó∞Í≤∞ Ïã§Ìå®: " + ex.Message);
         }
     }
 

@@ -24,7 +24,7 @@ public class PlayerHand : Hand
         BetAmount = amount;
     }
 
-    // Ä«µå°¡ 2ÀåÀÌ¸ç °°Àº ¼ıÀÚ ¶Ç´Â ¹®ÀÚ¿©¾ßÇÔ
+    // ì¹´ë“œê°€ 2ì¥ì´ë©° ê°™ì€ ìˆ«ì ë˜ëŠ” ë¬¸ìì—¬ì•¼í•¨
     public bool CanSplit()
     {
         if (Cards.Count != 2)

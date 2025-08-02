@@ -14,7 +14,7 @@ public class OnTimeToBettingCommand : IGameCommand
     {
         OnTimeToBettingDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnTimeToBettingDTO>(payload);
 
-        Debug.Log("OnTimeToBetting, " + "Player Guid: " + dto.playerGuid + " ÇÚµå ID: " + dto.handId + "¿¡ º£ÆÃÀÌ ÇÊ¿äÇÕ´Ï´Ù.");
+        Debug.Log("OnTimeToBetting, " + "Player Guid: " + dto.playerGuid + " í•¸ë“œ ID: " + dto.handId + "ì— ë² íŒ…ì´ í•„ìš”í•©ë‹ˆë‹¤.");
 
         _player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
 

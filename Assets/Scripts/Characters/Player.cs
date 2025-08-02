@@ -9,10 +9,10 @@ public class Player
     public string Id { get; private set; }
     public string DisplayName { get; private set; }
 
-    // ¼ÒÀ¯ÇÑ Chip
+    // ì†Œìœ í•œ Chip
     public int Chips { get; private set; }
 
-    // ÇÃ·¹ÀÌ¾î°¡ SplitÀ» ÇÏ¸é ¿©·¯ °³ÀÇ ÇÚµå¸¦ °¡Áú ¼ö ÀÖÀ½
+    // í”Œë ˆì´ì–´ê°€ Splitì„ í•˜ë©´ ì—¬ëŸ¬ ê°œì˜ í•¸ë“œë¥¼ ê°€ì§ˆ ìˆ˜ ìˆìŒ
     public List<PlayerHand> Hands { get; private set; } = new();
     public bool IsFinishedTurn { get; set; } = false;
     public bool IsFinishedBetting { get; set; } = false;
