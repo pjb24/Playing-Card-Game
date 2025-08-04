@@ -16,6 +16,8 @@ public class OnTimeToBettingCommand : IGameCommand
 
         Debug.Log("OnTimeToBetting, " + "Player Guid: " + dto.playerGuid + " 핸드 ID: " + dto.handId + "에 베팅이 필요합니다.");
 
+        _betAmount = 0;
+
         _player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
 
         _hand = _player.GetHandByGuid(dto.handId);

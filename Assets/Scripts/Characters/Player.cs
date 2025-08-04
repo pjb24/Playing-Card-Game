@@ -81,6 +81,18 @@ public class Player
         Hands.Add(new PlayerHand());
     }
 
+    public void ResetForNextRound_Network()
+    {
+        IsFinishedTurn = false;
+        IsFinishedBetting = false;
+        foreach (var hand in Hands)
+        {
+            hand.ResetChipAll();
+            hand.Clear();
+        }
+        Hands.Clear();
+    }
+
     public void Blackjack(PlayerHand hand)
     {
         int payout = (int)(hand.BetAmount * 2.5f);

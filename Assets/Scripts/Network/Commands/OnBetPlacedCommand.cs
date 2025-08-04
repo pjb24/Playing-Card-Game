@@ -17,6 +17,8 @@ public class OnBetPlacedCommand : IGameCommand
 
         PlayerHand hand = _player.GetHandByGuid(dto.handId);
 
+        hand.Bet(dto.betAmount);
+
         WorkForUI(hand);
     }
 

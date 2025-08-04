@@ -13,6 +13,11 @@ public class OnJoinSuccessCommand : IGameCommand
 
         GameManager.Instance.characterManager.AddPlayer(new Player(dto.playerGuid, dto.userName));
 
+        WorkForUI();
+    }
+
+    private void WorkForUI()
+    {
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             GameManager.Instance.uiManager.ChangeToBetPanel();

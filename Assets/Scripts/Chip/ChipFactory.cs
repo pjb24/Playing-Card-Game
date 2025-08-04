@@ -163,7 +163,23 @@ public class ChipFactory : MonoBehaviour
 
     public int CreateChipsToFitValue(int value, PlayerHand hand)
     {
-        int tempChips = value;
+        int chipsValue = 0;
+
+        foreach (var chip in hand.ListChips)
+        {
+            chipsValue += chip.ChipValue;
+        }
+
+        if (chipsValue == value)
+        {
+            return 0;
+        }
+        else if (chipsValue > value)
+        {
+            ResetChips(hand);
+        }
+
+        int tempChips = value - chipsValue;
         int countType5 = tempChips / (int)E_ChipValue.BetMax;
         tempChips -= countType5 * (int)E_ChipValue.BetMax;
         int countType4 = tempChips / (int)E_ChipValue.Bet4;

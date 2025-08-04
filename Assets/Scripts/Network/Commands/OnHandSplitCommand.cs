@@ -44,10 +44,14 @@ public class OnHandSplitCommand : IGameCommand
             // 모든 카드 위치 갱신
             GameManager.Instance.UpdateAllPlayerHandPositions();
 
-            UpdateUICardValue();
+            Vector3 targetPosition = GameManager.Instance.GetHandPosition(hand);
+            GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate_Register(targetPosition, newHandIndex);
+            GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate_Register(targetPosition, newHandIndex);
 
             GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate_Y_Register(newHandIndex);
             GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate_Y_Register(newHandIndex);
+            
+            UpdateUICardValue();
         });
     }
 
@@ -69,6 +73,7 @@ public class OnHandSplitCommand : IGameCommand
 
         Vector3 targetPosition = GameManager.Instance.GetHandPosition(hand);
         GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate(targetPosition, handIndex);
+        GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
 
         GameManager.Instance.uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
     }
