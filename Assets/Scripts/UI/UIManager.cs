@@ -100,6 +100,7 @@ public class UIManager : MonoBehaviour
 
     private void UpdateCardValueUIPosition_Y(int index)
     {
+        float referenceResolution_Y = uiPlayerInfo.panelSettings.referenceResolution.y;
         float panelHeight = uiCardValue.rootVisualElement.resolvedStyle.height;
         float scaledPanelY = panelHeight * fovManager.ScaledY;
 
@@ -110,7 +111,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            heightRatio = panelHeight / Screen.height;
+            heightRatio = panelHeight / referenceResolution_Y;
         }
         float yPos = list_label_CardValue_Player[index].resolvedStyle.top;
         list_label_CardValue_Player[index].style.top = yPos * heightRatio + scaledPanelY;
@@ -269,11 +270,14 @@ public class UIManager : MonoBehaviour
 
         float sectionWidthHalf = list_section_text[index].resolvedStyle.width / 2;
 
-        list_section_text[index].style.left = xPos * widthRatio - sectionWidthHalf;
+        float left = xPos * widthRatio - sectionWidthHalf;
+
+        list_section_text[index].style.left = left;
     }
 
     private void UpdatePlayerInfoPosition_Y(int index)
     {
+        float referenceResolution_Y = uiPlayerInfo.panelSettings.referenceResolution.y;
         float panelHeight = uiPlayerInfo.rootVisualElement.resolvedStyle.height;
         float scaledPanelY = panelHeight * fovManager.ScaledY;
 
@@ -284,10 +288,11 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            heightRatio = panelHeight / Screen.height;
+            heightRatio = panelHeight / referenceResolution_Y;
         }
         float yPos = list_section_text[index].resolvedStyle.top;
-        list_section_text[index].style.top = yPos * heightRatio + scaledPanelY;
+        float top = yPos * heightRatio + scaledPanelY;
+        list_section_text[index].style.top = top;
     }
 
     public void RequestPlayerInfoPositionUpdate(Vector3 objectPosition, int index)
@@ -321,7 +326,7 @@ public class UIManager : MonoBehaviour
 
         label_CardValue_Dealer = null;
     }
-    
+
     public void CreateLabelCardValueDealer()
     {
         label_CardValue_Dealer = new Label();
@@ -334,6 +339,7 @@ public class UIManager : MonoBehaviour
     {
         label_CardValue_Dealer.visible = true;
 
+        float referenceResolution_Y = uiPlayerInfo.panelSettings.referenceResolution.y;
         float panelHeight = uiCardValue.rootVisualElement.resolvedStyle.height;
         float scaledPanelY = panelHeight * fovManager.ScaledY;
 
@@ -344,7 +350,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            heightRatio = panelHeight / Screen.height;
+            heightRatio = panelHeight / referenceResolution_Y;
         }
         float yPos = label_CardValue_Dealer.resolvedStyle.top;
         label_CardValue_Dealer.style.top = yPos * heightRatio + scaledPanelY;
