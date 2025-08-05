@@ -6,7 +6,7 @@ using UnityEngine.XR;
 
 public class OnCardDealtCommand : IGameCommand
 {
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnCardDealtDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnCardDealtDTO>(payload);
 
@@ -27,6 +27,8 @@ public class OnCardDealtCommand : IGameCommand
         {
             WorkForUI(card, hand);
         }
+
+        yield return null;
     }
 
     private void WorkForUIAtFirst(Card card, PlayerHand hand)

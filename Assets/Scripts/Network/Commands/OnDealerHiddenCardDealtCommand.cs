@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class OnDealerHiddenCardDealtCommand : IGameCommand
 {
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnDealerHiddenCardDealtDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnDealerHiddenCardDealtDTO>(payload);
 
@@ -14,10 +14,12 @@ public class OnDealerHiddenCardDealtCommand : IGameCommand
         Dealer dealer = GameManager.Instance.characterManager.dealer;
 
         // Dealer Second Card - Hidden Card
-        Card dealerCard = new Card(E_Suit.Back, E_Rank.Back);
+        Card dealerCard = new Card(E_CardSuit.Back, E_CardRank.Back);
         dealer.Hand.AddCard(dealerCard);
 
         WorkForUI(dealerCard, dealer);
+
+        yield return null;
     }
 
     private void WorkForUI(Card dealerCard, Dealer dealer)

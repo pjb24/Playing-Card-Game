@@ -101,12 +101,12 @@ public class GameManager : MonoBehaviour
         MoveCardToPlayer(cardObj, hand);
     }
 
-    private void MoveCardToHand(GameObject cardObj, Vector3 handPosition)
+    private Tween MoveCardToHand(GameObject cardObj, Vector3 handPosition)
     {
-        cardObj.transform.DOMove(handPosition, 1f);
+        return cardObj.transform.DOMove(handPosition, 1f);
     }
 
-    public void InstancingCardToDealer(Card card, Hand hand, bool hidden = false)
+    public Tween InstancingCardToDealer(Card card, Hand hand, bool hidden = false)
     {
         GameObject cardObj = Instantiate(cardPrefab, deckPosition.position, deckPosition.rotation);
         CardView view = cardObj.GetComponent<CardView>();
@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
         hand.cardObjects.Add(cardObj);
         int cardObjIndex = hand.cardObjects.IndexOf(cardObj);
 
-        MoveCardToHand(cardObj, dealerHandPosition.position + new Vector3(cardObjIndex * cardOffsetX, cardObjIndex * cardOffsetY, 0));
+        return MoveCardToHand(cardObj, dealerHandPosition.position + new Vector3(cardObjIndex * cardOffsetX, cardObjIndex * cardOffsetY, 0));
     }
 
     public void RevealHoleCard()

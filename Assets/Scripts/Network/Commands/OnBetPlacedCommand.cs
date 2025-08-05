@@ -7,7 +7,7 @@ public class OnBetPlacedCommand : IGameCommand
 {
     Player _player;
 
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnBetPlacedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnBetPlacedDTO>(payload);
 
@@ -20,6 +20,8 @@ public class OnBetPlacedCommand : IGameCommand
         hand.Bet(dto.betAmount);
 
         WorkForUI(hand);
+
+        yield return null;
     }
 
     private void WorkForUI(PlayerHand hand)

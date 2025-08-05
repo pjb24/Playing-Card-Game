@@ -39,7 +39,7 @@ public class DealerHand : Hand
             int value = card.GetValue();
             total += value;
 
-            if (card.Rank == E_Rank.Ace)
+            if (card.Rank == E_CardRank.Ace)
             {
                 aceCount++;
             }

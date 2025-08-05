@@ -67,15 +67,15 @@ public class OnPayoutDTO
 {
     public string playerGuid { get; set; }
     public string handId { get; set; }
-    public E_EvaluateResult evaluationResult { get; set; }
+    public E_EvaluationResult evaluationResult { get; set; }
 }
 
 public class OnCardDealtDTO
 {
     public string playerGuid { get; set; }
     public string playerName { get; set; }
-    public E_Rank cardRank { get; set; }
-    public E_Suit cardSuit { get; set; }    
+    public E_CardRank cardRank { get; set; }
+    public E_CardSuit cardSuit { get; set; }
     public string handId { get; set; }
 }
 
@@ -103,14 +103,14 @@ public class OnHandSplitDTO
 
 public class OnDealerHoleCardRevealedDTO
 {
-    public E_Rank cardRank { get; set; }
-    public E_Suit cardSuit { get; set; }
+    public E_CardRank cardRank { get; set; }
+    public E_CardSuit cardSuit { get; set; }
 }
 
 public class OnDealerCardDealtDTO
 {
-    public E_Rank cardRank { get; set; }
-    public E_Suit cardSuit { get; set; }
+    public E_CardRank cardRank { get; set; }
+    public E_CardSuit cardSuit { get; set; }
 }
 
 public class OnDealerHiddenCardDealtDTO
@@ -132,6 +132,11 @@ public class OnAddHandToPlayerDTO
 
 public class OnGameEndDTO
 {
+}
+
+public class OnDealerCardDealtCompleteDTO
+{
+
 }
 
 // Server To Client DTO
@@ -177,6 +182,11 @@ public class DoubleDownDTO
 public class LeaveGameDTO
 {
     public string gameId { get; set; }
+}
+
+public class DealerBehaviorDoneDTO
+{
+    public string playerGuid { get; set; }
 }
 
 // Client To Server DTO

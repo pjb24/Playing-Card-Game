@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class OnErrorCommand : IGameCommand
 {
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnErrorDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnErrorDTO>(payload);
 
         Debug.Log("OnError, " + dto.message);
+
+        yield return null;
     }
 }

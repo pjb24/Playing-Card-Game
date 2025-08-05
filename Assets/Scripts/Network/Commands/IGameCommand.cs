@@ -1,4 +1,6 @@
+using System.Collections;
+
 public interface IGameCommand
 {
-    void Execute(string payload);
+    IEnumerator Execute(string payload);
 }

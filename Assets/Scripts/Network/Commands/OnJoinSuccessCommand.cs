@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class OnJoinSuccessCommand : IGameCommand
 {
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnJoinSuccessDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnJoinSuccessDTO>(payload);
 
@@ -14,6 +14,8 @@ public class OnJoinSuccessCommand : IGameCommand
         GameManager.Instance.characterManager.AddPlayer(new Player(dto.playerGuid, dto.userName));
 
         WorkForUI();
+
+        yield return null;
     }
 
     private void WorkForUI()

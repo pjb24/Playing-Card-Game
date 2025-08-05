@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class WelcomeCommand : IGameCommand
 {
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         WelcomeDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<WelcomeDTO>(payload);
 
         Debug.Log("Welcome, " + dto.message);
+
+        yield return null;
     }
 }

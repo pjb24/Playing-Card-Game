@@ -10,7 +10,7 @@ public class OnTimeToBettingCommand : IGameCommand
 
     private int _betAmount = 0;
 
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnTimeToBettingDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnTimeToBettingDTO>(payload);
 
@@ -23,6 +23,8 @@ public class OnTimeToBettingCommand : IGameCommand
         _hand = _player.GetHandByGuid(dto.handId);
 
         Enter();
+
+        yield return null;
     }
 
     private void Enter()

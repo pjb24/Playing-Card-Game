@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class OnPlayerBustedCommand : IGameCommand
 {
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnPlayerBustedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnPlayerBustedDTO>(payload);
 
@@ -16,6 +16,8 @@ public class OnPlayerBustedCommand : IGameCommand
         PlayerHand hand = player.GetHandByGuid(dto.handId);
 
         WorkForUI(hand);
+
+        yield return null;
     }
 
     private void WorkForUI(PlayerHand hand)

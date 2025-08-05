@@ -2,10 +2,17 @@ using PimDeWitte.UnityMainThreadDispatcher;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Concurrent;
+using DG.Tweening;
 
 public class OnDealerCardDealtCommand : IGameCommand
 {
-    public void Execute(string payload)
+    private ConcurrentQueue<Card> _queue = new();
+    public IReadOnlyCollection<Card> Queue => _queue;
+    private readonly object _lock = new();
+    private volatile bool _isCoroutineRunning = false;
+
+    public IEnumerator Execute(string payload)
     {
         OnDealerCardDealtDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnDealerCardDealtDTO>(payload);
 
@@ -13,23 +20,25 @@ public class OnDealerCardDealtCommand : IGameCommand
 
         Dealer dealer = GameManager.Instance.characterManager.dealer;
 
-        Card dealerCard = new Card(dto.cardSuit, dto.cardRank);
-        dealer.Hand.AddCard(dealerCard);
-
-        if (dealer.Hand.Cards.Count == 1)
+        if (dealer.Hand.Cards.Count == 0)
         {
-            WorkForUIAtFirst(dealerCard, dealer);
+            WorkForUIAtFirst(dealer, dto.cardRank, dto.cardSuit);
         }
         else
         {
-            WorkForUI(dealerCard, dealer);
+            WorkForUI(dealer, dto.cardRank, dto.cardSuit);
         }
+
+        yield return null;
     }
 
-    private void WorkForUIAtFirst(Card dealerCard, Dealer dealer)
+    private void WorkForUIAtFirst(Dealer dealer, E_CardRank cardRank, E_CardSuit cardSuit)
     {
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
+            Card dealerCard = new Card(cardSuit, cardRank);
+            dealer.Hand.AddCard(dealerCard);
+
             GameManager.Instance.InstancingCardToDealer(dealerCard, dealer.Hand);
 
             GameManager.Instance.uiManager.CreateLabelCardValueDealer();
@@ -38,13 +47,43 @@ public class OnDealerCardDealtCommand : IGameCommand
         });
     }
 
-    private void WorkForUI(Card dealerCard, Dealer dealer)
+    private void WorkForUI(Dealer dealer, E_CardRank cardRank, E_CardSuit cardSuit)
     {
-        UnityMainThreadDispatcher.Instance().Enqueue(() =>
-        {
-            GameManager.Instance.InstancingCardToDealer(dealerCard, GameManager.Instance.characterManager.dealer.Hand);
+        Card dealerCard = new Card(cardSuit, cardRank);
 
-            GameManager.Instance.uiManager.CardValueDealerSetText(GameManager.Instance.characterManager.dealer.Hand.GetValue().ToString());
-        });
+        _queue.Enqueue(dealerCard);
+
+        lock (_lock)
+        {
+            if (!_isCoroutineRunning)
+            {
+                _isCoroutineRunning = true;
+                UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                {
+                    GameManager.Instance.StartCoroutine(ExecuteCoroutine());
+                });
+            }
+        }
+    }
+
+    private IEnumerator ExecuteCoroutine()
+    {
+        while (_queue.TryDequeue(out Card dealerCard))
+        {
+            yield return GameManager.Instance.StartCoroutine(WorkCoroutine(dealerCard));
+        }
+
+        _isCoroutineRunning = false;
+    }
+
+    private IEnumerator WorkCoroutine(Card dealerCard)
+    {
+        Tween tween = GameManager.Instance.InstancingCardToDealer(dealerCard, GameManager.Instance.characterManager.dealer.Hand);
+
+        yield return tween.WaitForCompletion();
+        GameManager.Instance.characterManager.dealer.Hand.AddCard(dealerCard);
+        GameManager.Instance.uiManager.CardValueDealerSetText(GameManager.Instance.characterManager.dealer.Hand.GetValue().ToString());
+
+        yield return null;
     }
 }

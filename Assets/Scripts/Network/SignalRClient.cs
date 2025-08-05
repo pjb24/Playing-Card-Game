@@ -48,14 +48,6 @@ public class SignalRClient
         }
     }
 
-    private async void SendMessageToServer(string message)
-    {
-        if (_connection != null && _connection.State == HubConnectionState.Connected)
-        {
-            await _connection.InvokeAsync("SendMessageToServer", message);
-        }
-    }
-
     public async void OnApplicationQuit()
     {
         if (_connection != null)
@@ -84,10 +76,13 @@ public class SignalRClient
         _dispatcher.RegisterCommand("OnActionDone", new OnActionDoneCommand());
         _dispatcher.RegisterCommand("OnHandSplit", new OnHandSplitCommand());
         _dispatcher.RegisterCommand("OnDealerHoleCardRevealed", new OnDealerHoleCardRevealedCommand());
-        _dispatcher.RegisterCommand("OnDealerCardDealt", new OnDealerCardDealtCommand());
         _dispatcher.RegisterCommand("OnDealerHiddenCardDealt", new OnDealerHiddenCardDealtCommand());
         _dispatcher.RegisterCommand("OnAddHandToPlayer", new OnAddHandToPlayerCommand());
         _dispatcher.RegisterCommand("OnGameEnd", new OnGameEndCommand());
+
+        OnDealerCardDealtCommand onDealerCardDealtCommand = new();
+        _dispatcher.RegisterCommand("OnDealerCardDealt", onDealerCardDealtCommand);
+        _dispatcher.RegisterCommand("OnDealerCardDealtComplete", new OnDealerCardDealtCompleteCommand(onDealerCardDealtCommand));
 
         OnTimeToActionCommand onTimeToActionCommand = new();
         _dispatcher.RegisterCommand("OnTimeToAction", onTimeToActionCommand);

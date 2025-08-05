@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class OnHandSplitCommand : IGameCommand
 {
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnHandSplitDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnHandSplitDTO>(payload);
 
@@ -29,6 +29,8 @@ public class OnHandSplitCommand : IGameCommand
         GameObject splitCardObj = hand.cardObjects[1];
         hand.cardObjects.Remove(splitCardObj);
         newHand.cardObjects.Add(splitCardObj);
+
+        yield return null;
     }
 
     private void WorkForUI(PlayerHand hand)

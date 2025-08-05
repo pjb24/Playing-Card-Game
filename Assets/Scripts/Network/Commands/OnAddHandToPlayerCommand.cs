@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OnAddHandToPlayerCommand : IGameCommand
 {
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnAddHandToPlayerDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnAddHandToPlayerDTO>(payload);
 
@@ -12,5 +12,7 @@ public class OnAddHandToPlayerCommand : IGameCommand
 
         Player player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
         player.AddHand(dto.handId);
+
+        yield return null;
     }
 }

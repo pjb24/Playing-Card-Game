@@ -9,7 +9,7 @@ public class OnTimeToActionCommand : IGameCommand
     private Player _player;
     private PlayerHand _hand;
 
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnTimeToActionDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnTimeToActionDTO>(payload);
 
@@ -20,6 +20,8 @@ public class OnTimeToActionCommand : IGameCommand
         _hand = _player.GetHandByGuid(dto.handId);
 
         WorkForUI();
+
+        yield return null;
     }
 
     private void WorkForUI()

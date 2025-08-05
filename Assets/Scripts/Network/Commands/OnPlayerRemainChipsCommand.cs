@@ -7,7 +7,7 @@ public class OnPlayerRemainChipsCommand : IGameCommand
 {
     Player _player;
 
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnPlayerRemainChipsDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnPlayerRemainChipsDTO>(payload);
 
@@ -21,6 +21,8 @@ public class OnPlayerRemainChipsCommand : IGameCommand
         {
             WorkForUI(hand);
         }
+
+        yield return null;
     }
 
     private void WorkForUI(PlayerHand hand)

@@ -5,36 +5,22 @@ using UnityEngine;
 
 public class OnGameEndCommand : IGameCommand
 {
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnGameEndDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnGameEndDTO>(payload);
 
         Debug.Log("OnGameEnd");
 
-        //WorkForUI();
+        WorkForUI();
+
+        yield return null;
     }
 
     private void WorkForUI()
     {
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            foreach (var player in GameManager.Instance.characterManager.Players)
-            {
-                player.ResetForNextRound_Network();
-            }
-
-            GameManager.Instance.characterManager.dealer.ResetHand();
-
-            UpdateUI_PlayerInfos();
-            UpdateUI_CardValues();
-        });
-
-        UnityMainThreadDispatcher.Instance().Enqueue(() =>
-        {
-            GameManager.Instance.uiManager.ChangeToBetPanel();
-
-            GameManager.Instance.uiManager.button_Join.visible = true;
-            GameManager.Instance.uiManager.button_Join.clicked += HandleJoin;
+            GameManager.Instance.StartCoroutine(WaitAndExecute(2f));
         });
     }
 
@@ -77,5 +63,25 @@ public class OnGameEndCommand : IGameCommand
         {
             GameManager.Instance.uiManager.button_Join.clicked -= HandleJoin;
         });
+    }
+
+    private IEnumerator WaitAndExecute(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+
+        foreach (var player in GameManager.Instance.characterManager.Players)
+        {
+            player.ResetForNextRound_Network();
+        }
+
+        GameManager.Instance.characterManager.dealer.ResetHand();
+
+        UpdateUI_PlayerInfos();
+        UpdateUI_CardValues();
+
+        GameManager.Instance.uiManager.ChangeToBetPanel();
+
+        GameManager.Instance.uiManager.button_Join.visible = true;
+        GameManager.Instance.uiManager.button_Join.clicked += HandleJoin;
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 카드 문양
-public enum E_Suit
+public enum E_CardSuit
 {
     Spades,
     Hearts,
@@ -13,7 +13,7 @@ public enum E_Suit
 }
 
 // 카드 숫자
-public enum E_Rank
+public enum E_CardRank
 {
     Back = 0,
     Ace = 1,
@@ -33,10 +33,10 @@ public enum E_Rank
 
 public class Card
 {
-    public E_Suit Suit { get; private set; }
-    public E_Rank Rank { get; private set; }
+    public E_CardSuit Suit { get; private set; }
+    public E_CardRank Rank { get; private set; }
 
-	public Card(E_Suit suit, E_Rank rank)
+	public Card(E_CardSuit suit, E_CardRank rank)
     {
         this.Suit = suit;
         this.Rank = rank;
@@ -46,11 +46,11 @@ public class Card
 	{
 		int result = (int)Rank;
 
-		if (Rank >= E_Rank.Ten)
+		if (Rank >= E_CardRank.Ten)
 		{
 			result = 10;
 		}
-		if (Rank == E_Rank.Ace)
+		if (Rank == E_CardRank.Ace)
 		{
 			result = 11;
 		}
@@ -63,12 +63,12 @@ public class Card
         return $"{Rank} of {Suit}";
     }
 
-    public void SetRank(E_Rank rank)
+    public void SetRank(E_CardRank rank)
     {
         Rank = rank;
     }
 
-    public void SetSuit(E_Suit suit)
+    public void SetSuit(E_CardSuit suit)
     {
         Suit = suit;
     }

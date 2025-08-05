@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class OnDealerHoleCardRevealedCommand : IGameCommand
 {
-    public void Execute(string payload)
+    public IEnumerator Execute(string payload)
     {
         OnDealerHoleCardRevealedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnDealerHoleCardRevealedDTO>(payload);
 
@@ -18,6 +18,8 @@ public class OnDealerHoleCardRevealedCommand : IGameCommand
         hiddenCard.SetSuit(dto.cardSuit);
 
         WorkForUI();
+
+        yield return null;
     }
 
     private void WorkForUI()

@@ -45,9 +45,9 @@ public class DeckManager
     private List<Card> GenerateStandardDeck()
     {
         var cards = new List<Card>();
-        foreach (E_Suit suit in System.Enum.GetValues(typeof(E_Suit)))
+        foreach (E_CardSuit suit in System.Enum.GetValues(typeof(E_CardSuit)))
         {
-            foreach (E_Rank rank in System.Enum.GetValues(typeof(E_Rank)))
+            foreach (E_CardRank rank in System.Enum.GetValues(typeof(E_CardRank)))
             {
                 cards.Add(new Card(suit, rank));
             }

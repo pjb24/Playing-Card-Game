@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum E_EvaluateResult
+public enum E_EvaluationResult
 {
     Win = 0,
     Lose = 1,
@@ -28,9 +28,9 @@ public class ResultState : IGameState
     {
     }
 
-    public E_EvaluateResult Evaluate(Hand playerHand, Hand dealerHand)
+    public E_EvaluationResult Evaluate(Hand playerHand, Hand dealerHand)
     {
-        E_EvaluateResult result;
+        E_EvaluationResult result;
 
         bool isBlackjackPlayer = playerHand.IsBlackjack();
         bool isBlackjackDealer = dealerHand.IsBlackjack();
@@ -40,63 +40,63 @@ public class ResultState : IGameState
 
         if (playerValue == dealerValue)
         {
-            result = E_EvaluateResult.Push;
+            result = E_EvaluationResult.Push;
         }
         else if (playerValue < dealerValue)
         {
-            result = E_EvaluateResult.Lose;
+            result = E_EvaluationResult.Lose;
         }
         else
         {
-            result = E_EvaluateResult.Win;
+            result = E_EvaluationResult.Win;
         }
 
         if (dealerHand.IsBust())
         {
-            result = E_EvaluateResult.Win;
+            result = E_EvaluationResult.Win;
         }
 
         if (playerHand.IsBust())
         {
-            result = E_EvaluateResult.Lose;
+            result = E_EvaluationResult.Lose;
         }
 
         if (isBlackjackDealer && isBlackjackPlayer)
         {
-            result = E_EvaluateResult.Push;
+            result = E_EvaluationResult.Push;
         }
         else if (isBlackjackDealer)
         {
-            result = E_EvaluateResult.Lose;
+            result = E_EvaluationResult.Lose;
         }
         else if (isBlackjackPlayer)
         {
-            result = E_EvaluateResult.Blackjack;
+            result = E_EvaluationResult.Blackjack;
         }
 
         return result;
     }
 
-    public void ApplyPayout(Player player, PlayerHand hand, E_EvaluateResult result)
+    public void ApplyPayout(Player player, PlayerHand hand, E_EvaluationResult result)
     {
         switch (result)
         {
-            case E_EvaluateResult.Win:
+            case E_EvaluationResult.Win:
                 {
                     player.Win(hand);
                     break;
                 }
-            case E_EvaluateResult.Lose:
+            case E_EvaluationResult.Lose:
                 {
                     player.Lose(hand);
                     break;
                 }
-            case E_EvaluateResult.Push:
+            case E_EvaluationResult.Push:
                 {
                     player.Push(hand);
                     break;
                 }
-            case E_EvaluateResult.Blackjack:
+            case E_EvaluationResult.Blackjack:
                 {
                     player.Blackjack(hand);
                     break;
@@ -112,7 +112,7 @@ public class ResultState : IGameState
         {
             foreach (PlayerHand hand in player.Hands)
             {
-                E_EvaluateResult result = Evaluate(hand, dealerHand);
+                E_EvaluationResult result = Evaluate(hand, dealerHand);
 
                 ApplyPayout(player, hand, result);
 
