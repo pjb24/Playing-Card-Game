@@ -4,6 +4,25 @@ using UnityEngine;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Text;
+
+public class RandomStringGenerator
+{
+    private static System.Random _random = new System.Random();
+
+    private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    public static string GenerateRandomString(int length)
+    {
+        StringBuilder result = new StringBuilder(length);
+        for (int i = 0; i < length; i++)
+        {
+            result.Append(Chars[_random.Next(Chars.Length)]);
+        }
+
+        return result.ToString();
+    }
+}
 
 public class SignalRClient
 {
@@ -39,6 +58,7 @@ public class SignalRClient
 
             JoinGameDTO joinGameDTO = new JoinGameDTO();
             joinGameDTO.userName = "DisplayName_1";
+            joinGameDTO.userName = RandomStringGenerator.GenerateRandomString(8);
             string joinGameJson = Newtonsoft.Json.JsonConvert.SerializeObject(joinGameDTO);
             GameManager.Instance.SignalRClient.Execute("JoinGame", joinGameJson);
         }
