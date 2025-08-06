@@ -15,21 +15,32 @@ public class OnTimeToActionCommand : IGameCommand
 
         Debug.Log("OnTimeToAction, " + "플레이어: " + dto.playerName + "의 " + "핸드 ID: " + dto.handId + "이/가 동작을 수행할 차례입니다." + " 플레이어 Guid: " + dto.playerGuid);
 
-        _player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
+        Enter();
 
-        _hand = _player.GetHandByGuid(dto.handId);
+        _player = GameManager.Instance.characterManager.ClientPlayer;
 
-        WorkForUI();
+        if (_player.Id == dto.playerGuid)
+        {
+            _hand = _player.GetHandByGuid(dto.handId);
+
+            WorkForUI();
+        }
 
         yield return null;
+    }
+
+    private void Enter()
+    {
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            GameManager.Instance.uiManager.ChangeToPlayerActionPanel();
+        });
     }
 
     private void WorkForUI()
     {
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            GameManager.Instance.uiManager.ChangeToPlayerActionPanel();
-
             // Button subscribe function
             GameManager.Instance.uiManager.button_Hit.clicked += HandleHit;
             GameManager.Instance.uiManager.button_Stand.clicked += HandleStand;

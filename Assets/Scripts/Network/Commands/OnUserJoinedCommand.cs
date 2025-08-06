@@ -10,6 +10,8 @@ public class OnUserJoinedCommand : IGameCommand
 
         Debug.Log("OnUserJoined, " + "유저가 게임에 입장하였습니다." + " 유저 이름: " + dto.userName);
 
+        GameManager.Instance.characterManager.AddPlayer(new Player(dto.playerGuid, dto.userName));
+
         yield return null;
     }
 }

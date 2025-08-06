@@ -8,6 +8,14 @@ public class CharacterManager
     private int currentPlayerIndex = 0;
     public Dealer dealer = new();
 
+    private Player _clientPlayer;
+    public Player ClientPlayer => _clientPlayer;
+
+    public void SetClientPlayer(Player player)
+    {
+        _clientPlayer = player;
+    }
+
     public Player GetPlayerByGuid(string guid)
     {
         return Players.Find(p => p.Id == guid);
@@ -58,6 +66,7 @@ public class CharacterManager
             else
             {
                 index += result;
+                break;
             }
         }
 

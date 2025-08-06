@@ -107,6 +107,9 @@ public class SignalRClient
         OnTimeToActionCommand onTimeToActionCommand = new();
         _dispatcher.RegisterCommand("OnTimeToAction", onTimeToActionCommand);
         GameManager.Instance.SetOnTimeToActionCommandInstance(onTimeToActionCommand);
+
+        _dispatcher.RegisterCommand("OnGrantRoomMaster", new OnGrantRoomMasterCommand());
+        _dispatcher.RegisterCommand("OnExistingPlayerList", new OnExistingPlayerListCommand());
     }
 
     public async void Execute(string commandName, string payload)

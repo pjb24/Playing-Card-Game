@@ -14,13 +14,13 @@ public class OnTimeToBettingCommand : IGameCommand
     {
         OnTimeToBettingDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnTimeToBettingDTO>(payload);
 
-        Debug.Log("OnTimeToBetting, " + "Player Guid: " + dto.playerGuid + " 핸드 ID: " + dto.handId + "에 베팅이 필요합니다.");
+        Debug.Log("OnTimeToBetting, " + "베팅이 필요합니다.");
 
         _betAmount = 0;
 
-        _player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
+        _player = GameManager.Instance.characterManager.ClientPlayer;
 
-        _hand = _player.GetHandByGuid(dto.handId);
+        _hand = _player.GetNextBettingHand();
 
         Enter();
 
@@ -236,16 +236,22 @@ public class OnTimeToBettingCommand : IGameCommand
         string placeBetJson = Newtonsoft.Json.JsonConvert.SerializeObject(placeBetDTO);
         GameManager.Instance.SignalRClient.Execute("PlaceBet", placeBetJson);
 
-        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        _hand = _player.GetNextBettingHand();
+        _betAmount = 0;
+
+        if (_hand == null)
         {
-            // Unsubscribe function
-            GameManager.Instance.uiManager.button_BetReset.clicked -= HandleBetReset;
-            GameManager.Instance.uiManager.button_Bet1.clicked -= HandleBet1;
-            GameManager.Instance.uiManager.button_Bet2.clicked -= HandleBet2;
-            GameManager.Instance.uiManager.button_Bet3.clicked -= HandleBet3;
-            GameManager.Instance.uiManager.button_Bet4.clicked -= HandleBet4;
-            GameManager.Instance.uiManager.button_BetMax.clicked -= HandleBetMax;
-            GameManager.Instance.uiManager.button_BetConfirm.clicked -= HandleBetConfirm;
-        });
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                // Unsubscribe function
+                GameManager.Instance.uiManager.button_BetReset.clicked -= HandleBetReset;
+                GameManager.Instance.uiManager.button_Bet1.clicked -= HandleBet1;
+                GameManager.Instance.uiManager.button_Bet2.clicked -= HandleBet2;
+                GameManager.Instance.uiManager.button_Bet3.clicked -= HandleBet3;
+                GameManager.Instance.uiManager.button_Bet4.clicked -= HandleBet4;
+                GameManager.Instance.uiManager.button_BetMax.clicked -= HandleBetMax;
+                GameManager.Instance.uiManager.button_BetConfirm.clicked -= HandleBetConfirm;
+            });
+        }
     }
 }

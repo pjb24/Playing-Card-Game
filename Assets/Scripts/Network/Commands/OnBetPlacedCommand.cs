@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class OnBetPlacedCommand : IGameCommand
 {
-    Player _player;
-
     public IEnumerator Execute(string payload)
     {
         OnBetPlacedDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<OnBetPlacedDTO>(payload);
 
         Debug.Log("OnBetPlaced, " + "플레이어 " + dto.playerName + "이/가 핸드 ID: " + dto.handId + "에 " + dto.betAmount + "를 베팅하였습니다." + " 플레이어 Guid: " + dto.playerGuid);
 
-        _player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
+        Player player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
 
-        PlayerHand hand = _player.GetHandByGuid(dto.handId);
+        PlayerHand hand = player.GetHandByGuid(dto.handId);
 
         hand.Bet(dto.betAmount);
 
@@ -44,12 +42,12 @@ public class OnBetPlacedCommand : IGameCommand
         {
             foreach (var hand in player.Hands)
             {
-                UpdateUiChips(hand);
+                UpdateUiChips(hand, player);
             }
         }
     }
 
-    private void UpdateUiChips(PlayerHand hand)
+    private void UpdateUiChips(PlayerHand hand, Player player)
     {
         int handIndex = GameManager.Instance.characterManager.GetHandIndex(hand);
         GameManager.Instance.uiManager.PlayerInfoVisible(handIndex);
@@ -58,7 +56,7 @@ public class OnBetPlacedCommand : IGameCommand
         GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
 
         GameManager.Instance.uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), handIndex);
-        GameManager.Instance.uiManager.PlayerInfoNameSetText(_player.DisplayName, handIndex);
-        GameManager.Instance.uiManager.PlayerInfoChipSetText(_player.Chips.ToString("N0"), handIndex);
+        GameManager.Instance.uiManager.PlayerInfoNameSetText(player.DisplayName, handIndex);
+        GameManager.Instance.uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), handIndex);
     }
 }

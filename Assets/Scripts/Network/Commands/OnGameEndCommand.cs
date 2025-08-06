@@ -81,7 +81,10 @@ public class OnGameEndCommand : IGameCommand
 
         GameManager.Instance.uiManager.ChangeToBetPanel();
 
-        GameManager.Instance.uiManager.button_Join.visible = true;
-        GameManager.Instance.uiManager.button_Join.clicked += HandleJoin;
+        GameManager.Instance.uiManager.button_Join.visible = false;
+
+        ReadyToNextRoundDTO readyToNextRoundDTO = new();
+        string readyToNextRoundJson = Newtonsoft.Json.JsonConvert.SerializeObject(readyToNextRoundDTO);
+        GameManager.Instance.SignalRClient.Execute("ReadyToNextRound", readyToNextRoundJson);
     }
 }
