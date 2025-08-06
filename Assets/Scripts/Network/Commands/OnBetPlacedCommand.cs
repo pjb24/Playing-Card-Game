@@ -53,7 +53,6 @@ public class OnBetPlacedCommand : IGameCommand
         GameManager.Instance.uiManager.PlayerInfoVisible(handIndex);
 
         Vector3 targetPosition = GameManager.Instance.GetHandPosition(hand);
-        GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
 
         GameManager.Instance.uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), handIndex);
         GameManager.Instance.uiManager.PlayerInfoNameSetText(player.DisplayName, handIndex);

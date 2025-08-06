@@ -76,7 +76,7 @@ public class OnTimeToActionCommand : IGameCommand
         // 핸드에 카드가 2장, 카드의 숫자 또는 문자가 같아야 함
         if (!_hand.CanSplit())
         {
-            //return;
+            return;
         }
 
         SplitDTO splitDTO = new SplitDTO();

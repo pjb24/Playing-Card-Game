@@ -18,7 +18,7 @@ public class OnHandSplitCommand : IGameCommand
         // 새로운 핸드를 현재 핸드의 오른편에 추가
         PlayerHand newHand = player.InsertHand(player.Hands.IndexOf(hand) + 1, dto.newHandId);
 
-        WorkForUI(newHand);
+        WorkForUI(newHand, player);
 
         // 현재 핸드의 2번째 카드를 새로운 핸드로 나눔
         Card splitCard = hand.Cards[1];
@@ -33,7 +33,7 @@ public class OnHandSplitCommand : IGameCommand
         yield return null;
     }
 
-    private void WorkForUI(PlayerHand hand)
+    private void WorkForUI(PlayerHand hand, Player player)
     {
         // 핸드에 맞는 UI Insert
         int newHandIndex = GameManager.Instance.characterManager.GetHandIndex(hand);
@@ -42,6 +42,10 @@ public class OnHandSplitCommand : IGameCommand
         {
             GameManager.Instance.uiManager.CreateLabelCardValuePlayer(newHandIndex);
             GameManager.Instance.uiManager.CreatePlayerInfo(newHandIndex);
+
+            GameManager.Instance.uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), newHandIndex);
+            GameManager.Instance.uiManager.PlayerInfoNameSetText(player.DisplayName, newHandIndex);
+            GameManager.Instance.uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), newHandIndex);
 
             // 모든 카드 위치 갱신
             GameManager.Instance.UpdateAllPlayerHandPositions();
@@ -52,7 +56,7 @@ public class OnHandSplitCommand : IGameCommand
 
             GameManager.Instance.uiManager.RequestCardValueUIPositionUpdate_Y_Register(newHandIndex);
             GameManager.Instance.uiManager.RequestPlayerInfoPositionUpdate_Y_Register(newHandIndex);
-            
+
             UpdateUICardValue();
         });
     }
