@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,6 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-
-    private GameStateMachine stateMachine;
 
     public UIManager uiManager;
     public DeckManager deckManager;
@@ -27,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     public bool PlayerJoined { get; set; } = false;
 
+    public event Action OnSceneLoaded;
+
     private void Awake()
     {
         if (Instance == null)
@@ -34,19 +35,8 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
         
-        stateMachine = new GameStateMachine();
         deckManager = new DeckManager();
         characterManager = new CharacterManager();
-    }
-
-    private void Update()
-    {
-        stateMachine.Update();
-    }
-
-    public void ChangeState(IGameState newState)
-    {
-        stateMachine.ChangeState(newState);
     }
 
     public void UpdateAllPlayerHandPositions()

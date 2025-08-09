@@ -1,8 +1,16 @@
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-// Server To Client DTO
-
 using System.Collections.Generic;
+
+public enum E_EvaluationResult
+{
+    Win,
+    Lose,
+    Push,
+    Blackjack,
+}
+
+// Server To Client DTO
 
 public class WelcomeDTO
 {

@@ -86,7 +86,6 @@ public class SignalRClient
         _dispatcher.RegisterCommand("OnJoinSuccess", new OnJoinSuccessCommand());
         _dispatcher.RegisterCommand("OnUserJoined", new OnUserJoinedCommand());
         _dispatcher.RegisterCommand("OnPlayerRemainChips", new OnPlayerRemainChipsCommand());
-        _dispatcher.RegisterCommand("OnGameStateChanged", new OnGameStateChangedCommand());
         _dispatcher.RegisterCommand("OnBetPlaced", new OnBetPlacedCommand());
         _dispatcher.RegisterCommand("UserLeft", new UserLeftCommand());
         _dispatcher.RegisterCommand("OnTimeToBetting", new OnTimeToBettingCommand());
