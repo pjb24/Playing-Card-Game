@@ -234,7 +234,7 @@ public class OnTimeToBettingCommand : IGameCommand
         placeBetDTO.amount = _betAmount;
         placeBetDTO.handId = _hand.Id;
         string placeBetJson = Newtonsoft.Json.JsonConvert.SerializeObject(placeBetDTO);
-        GameManager.Instance.SignalRClient.Execute("PlaceBet", placeBetJson);
+        NetworkManager.Instance.SignalRClient.Execute("PlaceBet", placeBetJson);
 
         _hand = _player.GetNextBettingHand();
         _betAmount = 0;

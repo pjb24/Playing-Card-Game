@@ -25,7 +25,7 @@ public class OnDealerCardDealtCompleteCommand : IGameCommand
 
         DealerBehaviorDoneDTO dealerBehaviorDoneDTO = new DealerBehaviorDoneDTO();
         string dealerBehaviorDoneJson = Newtonsoft.Json.JsonConvert.SerializeObject(dealerBehaviorDoneDTO);
-        GameManager.Instance.SignalRClient.Execute("DealerBehaviorDone", dealerBehaviorDoneJson);
+        NetworkManager.Instance.SignalRClient.Execute("DealerBehaviorDone", dealerBehaviorDoneJson);
 
         yield return null;
     }

@@ -1,0 +1,13 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement style="flex-grow: 1; margin-left: 25%; margin-right: 25%; margin-top: 10%; margin-bottom: 10%; background-color: rgb(115, 179, 204); padding-top: 150px; padding-bottom: 150px; padding-left: 100px; padding-right: 100px;">
+        <engine:VisualElement style="flex-grow: 1; justify-content: flex-start; flex-direction: row; align-items: center;">
+            <engine:TextField label="ID :" placeholder-text="filler text" name="TextField_ID" style="font-size: 30px; width: 750px; flex-grow: 1;" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-grow: 1; justify-content: flex-start; flex-direction: row; align-self: auto; align-items: center;">
+            <engine:TextField label="Name :" placeholder-text="filler text" name="TextField_Name" style="font-size: 30px; width: 750px; flex-grow: 1;" />
+        </engine:VisualElement>
+        <engine:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: center;">
+            <engine:Button text="입장" name="Button_Enter" style="font-size: 30px; width: 270px;" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

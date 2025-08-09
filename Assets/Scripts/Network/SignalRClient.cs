@@ -60,7 +60,7 @@ public class SignalRClient
             joinGameDTO.userName = "DisplayName_1";
             joinGameDTO.userName = RandomStringGenerator.GenerateRandomString(8);
             string joinGameJson = Newtonsoft.Json.JsonConvert.SerializeObject(joinGameDTO);
-            GameManager.Instance.SignalRClient.Execute("JoinGame", joinGameJson);
+            NetworkManager.Instance.SignalRClient.Execute("JoinGame", joinGameJson);
         }
         catch (System.Exception ex)
         {
@@ -106,7 +106,7 @@ public class SignalRClient
 
         OnTimeToActionCommand onTimeToActionCommand = new();
         _dispatcher.RegisterCommand("OnTimeToAction", onTimeToActionCommand);
-        GameManager.Instance.SetOnTimeToActionCommandInstance(onTimeToActionCommand);
+        NetworkManager.Instance.SetOnTimeToActionCommandInstance(onTimeToActionCommand);
 
         _dispatcher.RegisterCommand("OnGrantRoomMaster", new OnGrantRoomMasterCommand());
         _dispatcher.RegisterCommand("OnExistingPlayerList", new OnExistingPlayerListCommand());

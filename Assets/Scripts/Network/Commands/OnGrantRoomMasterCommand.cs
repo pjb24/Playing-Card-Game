@@ -28,7 +28,7 @@ public class OnGrantRoomMasterCommand : IGameCommand
     {
         StartGameDTO startGameDTO = new StartGameDTO();
         string startGameJson = Newtonsoft.Json.JsonConvert.SerializeObject(startGameDTO);
-        GameManager.Instance.SignalRClient.Execute("StartGame", startGameJson);
+        NetworkManager.Instance.SignalRClient.Execute("StartGame", startGameJson);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {

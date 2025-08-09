@@ -57,7 +57,7 @@ public class OnGameEndCommand : IGameCommand
     {
         StartGameDTO startGameDTO = new StartGameDTO();
         string startGameJson = Newtonsoft.Json.JsonConvert.SerializeObject(startGameDTO);
-        GameManager.Instance.SignalRClient.Execute("StartGame", startGameJson);
+        NetworkManager.Instance.SignalRClient.Execute("StartGame", startGameJson);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
@@ -85,6 +85,6 @@ public class OnGameEndCommand : IGameCommand
 
         ReadyToNextRoundDTO readyToNextRoundDTO = new();
         string readyToNextRoundJson = Newtonsoft.Json.JsonConvert.SerializeObject(readyToNextRoundDTO);
-        GameManager.Instance.SignalRClient.Execute("ReadyToNextRound", readyToNextRoundJson);
+        NetworkManager.Instance.SignalRClient.Execute("ReadyToNextRound", readyToNextRoundJson);
     }
 }

@@ -54,7 +54,7 @@ public class OnTimeToActionCommand : IGameCommand
         HitDTO hitDTO = new HitDTO();
         hitDTO.handId = _hand.Id;
         string hitJson = Newtonsoft.Json.JsonConvert.SerializeObject(hitDTO);
-        GameManager.Instance.SignalRClient.Execute("Hit", hitJson);
+        NetworkManager.Instance.SignalRClient.Execute("Hit", hitJson);
     }
 
     private void HandleStand()
@@ -62,7 +62,7 @@ public class OnTimeToActionCommand : IGameCommand
         StandDTO standDTO = new StandDTO();
         standDTO.handId = _hand.Id;
         string standJson = Newtonsoft.Json.JsonConvert.SerializeObject(standDTO);
-        GameManager.Instance.SignalRClient.Execute("Stand", standJson);
+        NetworkManager.Instance.SignalRClient.Execute("Stand", standJson);
     }
 
     private void HandleSplit()
@@ -76,13 +76,13 @@ public class OnTimeToActionCommand : IGameCommand
         // 핸드에 카드가 2장, 카드의 숫자 또는 문자가 같아야 함
         if (!_hand.CanSplit())
         {
-            return;
+            //return;
         }
 
         SplitDTO splitDTO = new SplitDTO();
         splitDTO.handId = _hand.Id;
         string splitJson = Newtonsoft.Json.JsonConvert.SerializeObject(splitDTO);
-        GameManager.Instance.SignalRClient.Execute("Split", splitJson);
+        NetworkManager.Instance.SignalRClient.Execute("Split", splitJson);
     }
 
     private void HandleDoubleDown()
@@ -101,7 +101,7 @@ public class OnTimeToActionCommand : IGameCommand
         DoubleDownDTO doubleDownDTO = new DoubleDownDTO();
         doubleDownDTO.handId = _hand.Id;
         string doubleDownJson = Newtonsoft.Json.JsonConvert.SerializeObject(doubleDownDTO);
-        GameManager.Instance.SignalRClient.Execute("DoubleDown", doubleDownJson);
+        NetworkManager.Instance.SignalRClient.Execute("DoubleDown", doubleDownJson);
     }
 
     public void RemoveListeners()
