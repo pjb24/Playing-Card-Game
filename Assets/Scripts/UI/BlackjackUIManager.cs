@@ -9,28 +9,28 @@ public class BlackjackUIManager : MonoBehaviour
     [SerializeField] private FOVManager fovManager;
 
     [Header("Panels")]
-    public UIDocument uiPanel;
-    public VisualTreeAsset betPanel;
-    public VisualTreeAsset playerActionPanel;
+    [SerializeField] private UIDocument uiPanel;
+    [SerializeField] private VisualTreeAsset betPanel;
+    [SerializeField] private VisualTreeAsset playerActionPanel;
 
     [Header("Betting Buttons")]
-    public Button button_Join;
-    public Button button_BetReset;
-    public Button button_Bet1;
-    public Button button_Bet2;
-    public Button button_Bet3;
-    public Button button_Bet4;
-    public Button button_BetMax;
-    public Button button_BetConfirm;
+    private Button button_Join;
+    private Button button_BetReset;
+    private Button button_Bet1;
+    private Button button_Bet2;
+    private Button button_Bet3;
+    private Button button_Bet4;
+    private Button button_BetMax;
+    private Button button_BetConfirm;
 
     [Header("Player Action Buttons")]
-    public Button button_Hit;
-    public Button button_Stand;
-    public Button button_Split;
-    public Button button_DoubleDown;
+    private Button button_Hit;
+    private Button button_Stand;
+    private Button button_Split;
+    private Button button_DoubleDown;
 
     [Header("Player Infos")]
-    public UIDocument uiPlayerInfo;
+    [SerializeField] private UIDocument uiPlayerInfo;
 
     private List<VisualElement> list_section_text = new();
     private List<Label> list_label_BetAmount = new();
@@ -369,5 +369,135 @@ public class BlackjackUIManager : MonoBehaviour
         }
 
         label_CardValue_Dealer.text = text;
+    }
+
+    public void SetButtonJoinInvisible()
+    {
+        button_Join.visible = false;
+    }
+
+    public void SetButtonJoinVisible()
+    {
+        button_Join.visible = true;
+    }
+
+    public void SubscribeButtonJoinClicked(Action action)
+    {
+        button_Join.clicked += action;
+    }
+
+    public void UnsubscribeButtonJoinClicked(Action action)
+    {
+        button_Join.clicked += action;
+    }
+
+    public void SubscribeButtonBetResetClicked(Action action)
+    {
+        button_BetReset.clicked += action;
+    }
+
+    public void UnsubscribeButtonBetResetClicked(Action action)
+    {
+        button_BetReset.clicked += action;
+    }
+
+    public void SubscribeButtonBet1Clicked(Action action)
+    {
+        button_Bet1.clicked += action;
+    }
+
+    public void UnsubscribeButtonBet1Clicked(Action action)
+    {
+        button_Bet1.clicked += action;
+    }
+
+    public void SubscribeButtonBet2Clicked(Action action)
+    {
+        button_Bet2.clicked += action;
+    }
+
+    public void UnsubscribeButtonBet2Clicked(Action action)
+    {
+        button_Bet2.clicked += action;
+    }
+
+    public void SubscribeButtonBet3Clicked(Action action)
+    {
+        button_Bet3.clicked += action;
+    }
+
+    public void UnsubscribeButtonBet3Clicked(Action action)
+    {
+        button_Bet3.clicked += action;
+    }
+
+    public void SubscribeButtonBet4Clicked(Action action)
+    {
+        button_Bet4.clicked += action;
+    }
+
+    public void UnsubscribeButtonBet4Clicked(Action action)
+    {
+        button_Bet4.clicked += action;
+    }
+
+    public void SubscribeButtonBetMaxClicked(Action action)
+    {
+        button_BetMax.clicked += action;
+    }
+
+    public void UnsubscribeButtonBetMaxClicked(Action action)
+    {
+        button_BetMax.clicked += action;
+    }
+
+    public void SubscribeButtonBetConfirmClicked(Action action)
+    {
+        button_BetConfirm.clicked += action;
+    }
+
+    public void UnsubscribeButtonBetConfirmClicked(Action action)
+    {
+        button_BetConfirm.clicked += action;
+    }
+
+    public void SubscribeButtonHitClicked(Action action)
+    {
+        button_Hit.clicked += action;
+    }
+
+    public void UnsubscribeButtonHitClicked(Action action)
+    {
+        button_Hit.clicked += action;
+    }
+
+    public void SubscribeButtonStandClicked(Action action)
+    {
+        button_Stand.clicked += action;
+    }
+
+    public void UnsubscribeButtonStandClicked(Action action)
+    {
+        button_Stand.clicked += action;
+    }
+
+    public void SubscribeButtonSplitClicked(Action action)
+    {
+        button_Split.clicked += action;
+    }
+
+    public void UnsubscribeButtonSplitClicked(Action action)
+    {
+        button_Split.clicked += action;
+    }
+
+    public void SubscribeButtonDoubleDownClicked(Action action)
+    {
+        button_DoubleDown.clicked += action;
+    }
+
+    public void UnsubscribeButtonDoubleDownClicked(Action action)
+    {
+        button_DoubleDown.clicked += action;
     }
 }

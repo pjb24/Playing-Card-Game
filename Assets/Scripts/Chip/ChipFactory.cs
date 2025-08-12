@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class ChipFactory : MonoBehaviour
 {
-    public List<GameObject> chipPrefabs;
+    [SerializeField] private List<GameObject> _chipPrefabs;
 
-    public Transform spawnPosition;
+    [SerializeField] private Transform _spawnPosition;
 
-    [SerializeField] private Transform bettingPositionRoot;
-    [SerializeField] private float bettingPositionSpacing = 0.5f;
+    [SerializeField] private Transform _bettingPositionRoot;
+    [SerializeField] private float _bettingPositionSpacing = 0.5f;
 
-    [SerializeField] private float chipOffsetY = 0.1f;
+    [SerializeField] private float _chipOffsetY = 0.1f;
 
     // 각각의 타입에 맞는 칩을 생성한다.
     // 하위 타입의 칩들이 모여서 상위 타입의 칩의 가치를 넘기면
@@ -20,7 +20,7 @@ public class ChipFactory : MonoBehaviour
 
     public void CreateChipType1(PlayerHand hand)
     {
-        var chipObj = Instantiate(chipPrefabs[0], spawnPosition.position, chipPrefabs[0].transform.rotation);
+        var chipObj = Instantiate(_chipPrefabs[0], _spawnPosition.position, _chipPrefabs[0].transform.rotation);
         var chipView = chipObj.GetComponent<ChipView>();
         chipView.SetValue((int)E_ChipValue.Bet1);
 
@@ -35,7 +35,7 @@ public class ChipFactory : MonoBehaviour
 
     public void CreateChipType2(PlayerHand hand)
     {
-        var chipObj = Instantiate(chipPrefabs[1], spawnPosition.position, chipPrefabs[1].transform.rotation);
+        var chipObj = Instantiate(_chipPrefabs[1], _spawnPosition.position, _chipPrefabs[1].transform.rotation);
         var chipView = chipObj.GetComponent<ChipView>();
         chipView.SetValue((int)E_ChipValue.Bet2);
 
@@ -50,7 +50,7 @@ public class ChipFactory : MonoBehaviour
 
     public void CreateChipType3(PlayerHand hand)
     {
-        var chipObj = Instantiate(chipPrefabs[2], spawnPosition.position, chipPrefabs[2].transform.rotation);
+        var chipObj = Instantiate(_chipPrefabs[2], _spawnPosition.position, _chipPrefabs[2].transform.rotation);
         var chipView = chipObj.GetComponent<ChipView>();
         chipView.SetValue((int)E_ChipValue.Bet3);
 
@@ -65,7 +65,7 @@ public class ChipFactory : MonoBehaviour
 
     public void CreateChipType4(PlayerHand hand)
     {
-        var chipObj = Instantiate(chipPrefabs[3], spawnPosition.position, chipPrefabs[3].transform.rotation);
+        var chipObj = Instantiate(_chipPrefabs[3], _spawnPosition.position, _chipPrefabs[3].transform.rotation);
         var chipView = chipObj.GetComponent<ChipView>();
         chipView.SetValue((int)E_ChipValue.Bet4);
 
@@ -80,7 +80,7 @@ public class ChipFactory : MonoBehaviour
 
     public void CreateChipType5(PlayerHand hand)
     {
-        var chipObj = Instantiate(chipPrefabs[4], spawnPosition.position, chipPrefabs[4].transform.rotation);
+        var chipObj = Instantiate(_chipPrefabs[4], _spawnPosition.position, _chipPrefabs[4].transform.rotation);
         var chipView = chipObj.GetComponent<ChipView>();
         chipView.SetValue((int)E_ChipValue.BetMax);
 
@@ -99,9 +99,9 @@ public class ChipFactory : MonoBehaviour
             int index = hand.GetChipTypeIndex(chip);
 
             Vector3 destination;
-            destination.x = GetChipPosition(index, typeCount, bettingPositionSpacing);
-            destination.y = bettingPositionRoot.position.y;
-            destination.z = bettingPositionRoot.position.z;
+            destination.x = GetChipPosition(index, typeCount, _bettingPositionSpacing);
+            destination.y = _bettingPositionRoot.position.y;
+            destination.z = _bettingPositionRoot.position.z;
 
             destination.x += handPosition.x;
 
@@ -116,7 +116,7 @@ public class ChipFactory : MonoBehaviour
 
             tempListChipType.Add(chip.chipType);
 
-            destination.y += chipTypeCount * chipOffsetY;
+            destination.y += chipTypeCount * _chipOffsetY;
 
             MoveChip(destination, chip);
         }

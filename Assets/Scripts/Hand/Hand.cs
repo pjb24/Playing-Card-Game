@@ -4,29 +4,41 @@ using UnityEngine;
 
 public class Hand
 {
-    protected List<Card> cards = new();
-    public IReadOnlyList<Card> Cards => cards;
-    public List<GameObject> cardObjects = new();
+    protected List<Card> _cards = new();
+    public IReadOnlyList<Card> Cards => _cards;
+
+    private List<GameObject> _cardObjects = new();
+    public IReadOnlyList<GameObject> CardObjects => _cardObjects;
 
     public void AddCard(Card card)
     {
-        cards.Add(card);
+        _cards.Add(card);
     }
 
     public void RemoveCard(Card card)
     {
-        cards.Remove(card);
+        _cards.Remove(card);
+    }
+
+    public void AddCardObject(GameObject gameObject)
+    {
+        _cardObjects.Add(gameObject);
+    }
+
+    public void RemoveCardObject(GameObject gameObject)
+    {
+        _cardObjects.Remove(gameObject);
     }
 
     public void Clear()
     {
-        cards.Clear();
+        _cards.Clear();
 
-        foreach (var cardObj in cardObjects)
+        foreach (var cardObj in _cardObjects)
         {
             Object.Destroy(cardObj);
         }
-        cardObjects.Clear();
+        _cardObjects.Clear();
     }
 
     // 핸드의 점수 계산
@@ -35,7 +47,7 @@ public class Hand
         int total = 0;
         int aceCount = 0;
 
-        foreach (Card card in cards)
+        foreach (Card card in _cards)
         {
             int value = card.GetValue();
             total += value;
@@ -55,7 +67,7 @@ public class Hand
         return total;
     }
 
-    public bool IsBlackjack() => cards.Count == 2 && GetValue() == 21;
+    public bool IsBlackjack() => _cards.Count == 2 && GetValue() == 21;
 
     public bool IsBust() => GetValue() > 21;
 }

@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CharacterManager
 {
-    public List<Player> Players { get; private set; } = new();
+    private List<Player> _players = new();
+    public IReadOnlyList<Player> Players => _players;
+
     private int currentPlayerIndex = 0;
-    public Dealer dealer = new();
+
+    private Dealer _dealer = new();
+    public Dealer Dealer => _dealer;
 
     private Player _clientPlayer;
     public Player ClientPlayer => _clientPlayer;
@@ -18,7 +23,7 @@ public class CharacterManager
 
     public Player GetPlayerByGuid(string guid)
     {
-        return Players.Find(p => p.Id == guid);
+        return _players.Find(p => p.Id == guid);
     }
 
     public PlayerHand GetHandFromIndex(int index)
@@ -27,7 +32,7 @@ public class CharacterManager
 
         int tempIndex = 0;
 
-        foreach (Player p in Players)
+        foreach (Player p in _players)
         {
             if (p.Hands.Count + tempIndex < index)
             {
@@ -56,9 +61,9 @@ public class CharacterManager
     {
         int index = 0;
 
-        foreach (Player p in Players)
+        foreach (Player p in _players)
         {
-            int result = p.Hands.FindIndex((PlayerHand x) => { return x == hand; });
+            int result = p.Hands.FindIndex((PlayerHand h) => { return h == hand; });
             if (result == -1)
             {
                 index += p.Hands.Count;
@@ -76,7 +81,7 @@ public class CharacterManager
     public int GetHandCount()
     {
         int count = 0;
-        foreach (Player p in Players)
+        foreach (Player p in _players)
         {
             count += p.Hands.Count;
         }
@@ -86,20 +91,20 @@ public class CharacterManager
 
     public void AddPlayer(Player player)
     {
-        if (!Players.Contains(player))
+        if (!_players.Contains(player))
         {
-            Players.Add(player);
+            _players.Add(player);
         }
     }
 
     public void RemovePlayer(Player player)
     {
-        Players.Remove(player);
+        _players.Remove(player);
     }
 
     public void ResetAllPlayers()
     {
-        foreach (var player in Players)
+        foreach (var player in _players)
         {
             player.ResetForNextRound();
         }
@@ -108,12 +113,12 @@ public class CharacterManager
 
     public Player GetNextBettingPlayer()
     {
-        for (int i = currentPlayerIndex; i < Players.Count; i++)
+        for (int i = currentPlayerIndex; i < _players.Count; i++)
         {
-            if (!Players[i].IsFinishedBetting)
+            if (!_players[i].IsFinishedBetting)
             {
                 currentPlayerIndex = i;
-                return Players[i];
+                return _players[i];
             }
         }
 
@@ -122,12 +127,12 @@ public class CharacterManager
 
     public Player GetNextActivePlayer()
     {
-        for (int i = currentPlayerIndex; i < Players.Count; i++)
+        for (int i = currentPlayerIndex; i < _players.Count; i++)
         {
-            if (!Players[i].IsFinishedTurn)
+            if (!_players[i].IsFinishedTurn)
             {
                 currentPlayerIndex = i;
-                return Players[i];
+                return _players[i];
             }
         }
 
@@ -136,12 +141,12 @@ public class CharacterManager
 
     public void MarkCurrentPlayerDone()
     {
-        Players[currentPlayerIndex].IsFinishedTurn = true;
+        _players[currentPlayerIndex].SetIsFinishedTurn();
     }
 
     public void MarkCurrentPlayerDoneBetting()
     {
-        Players[currentPlayerIndex].IsFinishedBetting = true;
+        _players[currentPlayerIndex].SetIsFinishedBetting();
     }
 
     public void ResetTurnOrder()

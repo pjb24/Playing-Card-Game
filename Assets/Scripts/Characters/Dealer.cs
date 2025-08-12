@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class Dealer
 {
-    public DealerHand Hand { get; private set; } = new();
+    private DealerHand _hand = new();
+    public DealerHand Hand => _hand;
 
     public bool ShouldHit()
     {
-        return Hand.ShouldHit();
+        return _hand.ShouldHit();
     }
 
     public void ResetHand()
     {
-        Hand.Clear();
+        _hand.Clear();
     }
 }

@@ -33,24 +33,26 @@ public enum E_CardRank
 
 public class Card
 {
-    public E_CardSuit Suit { get; private set; }
-    public E_CardRank Rank { get; private set; }
+    private E_CardSuit _suit;
+    public E_CardSuit Suit => _suit;
+    private E_CardRank _rank;
+    public E_CardRank Rank => _rank;
 
 	public Card(E_CardSuit suit, E_CardRank rank)
     {
-        this.Suit = suit;
-        this.Rank = rank;
+        _suit = suit;
+        _rank = rank;
     }
 
 	public int GetValue()
 	{
-		int result = (int)Rank;
+		int result = (int)_rank;
 
-		if (Rank >= E_CardRank.Ten)
+		if (_rank >= E_CardRank.Ten)
 		{
 			result = 10;
 		}
-		if (Rank == E_CardRank.Ace)
+		if (_rank == E_CardRank.Ace)
 		{
 			result = 11;
 		}
@@ -60,16 +62,16 @@ public class Card
 
     public override string ToString()
     {
-        return $"{Rank} of {Suit}";
+        return $"{_rank} of {_suit}";
     }
 
     public void SetRank(E_CardRank rank)
     {
-        Rank = rank;
+        _rank = rank;
     }
 
     public void SetSuit(E_CardSuit suit)
     {
-        Suit = suit;
+        _suit = suit;
     }
 }

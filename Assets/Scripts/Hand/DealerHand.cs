@@ -5,21 +5,20 @@ using UnityEngine;
 public class DealerHand : Hand
 {
     // 소프트 17일 때 히트 할지 여부
-    public bool DealerHitOnSoftCount => true;
-
-    public int SoftCount = 17;
+    private bool _dealerHitOnSoftCount = true;
+    private int _softCount = 17;
 
     // 딜러가 히트해야하는지 확인
     public bool ShouldHit()
     {
         int value = GetValue();
 
-        if (value < SoftCount)
+        if (value < _softCount)
         {
             return true;
         }
 
-        if (value == SoftCount && DealerHitOnSoftCount)
+        if (value == _softCount && _dealerHitOnSoftCount)
         {
             return IsSoftCount();
         }
@@ -45,6 +44,6 @@ public class DealerHand : Hand
             }
         }
 
-        return total == SoftCount && aceCount > 0;
+        return total == _softCount && aceCount > 0;
     }
 }

@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class PlayerHand : Hand
 {
-    public int BetAmount { get; private set; }
-    public bool IsCompleted { get; set; } = false;
-    public bool IsBetConfirmed { get; set; } = false;
+    private int _betAmount = 0;
+    public int BetAmount => _betAmount;
+    
+    private bool _isCompleted = false;
+    public bool IsCompleted => _isCompleted;
 
-    private List<ChipView> listChips = new();
-    public IReadOnlyList<ChipView> ListChips => listChips;
+    private bool _isBetConfirmed = false;
+    public bool IsBetConfirmed => _isBetConfirmed;
+
+    private List<ChipView> _listChips = new();
+    public IReadOnlyList<ChipView> ListChips => _listChips;
 
     private string _id;
     public string Id => _id;
@@ -21,7 +26,7 @@ public class PlayerHand : Hand
 
     public void Bet(int amount)
     {
-        BetAmount = amount;
+        _betAmount = amount;
     }
 
     // 카드가 2장이며 같은 숫자 또는 문자여야함
@@ -52,23 +57,23 @@ public class PlayerHand : Hand
 
     public void AddChip(ChipView chip)
     {
-        listChips.Add(chip);
+        _listChips.Add(chip);
     }
 
     public void ResetChipAll()
     {
-        foreach (var chip in listChips)
+        foreach (var chip in _listChips)
         {
             GameObject.Destroy(chip.gameObject);
         }
-        listChips.Clear();
+        _listChips.Clear();
     }
 
     public void ResetChip(E_ChipType chipType)
     {
         List<ChipView> listToRemove = new();
 
-        foreach (var chip in listChips)
+        foreach (var chip in _listChips)
         {
             if (chip.chipType == chipType)
             {
@@ -79,7 +84,7 @@ public class PlayerHand : Hand
         
         foreach (var item in listToRemove)
         {
-            listChips.Remove(item);
+            _listChips.Remove(item);
         }
         listToRemove.Clear();
     }
@@ -88,7 +93,7 @@ public class PlayerHand : Hand
     {
         int count = 0;
 
-        foreach (var chip in listChips)
+        foreach (var chip in _listChips)
         {
             if (chip.chipType == chipType)
             {
@@ -103,7 +108,7 @@ public class PlayerHand : Hand
     {
         int count = 0;
 
-        foreach (var chip in listChips)
+        foreach (var chip in _listChips)
         {
             if (chip.chipType == targetChip.chipType)
             {
@@ -118,7 +123,7 @@ public class PlayerHand : Hand
     {
         HashSet<E_ChipType> setChipType = new();
 
-        foreach (var chip in listChips)
+        foreach (var chip in _listChips)
         {
             setChipType.Add(chip.chipType);
         }
@@ -136,7 +141,7 @@ public class PlayerHand : Hand
 
         SortedSet<E_ChipType> setChipType = new();
 
-        foreach (var chip in listChips)
+        foreach (var chip in _listChips)
         {
             setChipType.Add(chip.chipType);
         }
@@ -156,5 +161,25 @@ public class PlayerHand : Hand
         setChipType.Clear();
 
         return index;
+    }
+
+    public void SetIsBetConfirmed()
+    {
+        _isBetConfirmed = true;
+    }
+
+    public void ResetIsBetConfirmed()
+    {
+        _isBetConfirmed = false;
+    }
+
+    public void SetIsCompleted()
+    {
+        _isCompleted = true;
+    }
+
+    public void ResetIsCompleted()
+    {
+        _isCompleted = false;
     }
 }

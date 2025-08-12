@@ -6,109 +6,118 @@ using UnityEngine;
 
 public class Player
 {
-    public string Id { get; private set; }
-    public string DisplayName { get; private set; }
+    private string _id;
+    public string Id => _id;
+
+    private string _displayName;
+    public string DisplayName => _displayName;
 
     // 소유한 Chip
-    public int Chips { get; private set; }
+    private int _chips = 0;
+    public int Chips => _chips;
 
     // 플레이어가 Split을 하면 여러 개의 핸드를 가질 수 있음
-    public List<PlayerHand> Hands { get; private set; } = new();
-    public bool IsFinishedTurn { get; set; } = false;
-    public bool IsFinishedBetting { get; set; } = false;
+    private List<PlayerHand> _hands = new();
+    public IReadOnlyList<PlayerHand> Hands => _hands;
+
+    private bool _isFinishedTurn = false;
+    public bool IsFinishedTurn => _isFinishedTurn;
+
+    private bool _isFinishedBetting = false;
+    public bool IsFinishedBetting => _isFinishedBetting;
 
     public Player(string id, string displayName)
     {
-        Id = id;
-        DisplayName = displayName;
+        _id = id;
+        _displayName = displayName;
     }
 
     public PlayerHand GetHandByGuid(string guid)
     {
-        return Hands.Find(h => h.Id == guid);
+        return _hands.Find(h => h.Id == guid);
     }
 
     public void AddHand(string handId)
     {
         PlayerHand hand = new();
         hand.SetHandId(handId);
-        Hands.Add(hand);
+        _hands.Add(hand);
     }
 
     public void SetPlayerChips(int chips)
     {
-        Chips = chips;
+        _chips = chips;
     }
 
     public PlayerHand GetActiveHand()
     {
-        return Hands.FirstOrDefault(h => !h.IsCompleted);
+        return _hands.FirstOrDefault(h => !h.IsCompleted);
     }
 
     public PlayerHand GetNextBettingHand()
     {
-        return Hands.FirstOrDefault(h => !h.IsBetConfirmed);
+        return _hands.FirstOrDefault(h => !h.IsBetConfirmed);
     }
 
     public void PlaceBet(PlayerHand hand, int amount)
     {
-        if (amount > Chips)
+        if (amount > _chips)
         {
             throw new InvalidOperationException("Not enough chips to place bet.");
         }
 
-        hand.IsBetConfirmed = true;
+        hand.SetIsBetConfirmed();
         hand.Bet(amount);
 
-        Chips -= amount;
+        _chips -= amount;
     }
 
     public void Stand(PlayerHand hand)
     {
-        hand.IsCompleted = true;
+        hand.SetIsCompleted();
     }
 
     public void ResetForNextRound()
     {
-        IsFinishedTurn = false;
-        IsFinishedBetting = false;
-        foreach (var hand in Hands)
+        _isFinishedTurn = false;
+        _isFinishedBetting = false;
+        foreach (var hand in _hands)
         {
             hand.ResetChipAll();
             hand.Clear();
         }
-        Hands.Clear();
-        Hands.Add(new PlayerHand());
+        _hands.Clear();
+        _hands.Add(new PlayerHand());
     }
 
     public void ResetForNextRound_Network()
     {
-        IsFinishedTurn = false;
-        IsFinishedBetting = false;
-        foreach (var hand in Hands)
+        _isFinishedTurn = false;
+        _isFinishedBetting = false;
+        foreach (var hand in _hands)
         {
             hand.ResetChipAll();
             hand.Clear();
         }
-        Hands.Clear();
+        _hands.Clear();
     }
 
     public void Blackjack(PlayerHand hand)
     {
         int payout = (int)(hand.BetAmount * 2.5f);
-        Chips += payout;
+        _chips += payout;
     }
 
     public void Win(PlayerHand hand)
     {
         int payout = (int)(hand.BetAmount * 2.0f);
-        Chips += payout;
+        _chips += payout;
     }
 
     public void Push(PlayerHand hand)
     {
         int payout = hand.BetAmount;
-        Chips += payout;
+        _chips += payout;
     }
 
     public void Lose(PlayerHand hand)
@@ -118,13 +127,13 @@ public class Player
 
     public void DoubleDown(PlayerHand hand)
     {
-        if (hand.BetAmount > Chips)
+        if (hand.BetAmount > _chips)
         {
             Debug.Log("Not enough chips to double down.");
             return;
         }
 
-        Chips -= hand.BetAmount;
+        _chips -= hand.BetAmount;
 
         hand.Bet(hand.BetAmount * 2);
     }
@@ -132,14 +141,14 @@ public class Player
     public PlayerHand AppendHand()
     {
         PlayerHand hand = new PlayerHand();
-        Hands.Add(hand);
+        _hands.Add(hand);
         return hand;
     }
 
     public PlayerHand InsertHand(int index)
     {
         PlayerHand hand = new PlayerHand();
-        Hands.Insert(index, hand);
+        _hands.Insert(index, hand);
         return hand;
     }
 
@@ -147,7 +156,27 @@ public class Player
     {
         PlayerHand hand = new PlayerHand();
         hand.SetHandId(handId);
-        Hands.Insert(index, hand);
+        _hands.Insert(index, hand);
         return hand;
+    }
+
+    public void SetIsFinishedTurn()
+    {
+        _isFinishedTurn = true;
+    }
+
+    public void UnsetIsFinishedTurn()
+    {
+        _isFinishedTurn = false;
+    }
+
+    public void SetIsFinishedBetting()
+    {
+        _isFinishedBetting = true;
+    }
+
+    public void UnsetIsFinishedBetting()
+    {
+        _isFinishedBetting = false;
     }
 }

@@ -1,10 +1,10 @@
 using DG.Tweening;
 using PimDeWitte.UnityMainThreadDispatcher;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class BlackjackManager : BaseSceneManager
     , IOnExistingPlayerListMessageHandler
@@ -27,23 +27,19 @@ public class BlackjackManager : BaseSceneManager
     , IOnPayoutMessageHandler
     , IOnGameEndMessageHandler
 {
-    public BlackjackUIManager uiManager;
-    public DeckManager deckManager;
-    public CharacterManager characterManager;
+    private BlackjackUIManager _uiManager = new();
+    private CharacterManager _characterManager = new();
 
-    public GameObject cardPrefab;
-    public Transform deckPosition;
-    public Transform dealerHandPosition;
-    [SerializeField] private Transform playerHandPositionRoot;
-    public Transform PlayerHandPositionRoot => playerHandPositionRoot;
-    [SerializeField] private float playerHandPositionSpacing = 3f;
+    [SerializeField] private GameObject _cardPrefab;
+    [SerializeField] private Transform _deckPosition;
+    [SerializeField] private Transform _dealerHandPosition;
+    [SerializeField] private Transform _playerHandPositionRoot;
+    [SerializeField] private float _playerHandPositionSpacing = 3f;
 
-    public float cardOffsetX = 0.2f;
-    public float cardOffsetY = 0.01f;
+    [SerializeField] private float _cardOffsetX = 0.2f;
+    [SerializeField] private float _cardOffsetY = 0.01f;
 
-    public ChipFactory chipFactory;
-
-    public bool PlayerJoined { get; set; } = false;
+    [SerializeField] private ChipFactory _chipFactory;
 
     private int _betAmount = 0;
 
@@ -70,11 +66,11 @@ public class BlackjackManager : BaseSceneManager
 
     public void UpdateAllPlayerHandPositions()
     {
-        foreach (var player in characterManager.Players)
+        foreach (var player in _characterManager.Players)
         {
             foreach (var hand in player.Hands)
             {
-                foreach (var cardObj in hand.cardObjects)
+                foreach (var cardObj in hand.CardObjects)
                 {
                     MoveCardToPlayer(cardObj, hand);
                 }
@@ -84,21 +80,21 @@ public class BlackjackManager : BaseSceneManager
 
     public void MoveCardToPlayer(GameObject cardObj, PlayerHand hand)
     {
-        int cardObjIndex = hand.cardObjects.IndexOf(cardObj);
+        int cardObjIndex = hand.CardObjects.IndexOf(cardObj);
 
         Vector3 targetPosition = GetHandPosition(hand);
 
-        MoveCardToHand(cardObj, targetPosition + new Vector3(cardObjIndex * cardOffsetX, cardObjIndex * cardOffsetY, 0));
+        MoveCardToHand(cardObj, targetPosition + new Vector3(cardObjIndex * _cardOffsetX, cardObjIndex * _cardOffsetY, 0));
     }
 
     public void InstancingCardToPlayer(Card card, PlayerHand hand)
     {
-        GameObject cardObj = Instantiate(cardPrefab, deckPosition.position, deckPosition.rotation);
+        GameObject cardObj = Instantiate(_cardPrefab, _deckPosition.position, _deckPosition.rotation);
         CardView view = cardObj.GetComponent<CardView>();
 
         view.SetCard(card);
 
-        hand.cardObjects.Add(cardObj);
+        hand.AddCardObject(cardObj);
 
         MoveCardToPlayer(cardObj, hand);
     }
@@ -110,20 +106,20 @@ public class BlackjackManager : BaseSceneManager
 
     public Tween InstancingCardToDealer(Card card, Hand hand, bool hidden = false)
     {
-        GameObject cardObj = Instantiate(cardPrefab, deckPosition.position, deckPosition.rotation);
+        GameObject cardObj = Instantiate(_cardPrefab, _deckPosition.position, _deckPosition.rotation);
         CardView view = cardObj.GetComponent<CardView>();
 
         view.SetCard(card, hidden);
 
-        hand.cardObjects.Add(cardObj);
-        int cardObjIndex = hand.cardObjects.IndexOf(cardObj);
+        hand.AddCardObject(cardObj);
+        int cardObjIndex = hand.CardObjects.IndexOf(cardObj);
 
-        return MoveCardToHand(cardObj, dealerHandPosition.position + new Vector3(cardObjIndex * cardOffsetX, cardObjIndex * cardOffsetY, 0));
+        return MoveCardToHand(cardObj, _dealerHandPosition.position + new Vector3(cardObjIndex * _cardOffsetX, cardObjIndex * _cardOffsetY, 0));
     }
 
     public void RevealHoleCard()
     {
-        foreach (GameObject cardObj in characterManager.dealer.Hand.cardObjects)
+        foreach (GameObject cardObj in _characterManager.Dealer.Hand.CardObjects)
         {
             CardView view = cardObj.GetComponent<CardView>();
             view.UpdateVisual(false);
@@ -132,17 +128,17 @@ public class BlackjackManager : BaseSceneManager
 
     public Vector3 GetHandPosition(PlayerHand hand)
     {
-        int handIndex = characterManager.GetHandIndex(hand);
-        int handCount = characterManager.GetHandCount();
+        int handIndex = _characterManager.GetHandIndex(hand);
+        int handCount = _characterManager.GetHandCount();
 
-        float centerOffset = (handCount - 1) * playerHandPositionSpacing * 0.5f;
+        float centerOffset = (handCount - 1) * _playerHandPositionSpacing * 0.5f;
 
-        float xPos = handIndex * playerHandPositionSpacing - centerOffset;
+        float xPos = handIndex * _playerHandPositionSpacing - centerOffset;
 
         Vector3 handPosition;
         handPosition.x = xPos;
-        handPosition.y = playerHandPositionRoot.position.y;
-        handPosition.z = playerHandPositionRoot.position.z;
+        handPosition.y = _playerHandPositionRoot.position.y;
+        handPosition.z = _playerHandPositionRoot.position.z;
 
         return handPosition;
     }
@@ -150,15 +146,15 @@ public class BlackjackManager : BaseSceneManager
     public void OnJoinSuccess(OnJoinSuccessDTO dto)
     {
         Player player = new Player(dto.playerGuid, dto.userName);
-        characterManager.AddPlayer(player);
+        _characterManager.AddPlayer(player);
 
-        characterManager.SetClientPlayer(player);
+        _characterManager.SetClientPlayer(player);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            uiManager.ChangeToBetPanel();
+            _uiManager.ChangeToBetPanel();
 
-            uiManager.button_Join.visible = false;
+            _uiManager.SetButtonJoinInvisible();
         });
     }
 
@@ -167,28 +163,28 @@ public class BlackjackManager : BaseSceneManager
         foreach (var item in dto.players)
         {
             Player player = new Player(item.playerGuid, item.userName);
-            characterManager.AddPlayer(player);
+            _characterManager.AddPlayer(player);
         }
     }
 
     public void OnUserJoined(OnUserJoinedDTO dto)
     {
-        characterManager.AddPlayer(new Player(dto.playerGuid, dto.userName));
+        _characterManager.AddPlayer(new Player(dto.playerGuid, dto.userName));
     }
 
     public void OnPlayerRemainChips(OnPlayerRemainChipsDTO dto)
     {
-        Player player = characterManager.GetPlayerByGuid(dto.playerGuid);
+        Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
 
         player.SetPlayerChips(int.Parse(dto.chips));
 
         foreach (var hand in player.Hands)
         {
-            int handIndex = characterManager.GetHandIndex(hand);
+            int handIndex = _characterManager.GetHandIndex(hand);
 
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
-                uiManager.PlayerInfoChipSetText((player.Chips).ToString("N0"), handIndex);
+                _uiManager.PlayerInfoChipSetText((player.Chips).ToString("N0"), handIndex);
             });
         }
     }
@@ -197,8 +193,8 @@ public class BlackjackManager : BaseSceneManager
     {
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            uiManager.button_Join.visible = true;
-            uiManager.button_Join.clicked += HandleJoin;
+            _uiManager.SetButtonJoinVisible();
+            _uiManager.SubscribeButtonJoinClicked(HandleJoin);
         });
     }
 
@@ -210,13 +206,13 @@ public class BlackjackManager : BaseSceneManager
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            uiManager.button_Join.clicked -= HandleJoin;
+            _uiManager.UnsubscribeButtonJoinClicked(HandleJoin);
         });
     }
 
     public void OnAddHandToPlayer(OnAddHandToPlayerDTO dto)
     {
-        Player player = characterManager.GetPlayerByGuid(dto.playerGuid);
+        Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
         player.AddHand(dto.handId);
     }
 
@@ -224,7 +220,7 @@ public class BlackjackManager : BaseSceneManager
     {
         _betAmount = 0;
 
-        _player = characterManager.ClientPlayer;
+        _player = _characterManager.ClientPlayer;
 
         _hand = _player.GetNextBettingHand();
 
@@ -235,69 +231,70 @@ public class BlackjackManager : BaseSceneManager
     {
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            uiManager.ChangeToBetPanel();
+            _uiManager.ChangeToBetPanel();
 
             UpdateUI_PlayerInfos();
             UpdateUI_CardValues();
 
             // Hide join button
-            uiManager.button_Join.visible = false;
+            _uiManager.SetButtonJoinInvisible();
 
             // Button subscribe function
-            uiManager.button_BetReset.clicked += HandleBetReset;
-            uiManager.button_Bet1.clicked += HandleBet1;
-            uiManager.button_Bet2.clicked += HandleBet2;
-            uiManager.button_Bet3.clicked += HandleBet3;
-            uiManager.button_Bet4.clicked += HandleBet4;
-            uiManager.button_BetMax.clicked += HandleBetMax;
-            uiManager.button_BetConfirm.clicked += HandleBetConfirm;
+            
+            _uiManager.SubscribeButtonBetResetClicked(HandleBetReset);
+            _uiManager.SubscribeButtonBet1Clicked(HandleBet1);
+            _uiManager.SubscribeButtonBet2Clicked(HandleBet2);
+            _uiManager.SubscribeButtonBet3Clicked(HandleBet3);
+            _uiManager.SubscribeButtonBet4Clicked(HandleBet4);
+            _uiManager.SubscribeButtonBetMaxClicked(HandleBetMax);
+            _uiManager.SubscribeButtonBetConfirmClicked(HandleBetConfirm);
         });
     }
 
     private void UpdateUI_PlayerInfos()
     {
-        uiManager.RemoveAllPlayerInfos();
+        _uiManager.RemoveAllPlayerInfos();
 
-        foreach (var player in characterManager.Players)
+        foreach (var player in _characterManager.Players)
         {
             foreach (var hand in player.Hands)
             {
-                int handIndex = characterManager.GetHandIndex(hand);
-                uiManager.CreatePlayerInfo(handIndex);
-                uiManager.PlayerInfoVisible(handIndex);
+                int handIndex = _characterManager.GetHandIndex(hand);
+                _uiManager.CreatePlayerInfo(handIndex);
+                _uiManager.PlayerInfoVisible(handIndex);
 
-                uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), handIndex);
-                uiManager.PlayerInfoNameSetText(player.DisplayName, handIndex);
-                uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), handIndex);
+                _uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), handIndex);
+                _uiManager.PlayerInfoNameSetText(player.DisplayName, handIndex);
+                _uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), handIndex);
 
                 Vector3 targetPosition = GetHandPosition(hand);
-                uiManager.RequestPlayerInfoPositionUpdate_Register(targetPosition, handIndex);
-                uiManager.RequestPlayerInfoPositionUpdate_Y_Register(handIndex);
+                _uiManager.RequestPlayerInfoPositionUpdate_Register(targetPosition, handIndex);
+                _uiManager.RequestPlayerInfoPositionUpdate_Y_Register(handIndex);
             }
         }
     }
 
     private void UpdateUI_CardValues()
     {
-        uiManager.RemoveDealerCardValue();
-        uiManager.RemoveAllLabelCardValue();
+        _uiManager.RemoveDealerCardValue();
+        _uiManager.RemoveAllLabelCardValue();
     }
 
     public void UpdateUI()
     {
-        int handIndex = characterManager.GetHandIndex(_hand);
+        int handIndex = _characterManager.GetHandIndex(_hand);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            uiManager.PlayerInfoBetAmountSetText(_betAmount.ToString("N0"), handIndex);
-            uiManager.PlayerInfoChipSetText((_player.Chips - _betAmount).ToString("N0"), handIndex);
+            _uiManager.PlayerInfoBetAmountSetText(_betAmount.ToString("N0"), handIndex);
+            _uiManager.PlayerInfoChipSetText((_player.Chips - _betAmount).ToString("N0"), handIndex);
         });
     }
 
     public void HandleBetReset()
     {
         _betAmount = 0;
-        chipFactory.ResetChips(_hand);
+        _chipFactory.ResetChips(_hand);
         UpdateUI();
     }
 
@@ -321,10 +318,10 @@ public class BlackjackManager : BaseSceneManager
         _betAmount += (int)E_ChipValue.Bet1;
 
         // Animate chips
-        chipFactory.CreateChipType1(_hand);
+        _chipFactory.CreateChipType1(_hand);
 
         Vector3 handPosition = GetHandPosition(_hand);
-        chipFactory.UpdateHandChipPosition(_hand, handPosition);
+        _chipFactory.UpdateHandChipPosition(_hand, handPosition);
 
         UpdateUI();
     }
@@ -349,10 +346,10 @@ public class BlackjackManager : BaseSceneManager
         _betAmount += (int)E_ChipValue.Bet2;
 
         // Animate chips
-        chipFactory.CreateChipType2(_hand);
+        _chipFactory.CreateChipType2(_hand);
 
         Vector3 handPosition = GetHandPosition(_hand);
-        chipFactory.UpdateHandChipPosition(_hand, handPosition);
+        _chipFactory.UpdateHandChipPosition(_hand, handPosition);
 
         UpdateUI();
     }
@@ -377,10 +374,10 @@ public class BlackjackManager : BaseSceneManager
         _betAmount += (int)E_ChipValue.Bet3;
 
         // Animate chips
-        chipFactory.CreateChipType3(_hand);
+        _chipFactory.CreateChipType3(_hand);
         
         Vector3 handPosition = GetHandPosition(_hand);
-        chipFactory.UpdateHandChipPosition(_hand, handPosition);
+        _chipFactory.UpdateHandChipPosition(_hand, handPosition);
 
         UpdateUI();
     }
@@ -405,10 +402,10 @@ public class BlackjackManager : BaseSceneManager
         _betAmount += (int)E_ChipValue.Bet4;
 
         // Animate chips
-        chipFactory.CreateChipType4(_hand);
+        _chipFactory.CreateChipType4(_hand);
 
         Vector3 handPosition = GetHandPosition(_hand);
-        chipFactory.UpdateHandChipPosition(_hand, handPosition);
+        _chipFactory.UpdateHandChipPosition(_hand, handPosition);
 
         UpdateUI();
     }
@@ -420,21 +417,21 @@ public class BlackjackManager : BaseSceneManager
             return;
         }
 
-        chipFactory.ResetChips(_hand);
+        _chipFactory.ResetChips(_hand);
 
         if (_player.Chips < (int)E_ChipValue.BetMax)
         {
-            _betAmount = chipFactory.CreateChipsToFitValue(_player.Chips, _hand);
+            _betAmount = _chipFactory.CreateChipsToFitValue(_player.Chips, _hand);
         }
         else
         {
             _betAmount = (int)E_ChipValue.BetMax;
-            chipFactory.CreateChipType5(_hand);
+            _chipFactory.CreateChipType5(_hand);
         }
 
         Vector3 handPosition = GetHandPosition(_hand);
         // Animate chips
-        chipFactory.UpdateHandChipPosition(_hand, handPosition);
+        _chipFactory.UpdateHandChipPosition(_hand, handPosition);
 
         UpdateUI();
     }
@@ -457,20 +454,20 @@ public class BlackjackManager : BaseSceneManager
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
                 // Unsubscribe function
-                uiManager.button_BetReset.clicked -= HandleBetReset;
-                uiManager.button_Bet1.clicked -= HandleBet1;
-                uiManager.button_Bet2.clicked -= HandleBet2;
-                uiManager.button_Bet3.clicked -= HandleBet3;
-                uiManager.button_Bet4.clicked -= HandleBet4;
-                uiManager.button_BetMax.clicked -= HandleBetMax;
-                uiManager.button_BetConfirm.clicked -= HandleBetConfirm;
+                _uiManager.UnsubscribeButtonBetResetClicked(HandleBetReset);
+                _uiManager.UnsubscribeButtonBet1Clicked(HandleBet1);
+                _uiManager.UnsubscribeButtonBet2Clicked(HandleBet2);
+                _uiManager.UnsubscribeButtonBet3Clicked(HandleBet3);
+                _uiManager.UnsubscribeButtonBet4Clicked(HandleBet4);
+                _uiManager.UnsubscribeButtonBetMaxClicked(HandleBetMax);
+                _uiManager.UnsubscribeButtonBetConfirmClicked(HandleBetConfirm);
             });
         }
     }
 
     public void OnBetPlaced(OnBetPlacedDTO dto)
     {
-        Player player = characterManager.GetPlayerByGuid(dto.playerGuid);
+        Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
 
         PlayerHand hand = player.GetHandByGuid(dto.handId);
 
@@ -478,16 +475,16 @@ public class BlackjackManager : BaseSceneManager
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            chipFactory.CreateChipsToFitValue(hand.BetAmount, hand);
+            _chipFactory.CreateChipsToFitValue(hand.BetAmount, hand);
 
             // 모든 칩의 위치를 갱신
-            foreach (var player in characterManager.Players)
+            foreach (var player in _characterManager.Players)
             {
                 foreach (var hand in player.Hands)
                 {
                     Vector3 handPosition = GetHandPosition(hand);
 
-                    chipFactory.UpdateHandChipPosition(hand, handPosition);
+                    _chipFactory.UpdateHandChipPosition(hand, handPosition);
                 }
             }
 
@@ -498,7 +495,7 @@ public class BlackjackManager : BaseSceneManager
 
     private void UpdateUIChips()
     {
-        foreach (var player in characterManager.Players)
+        foreach (var player in _characterManager.Players)
         {
             foreach (var hand in player.Hands)
             {
@@ -509,19 +506,19 @@ public class BlackjackManager : BaseSceneManager
 
     private void UpdateUiChips(PlayerHand hand, Player player)
     {
-        int handIndex = characterManager.GetHandIndex(hand);
-        uiManager.PlayerInfoVisible(handIndex);
+        int handIndex = _characterManager.GetHandIndex(hand);
+        _uiManager.PlayerInfoVisible(handIndex);
 
         Vector3 targetPosition = GetHandPosition(hand);
 
-        uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), handIndex);
-        uiManager.PlayerInfoNameSetText(player.DisplayName, handIndex);
-        uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), handIndex);
+        _uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), handIndex);
+        _uiManager.PlayerInfoNameSetText(player.DisplayName, handIndex);
+        _uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), handIndex);
     }
 
     public void OnCardDealt(OnCardDealtDTO dto)
     {
-        Player player = characterManager.GetPlayerByGuid(dto.playerGuid);
+        Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
 
         PlayerHand hand = player.GetHandByGuid(dto.handId);
 
@@ -534,15 +531,15 @@ public class BlackjackManager : BaseSceneManager
             {
                 InstancingCardToPlayer(card, hand);
 
-                int handIndex = characterManager.GetHandIndex(hand);
-                uiManager.CreateLabelCardValuePlayer(handIndex);
-                uiManager.CardValuePlayerVisible(handIndex);
+                int handIndex = _characterManager.GetHandIndex(hand);
+                _uiManager.CreateLabelCardValuePlayer(handIndex);
+                _uiManager.CardValuePlayerVisible(handIndex);
 
                 Vector3 targetPosition = GetHandPosition(hand);
-                uiManager.RequestCardValueUIPositionUpdate_Register(targetPosition, handIndex);
-                uiManager.RequestCardValueUIPositionUpdate_Y_Register(handIndex);
+                _uiManager.RequestCardValueUIPositionUpdate_Register(targetPosition, handIndex);
+                _uiManager.RequestCardValueUIPositionUpdate_Y_Register(handIndex);
 
-                uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
+                _uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
             });
         }
         else
@@ -551,15 +548,15 @@ public class BlackjackManager : BaseSceneManager
             {
                 InstancingCardToPlayer(card, hand);
 
-                int handIndex = characterManager.GetHandIndex(hand);
+                int handIndex = _characterManager.GetHandIndex(hand);
 
                 if (hand.IsBlackjack())
                 {
-                    uiManager.CardValuePlayerSetText("Blackjack", handIndex);
+                    _uiManager.CardValuePlayerSetText("Blackjack", handIndex);
                 }
                 else
                 {
-                    uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
+                    _uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
                 }
             });
         }
@@ -567,7 +564,7 @@ public class BlackjackManager : BaseSceneManager
 
     public void OnDealerCardDealt(OnDealerCardDealtDTO dto)
     {
-        Dealer dealer = characterManager.dealer;
+        Dealer dealer = _characterManager.Dealer;
 
         if (dealer.Hand.Cards.Count == 0)
         {
@@ -578,9 +575,9 @@ public class BlackjackManager : BaseSceneManager
 
                 InstancingCardToDealer(dealerCard, dealer.Hand);
 
-                uiManager.CreateLabelCardValueDealer();
-                uiManager.RequestUpdateCardValueDealerPosition();
-                uiManager.CardValueDealerSetText(dealer.Hand.GetValue().ToString());
+                _uiManager.CreateLabelCardValueDealer();
+                _uiManager.RequestUpdateCardValueDealerPosition();
+                _uiManager.CardValueDealerSetText(dealer.Hand.GetValue().ToString());
             });
         }
         else
@@ -615,18 +612,18 @@ public class BlackjackManager : BaseSceneManager
 
     private IEnumerator WorkCoroutine(Card dealerCard)
     {
-        Tween tween = InstancingCardToDealer(dealerCard, characterManager.dealer.Hand);
+        Tween tween = InstancingCardToDealer(dealerCard, _characterManager.Dealer.Hand);
 
         yield return tween.WaitForCompletion();
-        characterManager.dealer.Hand.AddCard(dealerCard);
-        uiManager.CardValueDealerSetText(characterManager.dealer.Hand.GetValue().ToString());
+        _characterManager.Dealer.Hand.AddCard(dealerCard);
+        _uiManager.CardValueDealerSetText(_characterManager.Dealer.Hand.GetValue().ToString());
 
         yield return null;
     }
 
     public void OnDealerHiddenCardDealt(OnDealerHiddenCardDealtDTO dto)
     {
-        Dealer dealer = characterManager.dealer;
+        Dealer dealer = _characterManager.Dealer;
 
         // Dealer Second Card - Hidden Card
         Card dealerCard = new Card(E_CardSuit.Back, E_CardRank.Back);
@@ -642,10 +639,10 @@ public class BlackjackManager : BaseSceneManager
     {
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            uiManager.ChangeToPlayerActionPanel();
+            _uiManager.ChangeToPlayerActionPanel();
         });
 
-        _player = characterManager.ClientPlayer;
+        _player = _characterManager.ClientPlayer;
 
         if (_player.Id == dto.playerGuid)
         {
@@ -654,10 +651,10 @@ public class BlackjackManager : BaseSceneManager
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
                 // Button subscribe function
-                uiManager.button_Hit.clicked += HandleHit;
-                uiManager.button_Stand.clicked += HandleStand;
-                uiManager.button_Split.clicked += HandleSplit;
-                uiManager.button_DoubleDown.clicked += HandleDoubleDown;
+                _uiManager.SubscribeButtonHitClicked(HandleHit);
+                _uiManager.SubscribeButtonStandClicked(HandleStand);
+                _uiManager.SubscribeButtonSplitClicked(HandleSplit);
+                _uiManager.SubscribeButtonDoubleDownClicked(HandleDoubleDown);
             });
         }
     }
@@ -722,24 +719,24 @@ public class BlackjackManager : BaseSceneManager
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             // Unsubscribe function
-            uiManager.button_Hit.clicked -= HandleHit;
-            uiManager.button_Stand.clicked -= HandleStand;
-            uiManager.button_Split.clicked -= HandleSplit;
-            uiManager.button_DoubleDown.clicked -= HandleDoubleDown;
+            _uiManager.UnsubscribeButtonHitClicked(HandleHit);
+            _uiManager.UnsubscribeButtonStandClicked(HandleStand);
+            _uiManager.UnsubscribeButtonSplitClicked(HandleSplit);
+            _uiManager.UnsubscribeButtonDoubleDownClicked(HandleDoubleDown);
         });
     }
 
     public void OnPlayerBusted(OnPlayerBustedDTO dto)
     {
-        Player player = characterManager.GetPlayerByGuid(dto.playerGuid);
+        Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
 
         PlayerHand hand = player.GetHandByGuid(dto.handId);
 
-        int handIndex = characterManager.GetHandIndex(hand);
+        int handIndex = _characterManager.GetHandIndex(hand);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
+            _uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
         });
     }
 
@@ -750,34 +747,35 @@ public class BlackjackManager : BaseSceneManager
 
     public void OnHandSplit(OnHandSplitDTO dto)
     {
-        Player player = characterManager.GetPlayerByGuid(dto.playerGuid);
+        Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
 
         PlayerHand hand = player.GetHandByGuid(dto.handId);
 
         // 새로운 핸드를 현재 핸드의 오른편에 추가
+
         PlayerHand newHand = player.InsertHand(player.Hands.IndexOf(hand) + 1, dto.newHandId);
 
         // 핸드에 맞는 UI Insert
-        int newHandIndex = characterManager.GetHandIndex(hand);
+        int newHandIndex = _characterManager.GetHandIndex(hand);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            uiManager.CreateLabelCardValuePlayer(newHandIndex);
-            uiManager.CreatePlayerInfo(newHandIndex);
+            _uiManager.CreateLabelCardValuePlayer(newHandIndex);
+            _uiManager.CreatePlayerInfo(newHandIndex);
 
-            uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), newHandIndex);
-            uiManager.PlayerInfoNameSetText(player.DisplayName, newHandIndex);
-            uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), newHandIndex);
+            _uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), newHandIndex);
+            _uiManager.PlayerInfoNameSetText(player.DisplayName, newHandIndex);
+            _uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), newHandIndex);
 
             // 모든 카드 위치 갱신
             UpdateAllPlayerHandPositions();
 
             Vector3 targetPosition = GetHandPosition(hand);
-            uiManager.RequestCardValueUIPositionUpdate_Register(targetPosition, newHandIndex);
-            uiManager.RequestPlayerInfoPositionUpdate_Register(targetPosition, newHandIndex);
+            _uiManager.RequestCardValueUIPositionUpdate_Register(targetPosition, newHandIndex);
+            _uiManager.RequestPlayerInfoPositionUpdate_Register(targetPosition, newHandIndex);
 
-            uiManager.RequestCardValueUIPositionUpdate_Y_Register(newHandIndex);
-            uiManager.RequestPlayerInfoPositionUpdate_Y_Register(newHandIndex);
+            _uiManager.RequestCardValueUIPositionUpdate_Y_Register(newHandIndex);
+            _uiManager.RequestPlayerInfoPositionUpdate_Y_Register(newHandIndex);
 
             UpdateUICardValue();
         });
@@ -788,14 +786,14 @@ public class BlackjackManager : BaseSceneManager
         newHand.AddCard(splitCard);
 
         // 카드 오브젝트 나눔
-        GameObject splitCardObj = hand.cardObjects[1];
-        hand.cardObjects.Remove(splitCardObj);
-        newHand.cardObjects.Add(splitCardObj);
+        GameObject splitCardObj = hand.CardObjects[1];
+        newHand.RemoveCardObject(splitCardObj);
+        newHand.AddCardObject(splitCardObj);
     }
 
     private void UpdateUICardValue()
     {
-        foreach (var player in characterManager.Players)
+        foreach (var player in _characterManager.Players)
         {
             foreach (var hand in player.Hands)
             {
@@ -806,20 +804,20 @@ public class BlackjackManager : BaseSceneManager
 
     private void UpdateUICardValue(PlayerHand hand)
     {
-        int handIndex = characterManager.GetHandIndex(hand);
-        uiManager.CardValuePlayerVisible(handIndex);
+        int handIndex = _characterManager.GetHandIndex(hand);
+        _uiManager.CardValuePlayerVisible(handIndex);
 
         Vector3 targetPosition = GetHandPosition(hand);
-        uiManager.RequestCardValueUIPositionUpdate(targetPosition, handIndex);
-        uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
+        _uiManager.RequestCardValueUIPositionUpdate(targetPosition, handIndex);
+        _uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
 
-        uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
+        _uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
     }
 
     public void OnDealerHoleCardRevealed(OnDealerHoleCardRevealedDTO dto)
     {
         // 딜러의 히든 카드 오픈
-        Card hiddenCard = characterManager.dealer.Hand.Cards[1];
+        Card hiddenCard = _characterManager.Dealer.Hand.Cards[1];
 
         hiddenCard.SetRank(dto.cardRank);
         hiddenCard.SetSuit(dto.cardSuit);
@@ -828,13 +826,13 @@ public class BlackjackManager : BaseSceneManager
         {
             RevealHoleCard();
 
-            if (characterManager.dealer.Hand.IsBlackjack())
+            if (_characterManager.Dealer.Hand.IsBlackjack())
             {
-                uiManager.CardValueDealerSetText("Blackjack");
+                _uiManager.CardValueDealerSetText("Blackjack");
             }
             else
             {
-                uiManager.CardValueDealerSetText(characterManager.dealer.Hand.GetValue().ToString());
+                _uiManager.CardValueDealerSetText(_characterManager.Dealer.Hand.GetValue().ToString());
             }
         });
     }
@@ -873,19 +871,19 @@ public class BlackjackManager : BaseSceneManager
     {
         yield return new WaitForSeconds(seconds);
 
-        foreach (var player in characterManager.Players)
+        foreach (var player in _characterManager.Players)
         {
             player.ResetForNextRound_Network();
         }
 
-        characterManager.dealer.ResetHand();
+        _characterManager.Dealer.ResetHand();
 
         UpdateUI_PlayerInfos();
         UpdateUI_CardValues();
 
-        uiManager.ChangeToBetPanel();
+        _uiManager.ChangeToBetPanel();
 
-        uiManager.button_Join.visible = false;
+        _uiManager.SetButtonJoinInvisible();
 
         ReadyToNextRoundDTO readyToNextRoundDTO = new();
         string readyToNextRoundJson = Newtonsoft.Json.JsonConvert.SerializeObject(readyToNextRoundDTO);
