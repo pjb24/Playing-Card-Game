@@ -88,11 +88,9 @@ public class ChipFactory : MonoBehaviour
     }
 
     // 칩들의 위치를 조정한다.
-    public void UpdateHandChipPosition(PlayerHand hand)
+    public void UpdateHandChipPosition(PlayerHand hand, Vector3 handPosition)
     {
         int typeCount = hand.GetChipTypeCount();
-
-        Vector3 handPosition = GameManager.Instance.GetHandPosition(hand);
 
         List<E_ChipType> tempListChipType = new();
 
@@ -229,16 +227,5 @@ public class ChipFactory : MonoBehaviour
     {
         float centerOffset = (totalChipTypes - 1) * spacing * 0.5f;
         return index * spacing - centerOffset;
-    }
-
-    public void UpdateAllChipsPosition()
-    {
-        foreach (var player in GameManager.Instance.characterManager.Players)
-        {
-            foreach (var hand in player.Hands)
-            {
-                UpdateHandChipPosition(hand);
-            }
-        }
     }
 }

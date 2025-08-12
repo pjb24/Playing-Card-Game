@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class UIManager : MonoBehaviour
+public class BlackjackUIManager : MonoBehaviour
 {
     [SerializeField] private FOVManager fovManager;
 

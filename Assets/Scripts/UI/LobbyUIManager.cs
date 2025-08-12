@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,9 @@ public class LobbyUIManager : MonoBehaviour
     [SerializeField] private UIDocument _lobbyRooms;
 
     private VisualElement _section_blackjackRooms;
+    private Button _button_newRoom;
+
+    private Dictionary<string, Button> _list_roomButton = new();
 
     [Header("Player Infos")]
     [SerializeField] private UIDocument _lobbyPlayerInfo;
@@ -34,11 +38,22 @@ public class LobbyUIManager : MonoBehaviour
         SetPlayerInfoInvisible();
     }
 
+    public void SubscribeButtonNewRoomOnClick(Action action)
+    {
+        _button_newRoom.clicked += action;
+    }
+
+    public void UnsubscribeButtonNewRoomOnClick(Action action)
+    {
+        _button_newRoom.clicked -= action;
+    }
+
     private void GetRoomsItems()
     {
         VisualElement root = _lobbyRooms.rootVisualElement;
 
         _section_blackjackRooms = root.Q<VisualElement>("Section_BlackjackRooms");
+        _button_newRoom = _section_blackjackRooms.Q<Button>("Button_NewRoom");
     }
 
     private void GetPlayerInfoItems()
@@ -79,14 +94,37 @@ public class LobbyUIManager : MonoBehaviour
         _lobbyPlayerInfo.rootVisualElement.visible = true;
     }
 
-    public void AddRoom(string roomName)
+    public void AddRoom(string roomName, EventCallback<ClickEvent> evt)
     {
         Button room = new();
 
         room.text = roomName;
         room.AddToClassList("Button_Room");
 
+        room.RegisterCallback(evt);
+
+        _list_roomButton.Add(roomName, room);
+
         _section_blackjackRooms.Add(room);
+    }
+
+    public void RemoveAllRooms(EventCallback<ClickEvent> evt)
+    {
+        foreach (var room in _list_roomButton)
+        {
+            room.Value.UnregisterCallback(evt);
+            room.Value.RemoveFromHierarchy();
+        }
+
+        _list_roomButton.Clear();
+    }
+
+    public void RemoveRoom(string roomName, EventCallback<ClickEvent> evt)
+    {
+        _list_roomButton[roomName].UnregisterCallback(evt);
+        _list_roomButton[roomName].RemoveFromHierarchy();
+
+        _list_roomButton.Remove(roomName);
     }
 
     public void SetUserId(string userId)
@@ -111,5 +149,30 @@ public class LobbyUIManager : MonoBehaviour
         {
             _label_playerChips.text = playerChips.ToString("N0");
         }
+    }
+
+    public void SubscribeButtonEnterOnClick(Action action)
+    {
+        _button_enter.clicked += action;
+    }
+
+    public void UnsubscribeButtonEnterOnClick(Action action)
+    {
+        _button_enter.clicked -= action;
+    }
+
+    public string GetUserId()
+    {
+        return _text_userId?.text;
+    }
+
+    public string GetUserName()
+    {
+        return _text_playerName?.text;
+    }
+
+    public void SetSignInInvisible()
+    {
+        _lobbySignInInfo.rootVisualElement.visible = false;
     }
 }

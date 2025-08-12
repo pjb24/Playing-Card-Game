@@ -1137,59 +1137,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1243415204
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1243415206}
-  - component: {fileID: 1243415205}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1243415205
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243415204}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a28755276de615644a90b4f95a31fb24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiManager: {fileID: 620660599}
-  cardPrefab: {fileID: 2082232776277006348, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
-  deckPosition: {fileID: 2072246776}
-  dealerHandPosition: {fileID: 432687636}
-  playerHandPositionRoot: {fileID: 1984353915}
-  playerHandPositionSpacing: 3
-  cardOffsetX: 0.2
-  cardOffsetY: 0.01
-  chipFactory: {fileID: 248488723}
---- !u!4 &1243415206
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243415204}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1416351436
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1558,6 +1505,59 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8097021683156282000, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
   m_PrefabInstance: {fileID: 2072246775}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2142065844
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2142065846}
+  - component: {fileID: 2142065845}
+  m_Layer: 0
+  m_Name: BlackjackManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2142065845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142065844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e75f32a8178dc3469483fb55af09dc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiManager: {fileID: 620660599}
+  cardPrefab: {fileID: 2082232776277006348, guid: 73a9ec2a4873d354d8a7efed01e38a8c, type: 3}
+  deckPosition: {fileID: 2072246776}
+  dealerHandPosition: {fileID: 432687636}
+  playerHandPositionRoot: {fileID: 1984353915}
+  playerHandPositionSpacing: 3
+  cardOffsetX: 0.2
+  cardOffsetY: 0.01
+  chipFactory: {fileID: 248488723}
+--- !u!4 &2142065846
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142065844}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1577,9 +1577,9 @@ SceneRoots:
   - {fileID: 1655995864}
   - {fileID: 29186569}
   - {fileID: 738605335}
-  - {fileID: 1243415206}
   - {fileID: 620660600}
   - {fileID: 248488724}
+  - {fileID: 2142065846}
   - {fileID: 1141401879}
   - {fileID: 873443550}
   - {fileID: 188886549}

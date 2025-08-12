@@ -10,6 +10,8 @@ public class WelcomeCommand : IGameCommand
 
         Debug.Log("Welcome, " + dto.message);
 
+        GameManager.Instance.HandleWelcomeMessage(dto);
+
         yield return null;
     }
 }

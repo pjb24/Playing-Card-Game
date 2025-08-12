@@ -10,8 +10,7 @@ public class OnAddHandToPlayerCommand : IGameCommand
 
         Debug.Log("OnAddHandToPlayer, " + "플레이어 Guid: " + dto.playerGuid + "에 " + "핸드 ID: " + dto.handId + "를 추가합니다.");
 
-        Player player = GameManager.Instance.characterManager.GetPlayerByGuid(dto.playerGuid);
-        player.AddHand(dto.handId);
+        GameManager.Instance.HandleOnAddHandToPlayerMessage(dto);
 
         yield return null;
     }

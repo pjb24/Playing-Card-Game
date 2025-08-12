@@ -32,6 +32,32 @@ public class OnErrorDTO
     public string message { get; set; }
 }
 
+public class OnJoinLobbySuccessDTO
+{
+    public string playerGuid { get; set; }
+    public int playerChips { get; set; }
+}
+
+public class RoomInfoDTO
+{
+    public string roomName { get; set; }
+}
+
+public class OnFullExistRoomListDTO
+{
+    public List<RoomInfoDTO> rooms { get; set; }
+}
+
+public class OnChangedRoomListDTO
+{
+    public List<RoomInfoDTO> rooms { get; set; }
+}
+
+public class OnRoomCreateSuccessDTO
+{
+    public string roomName { get; set; }
+}
+
 public class PlayerInfoDTO
 {
     public string playerGuid { get; set; }
@@ -170,9 +196,21 @@ public class OnGrantRoomMasterDTO
 
 // Client To Server DTO
 
-public class JoinGameDTO
+public class JoinLobbyDTO
 {
+    public string userId { get; set; }
     public string userName { get; set; }
+}
+
+public class CreateNewRoomDTO
+{
+    public string roomName { get; set; }
+}
+
+public class JoinRoomDTO
+{
+    public string roomName { get; set; }
+    public string userId { get; set; }
 }
 
 public class StartGameDTO

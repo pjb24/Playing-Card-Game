@@ -10,8 +10,8 @@ public class OnActionDoneCommand : IGameCommand
 
         Debug.Log("OnActionDone, " + "플레이어: " + dto.playerName + "의 " + "핸드 ID: " + dto.handId + "의 Action을 완료합니다." + " 플레이어 Guid: " + dto.playerGuid);
 
-        NetworkManager.Instance.CallRemoveListenersOnTimeToActionCommandInstance();
-
+        GameManager.Instance.HandleOnActionDoneMessage(dto);
+        
         yield return null;
     }
 }

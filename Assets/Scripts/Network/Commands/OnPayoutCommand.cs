@@ -10,6 +10,8 @@ public class OnPayoutCommand : IGameCommand
 
         Debug.Log("OnPayout, " + "플레이어 Guid: " + dto.playerGuid + " 핸드 ID: " + dto.handId + "에 " + "결과: " + dto.evaluationResult.ToString() + "로 정산을 수행합니다.");
 
+        GameManager.Instance.HandleOnPayoutMessage(dto);
+
         yield return null;
     }
 }

@@ -55,12 +55,6 @@ public class SignalRClient
         {
             await _connection.StartAsync();
             Debug.Log("SignalR 연결 성공");
-
-            JoinGameDTO joinGameDTO = new JoinGameDTO();
-            joinGameDTO.userName = "DisplayName_1";
-            joinGameDTO.userName = RandomStringGenerator.GenerateRandomString(8);
-            string joinGameJson = Newtonsoft.Json.JsonConvert.SerializeObject(joinGameDTO);
-            NetworkManager.Instance.SignalRClient.Execute("JoinGame", joinGameJson);
         }
         catch (System.Exception ex)
         {
@@ -79,40 +73,38 @@ public class SignalRClient
 
     private void RegisterCommands()
     {
-        _dispatcher.RegisterCommand("Welcome", new WelcomeCommand());
+        _dispatcher.RegisterCommand("OnActionDone", new OnActionDoneCommand());
+        _dispatcher.RegisterCommand("OnAddHandToPlayer", new OnAddHandToPlayerCommand());
+        _dispatcher.RegisterCommand("OnBetPlaced", new OnBetPlacedCommand());
+        _dispatcher.RegisterCommand("OnCardDealt", new OnCardDealtCommand());
+        _dispatcher.RegisterCommand("OnDealerCardDealt", new OnDealerCardDealtCommand());
+        _dispatcher.RegisterCommand("OnDealerCardDealtComplete", new OnDealerCardDealtCompleteCommand());
+        _dispatcher.RegisterCommand("OnDealerHiddenCardDealt", new OnDealerHiddenCardDealtCommand());
+        _dispatcher.RegisterCommand("OnDealerHoleCardRevealed", new OnDealerHoleCardRevealedCommand());
+        _dispatcher.RegisterCommand("OnError", new OnErrorCommand());
+        _dispatcher.RegisterCommand("OnExistingPlayerList", new OnExistingPlayerListCommand());
+        _dispatcher.RegisterCommand("OnFullExistRoomList", new OnFullExistRoomListCommand());
+        _dispatcher.RegisterCommand("OnGameEnd", new OnGameEndCommand());
+        _dispatcher.RegisterCommand("OnGrantRoomMaster", new OnGrantRoomMasterCommand());
+        _dispatcher.RegisterCommand("OnHandSplit", new OnHandSplitCommand());
+        _dispatcher.RegisterCommand("OnJoinLobbySuccess", new OnJoinLobbySuccessCommand());
+        _dispatcher.RegisterCommand("OnJoinSuccess", new OnJoinSuccessCommand());
+        _dispatcher.RegisterCommand("OnPayout", new OnPayoutCommand());
+        _dispatcher.RegisterCommand("OnPlayerBusted", new OnPlayerBustedCommand());
+        _dispatcher.RegisterCommand("OnPlayerRemainChips", new OnPlayerRemainChipsCommand());
+        _dispatcher.RegisterCommand("OnRoomCreateSuccess", new OnRoomCreateSuccessCommand());
+        _dispatcher.RegisterCommand("OnTimeToAction", new OnTimeToActionCommand());
+        _dispatcher.RegisterCommand("OnTimeToBetting", new OnTimeToBettingCommand());
+        _dispatcher.RegisterCommand("OnUserJoined", new OnUserJoinedCommand());
         _dispatcher.RegisterCommand("UserConnected", new UserConnectedCommand());
         _dispatcher.RegisterCommand("UserDisconnected", new UserDisconnectedCommand());
-        _dispatcher.RegisterCommand("OnError", new OnErrorCommand());
-        _dispatcher.RegisterCommand("OnJoinSuccess", new OnJoinSuccessCommand());
-        _dispatcher.RegisterCommand("OnUserJoined", new OnUserJoinedCommand());
-        _dispatcher.RegisterCommand("OnPlayerRemainChips", new OnPlayerRemainChipsCommand());
-        _dispatcher.RegisterCommand("OnBetPlaced", new OnBetPlacedCommand());
         _dispatcher.RegisterCommand("UserLeft", new UserLeftCommand());
-        _dispatcher.RegisterCommand("OnTimeToBetting", new OnTimeToBettingCommand());
-        _dispatcher.RegisterCommand("OnPayout", new OnPayoutCommand());
-        _dispatcher.RegisterCommand("OnCardDealt", new OnCardDealtCommand());
-        _dispatcher.RegisterCommand("OnPlayerBusted", new OnPlayerBustedCommand());
-        _dispatcher.RegisterCommand("OnActionDone", new OnActionDoneCommand());
-        _dispatcher.RegisterCommand("OnHandSplit", new OnHandSplitCommand());
-        _dispatcher.RegisterCommand("OnDealerHoleCardRevealed", new OnDealerHoleCardRevealedCommand());
-        _dispatcher.RegisterCommand("OnDealerHiddenCardDealt", new OnDealerHiddenCardDealtCommand());
-        _dispatcher.RegisterCommand("OnAddHandToPlayer", new OnAddHandToPlayerCommand());
-        _dispatcher.RegisterCommand("OnGameEnd", new OnGameEndCommand());
-
-        OnDealerCardDealtCommand onDealerCardDealtCommand = new();
-        _dispatcher.RegisterCommand("OnDealerCardDealt", onDealerCardDealtCommand);
-        _dispatcher.RegisterCommand("OnDealerCardDealtComplete", new OnDealerCardDealtCompleteCommand(onDealerCardDealtCommand));
-
-        OnTimeToActionCommand onTimeToActionCommand = new();
-        _dispatcher.RegisterCommand("OnTimeToAction", onTimeToActionCommand);
-        NetworkManager.Instance.SetOnTimeToActionCommandInstance(onTimeToActionCommand);
-
-        _dispatcher.RegisterCommand("OnGrantRoomMaster", new OnGrantRoomMasterCommand());
-        _dispatcher.RegisterCommand("OnExistingPlayerList", new OnExistingPlayerListCommand());
+        _dispatcher.RegisterCommand("Welcome", new WelcomeCommand());
     }
 
     public async void Execute(string commandName, string payload)
     {
+        Debug.Log($"Execute, {commandName}, {payload}");
         await _connection.InvokeAsync("ExecuteCommand", commandName, payload);
     }
 }
