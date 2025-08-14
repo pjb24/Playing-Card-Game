@@ -101,6 +101,20 @@ public class GameManager : PersistentSingleton<GameManager>
         }
     }
 
+    public void HandleOnChangedRoomListMessage(OnChangedRoomListDTO dto)
+    {
+        // 현재 씬 매니저가 이 메시지 처리 역할을 수행할 수 있는지 확인
+        if (_currentSceneManager is IOnChangedRoomListDTOMessageHandler handler)
+        {
+            // 역할을 수행할 수 있다면, 해당 역할의 함수를 호출
+            handler.OnChangedRoomList(dto);
+        }
+        else
+        {
+            Debug.LogWarning("OnChangedRoomList 메시지를 받았지만, 현재 씬 매니저는 해당 메시지를 처리할 수 없습니다.");
+        }
+    }
+
     public void HandleOnExistingPlayerListMessage(OnExistingPlayerListDTO dto)
     {
         // 현재 씬 매니저가 이 메시지 처리 역할을 수행할 수 있는지 확인

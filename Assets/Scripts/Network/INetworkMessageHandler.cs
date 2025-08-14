@@ -15,6 +15,11 @@ public interface IOnFullExistRoomListMessageHandler
     void OnFullExistRoomList(OnFullExistRoomListDTO dto);
 }
 
+public interface IOnChangedRoomListDTOMessageHandler
+{
+    void OnChangedRoomList(OnChangedRoomListDTO dto);
+}
+
 public interface IOnRoomCreateSuccessMessageHandler
 {
     void OnRoomCreateSuccess(OnRoomCreateSuccessDTO dto);

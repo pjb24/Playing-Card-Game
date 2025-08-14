@@ -96,6 +96,11 @@ public class LobbyUIManager : MonoBehaviour
 
     public void AddRoom(string roomName, EventCallback<ClickEvent> evt)
     {
+        if (_list_roomButton.ContainsKey(roomName))
+        {
+            return;
+        }
+
         Button room = new();
 
         room.text = roomName;
@@ -103,7 +108,7 @@ public class LobbyUIManager : MonoBehaviour
 
         room.RegisterCallback(evt);
 
-        _list_roomButton.Add(roomName, room);
+        _list_roomButton.TryAdd(roomName, room);
 
         _section_blackjackRooms.Add(room);
     }

@@ -15,10 +15,14 @@ public class LobbyManager : BaseSceneManager
     , IOnJoinLobbySuccessMessageHandler
     , IOnFullExistRoomListMessageHandler
     , IOnRoomCreateSuccessMessageHandler
+    , IOnChangedRoomListDTOMessageHandler
 {
     [SerializeField] private LobbyUIManager _uiManager;
 
-    private List<RoomInfo> _rooms = new();
+    private Dictionary<string, RoomInfo> _rooms = new();
+
+    private bool _flagRequestRoomChanges = false;
+    private bool _flagRequestFullRoomList = false;
 
     public override void InitManager()
     {
@@ -58,6 +62,8 @@ public class LobbyManager : BaseSceneManager
 
         GameManager.Instance.SetUserId(_uiManager.GetUserId());
         GameManager.Instance.SetUserName(_uiManager.GetUserName());
+
+        StartRoomRequestRoutines();
     }
 
     public void OnFullExistRoomList(OnFullExistRoomListDTO dto)
@@ -70,7 +76,7 @@ public class LobbyManager : BaseSceneManager
         {
             RoomInfo roomInfo = new();
             roomInfo.roomId = room.roomName;
-            _rooms.Add(roomInfo);
+            _rooms.Add(roomInfo.roomId, roomInfo);
 
             _uiManager.AddRoom(roomInfo.roomId, RoomButtonOnClick);
         }
@@ -83,6 +89,8 @@ public class LobbyManager : BaseSceneManager
         if (clickedButton != null)
         {
             GameManager.Instance.SetRoomName(clickedButton.text);
+
+            StopRoomRequestRoutines();
 
             // 씬 전환
             SceneManager.LoadScene("BlackjackScene");
@@ -104,7 +112,80 @@ public class LobbyManager : BaseSceneManager
     {
         GameManager.Instance.SetRoomName(dto.roomName);
 
+        StopRoomRequestRoutines();
+
         // 씬 전환
         SceneManager.LoadScene("BlackjackScene");
+    }
+
+    private void StartRoomRequestRoutines()
+    {
+        _flagRequestRoomChanges = true;
+        _flagRequestFullRoomList = true;
+
+        StartCoroutine(RequestRoomChangesRoutine());
+        StartCoroutine(RequestFullRoomListRoutine());
+    }
+
+    private void StopRoomRequestRoutines()
+    {
+        _flagRequestRoomChanges = false;
+        _flagRequestFullRoomList = false;
+    }
+
+    private IEnumerator RequestRoomChangesRoutine()
+    {
+        while (_flagRequestRoomChanges)
+        {
+            RequestRoomChangesDTO requestRoomChangesDTO = new();
+            List<RoomInfoDTO> listRoomInfoDTO = new();
+            foreach (var room in _rooms.Values)
+            {
+                RoomInfoDTO roomInfoDTO = new();
+                roomInfoDTO.roomName = room.roomId;
+                listRoomInfoDTO.Add(roomInfoDTO);
+            }
+            requestRoomChangesDTO.roomList = listRoomInfoDTO;
+            string requestRoomChangesJson = Newtonsoft.Json.JsonConvert.SerializeObject(requestRoomChangesDTO);
+            NetworkManager.Instance.SignalRClient.Execute("RequestRoomChanges", requestRoomChangesJson);
+
+            yield return new WaitForSeconds(5f);
+        }
+    }
+
+    private IEnumerator RequestFullRoomListRoutine()
+    {
+        while (_flagRequestFullRoomList)
+        {
+            RequestFullRoomListDTO requestFullRoomListDTO = new();
+            string requestFullRoomListJson = Newtonsoft.Json.JsonConvert.SerializeObject(requestFullRoomListDTO);
+            NetworkManager.Instance.SignalRClient.Execute("RequestFullRoomList", requestFullRoomListJson);
+
+            yield return new WaitForSeconds(60f);
+        }
+    }
+
+    public void OnChangedRoomList(OnChangedRoomListDTO dto)
+    {
+        foreach (var room in dto.roomsRemove)
+        {
+            _rooms.Remove(room.roomName);
+
+            _uiManager.RemoveRoom(room.roomName, RoomButtonOnClick);
+        }
+
+        foreach (var room in dto.roomsAdd)
+        {
+            if (_rooms.ContainsKey(room.roomName))
+            {
+                continue;
+            }
+
+            RoomInfo roomInfo = new();
+            roomInfo.roomId = room.roomName;
+            _rooms.TryAdd(roomInfo.roomId, roomInfo);
+
+            _uiManager.AddRoom(roomInfo.roomId, RoomButtonOnClick);
+        }
     }
 }
