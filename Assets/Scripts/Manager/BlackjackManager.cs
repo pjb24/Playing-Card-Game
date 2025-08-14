@@ -27,7 +27,7 @@ public class BlackjackManager : BaseSceneManager
     , IOnPayoutMessageHandler
     , IOnGameEndMessageHandler
 {
-    private BlackjackUIManager _uiManager = new();
+    [SerializeField] private BlackjackUIManager _uiManager;
     private CharacterManager _characterManager = new();
 
     [SerializeField] private GameObject _cardPrefab;
@@ -57,7 +57,7 @@ public class BlackjackManager : BaseSceneManager
 
     private void Start()
     {
-        JoinRoomDTO joinRoomDTO = new JoinRoomDTO();
+        JoinRoomDTO joinRoomDTO = new();
         joinRoomDTO.userId = GameManager.Instance.UserId;
         joinRoomDTO.roomName = GameManager.Instance.RoomName;
         string joinRoomJson = Newtonsoft.Json.JsonConvert.SerializeObject(joinRoomDTO);
@@ -200,7 +200,7 @@ public class BlackjackManager : BaseSceneManager
 
     private void HandleJoin()
     {
-        StartGameDTO startGameDTO = new StartGameDTO();
+        StartGameDTO startGameDTO = new();
         string startGameJson = Newtonsoft.Json.JsonConvert.SerializeObject(startGameDTO);
         NetworkManager.Instance.SignalRClient.Execute("StartGame", startGameJson);
 
@@ -440,7 +440,7 @@ public class BlackjackManager : BaseSceneManager
     {
         _player.PlaceBet(_hand, _betAmount);
 
-        PlaceBetDTO placeBetDTO = new PlaceBetDTO();
+        PlaceBetDTO placeBetDTO = new();
         placeBetDTO.amount = _betAmount;
         placeBetDTO.handId = _hand.Id;
         string placeBetJson = Newtonsoft.Json.JsonConvert.SerializeObject(placeBetDTO);
@@ -522,7 +522,7 @@ public class BlackjackManager : BaseSceneManager
 
         PlayerHand hand = player.GetHandByGuid(dto.handId);
 
-        Card card = new Card(dto.cardSuit, dto.cardRank);
+        Card card = new(dto.cardSuit, dto.cardRank);
         hand.AddCard(card);
 
         if (hand.Cards.Count == 1)
@@ -570,7 +570,7 @@ public class BlackjackManager : BaseSceneManager
         {
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
-                Card dealerCard = new Card(dto.cardSuit, dto.cardRank);
+                Card dealerCard = new(dto.cardSuit, dto.cardRank);
                 dealer.Hand.AddCard(dealerCard);
 
                 InstancingCardToDealer(dealerCard, dealer.Hand);
@@ -582,7 +582,7 @@ public class BlackjackManager : BaseSceneManager
         }
         else
         {
-            Card dealerCard = new Card(dto.cardSuit, dto.cardRank);
+            Card dealerCard = new(dto.cardSuit, dto.cardRank);
 
             _queue.Enqueue(dealerCard);
 
@@ -626,7 +626,7 @@ public class BlackjackManager : BaseSceneManager
         Dealer dealer = _characterManager.Dealer;
 
         // Dealer Second Card - Hidden Card
-        Card dealerCard = new Card(E_CardSuit.Back, E_CardRank.Back);
+        Card dealerCard = new(E_CardSuit.Back, E_CardRank.Back);
         dealer.Hand.AddCard(dealerCard);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
@@ -661,7 +661,7 @@ public class BlackjackManager : BaseSceneManager
 
     private void HandleHit()
     {
-        HitDTO hitDTO = new HitDTO();
+        HitDTO hitDTO = new();
         hitDTO.handId = _hand.Id;
         string hitJson = Newtonsoft.Json.JsonConvert.SerializeObject(hitDTO);
         NetworkManager.Instance.SignalRClient.Execute("Hit", hitJson);
@@ -669,7 +669,7 @@ public class BlackjackManager : BaseSceneManager
 
     private void HandleStand()
     {
-        StandDTO standDTO = new StandDTO();
+        StandDTO standDTO = new();
         standDTO.handId = _hand.Id;
         string standJson = Newtonsoft.Json.JsonConvert.SerializeObject(standDTO);
         NetworkManager.Instance.SignalRClient.Execute("Stand", standJson);
@@ -689,7 +689,7 @@ public class BlackjackManager : BaseSceneManager
             //return;
         }
 
-        SplitDTO splitDTO = new SplitDTO();
+        SplitDTO splitDTO = new();
         splitDTO.handId = _hand.Id;
         string splitJson = Newtonsoft.Json.JsonConvert.SerializeObject(splitDTO);
         NetworkManager.Instance.SignalRClient.Execute("Split", splitJson);
@@ -708,7 +708,7 @@ public class BlackjackManager : BaseSceneManager
             return;
         }
 
-        DoubleDownDTO doubleDownDTO = new DoubleDownDTO();
+        DoubleDownDTO doubleDownDTO = new();
         doubleDownDTO.handId = _hand.Id;
         string doubleDownJson = Newtonsoft.Json.JsonConvert.SerializeObject(doubleDownDTO);
         NetworkManager.Instance.SignalRClient.Execute("DoubleDown", doubleDownJson);
@@ -752,14 +752,23 @@ public class BlackjackManager : BaseSceneManager
         PlayerHand hand = player.GetHandByGuid(dto.handId);
 
         // 새로운 핸드를 현재 핸드의 오른편에 추가
-
         PlayerHand newHand = player.InsertHand(player.Hands.IndexOf(hand) + 1, dto.newHandId);
 
-        // 핸드에 맞는 UI Insert
-        int newHandIndex = _characterManager.GetHandIndex(hand);
+        int newHandIndex = _characterManager.GetHandIndex(newHand);
+
+        // 현재 핸드의 2번째 카드를 새로운 핸드로 나눔
+        Card splitCard = hand.Cards[1];
+        hand.RemoveCard(splitCard);
+        newHand.AddCard(splitCard);
+
+        // 카드 오브젝트 나눔
+        GameObject splitCardObj = hand.CardObjects[1];
+        hand.RemoveCardObject(splitCardObj);
+        newHand.AddCardObject(splitCardObj);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
+            // 핸드에 맞는 UI Insert
             _uiManager.CreateLabelCardValuePlayer(newHandIndex);
             _uiManager.CreatePlayerInfo(newHandIndex);
 
@@ -770,7 +779,7 @@ public class BlackjackManager : BaseSceneManager
             // 모든 카드 위치 갱신
             UpdateAllPlayerHandPositions();
 
-            Vector3 targetPosition = GetHandPosition(hand);
+            Vector3 targetPosition = GetHandPosition(newHand);
             _uiManager.RequestCardValueUIPositionUpdate_Register(targetPosition, newHandIndex);
             _uiManager.RequestPlayerInfoPositionUpdate_Register(targetPosition, newHandIndex);
 
@@ -779,16 +788,6 @@ public class BlackjackManager : BaseSceneManager
 
             UpdateUICardValue();
         });
-
-        // 현재 핸드의 2번째 카드를 새로운 핸드로 나눔
-        Card splitCard = hand.Cards[1];
-        hand.RemoveCard(splitCard);
-        newHand.AddCard(splitCard);
-
-        // 카드 오브젝트 나눔
-        GameObject splitCardObj = hand.CardObjects[1];
-        newHand.RemoveCardObject(splitCardObj);
-        newHand.AddCardObject(splitCardObj);
     }
 
     private void UpdateUICardValue()
@@ -849,7 +848,7 @@ public class BlackjackManager : BaseSceneManager
             yield return null;
         }
 
-        DealerBehaviorDoneDTO dealerBehaviorDoneDTO = new DealerBehaviorDoneDTO();
+        DealerBehaviorDoneDTO dealerBehaviorDoneDTO = new();
         string dealerBehaviorDoneJson = Newtonsoft.Json.JsonConvert.SerializeObject(dealerBehaviorDoneDTO);
         NetworkManager.Instance.SignalRClient.Execute("DealerBehaviorDone", dealerBehaviorDoneJson);
     }

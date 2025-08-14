@@ -68,7 +68,7 @@ public class LobbyManager : BaseSceneManager
 
         foreach (var room in dto.rooms)
         {
-            RoomInfo roomInfo = new RoomInfo();
+            RoomInfo roomInfo = new();
             roomInfo.roomId = room.roomName;
             _rooms.Add(roomInfo);
 

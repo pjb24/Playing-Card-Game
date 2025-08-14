@@ -119,7 +119,7 @@ public class BlackjackUIManager : MonoBehaviour
 
     public void CreateLabelCardValuePlayer(int index)
     {
-        Label label = new Label();
+        Label label = new();
         label.AddToClassList("label_CardValue_Player");
         label.visible = false;
         uiCardValue.rootVisualElement.Add(label);
@@ -179,23 +179,23 @@ public class BlackjackUIManager : MonoBehaviour
 
     public void CreatePlayerInfo(int index)
     {
-        VisualElement section = new VisualElement();
+        VisualElement section = new();
         section.AddToClassList("section_text");
         section.visible = false;
         uiPlayerInfo.rootVisualElement.Add(section);
         list_section_text.Insert(index, section);
 
-        Label label_BetAmount = new Label();
+        Label label_BetAmount = new();
         label_BetAmount.AddToClassList("label");
         section.Add(label_BetAmount);
         list_label_BetAmount.Insert(index, label_BetAmount);
 
-        Label label_PlayerName = new Label();
+        Label label_PlayerName = new();
         label_PlayerName.AddToClassList("label");
         section.Add(label_PlayerName);
         list_label_PlayerName.Insert(index, label_PlayerName);
 
-        Label label_PlayerChip = new Label();
+        Label label_PlayerChip = new();
         label_PlayerChip.AddToClassList("label");
         section.Add(label_PlayerChip);
         list_label_PlayerChip.Insert(index, label_PlayerChip);
@@ -329,7 +329,7 @@ public class BlackjackUIManager : MonoBehaviour
 
     public void CreateLabelCardValueDealer()
     {
-        label_CardValue_Dealer = new Label();
+        label_CardValue_Dealer = new();
         label_CardValue_Dealer.AddToClassList("label_CardValue_Dealer");
         label_CardValue_Dealer.visible = false;
         uiCardValue.rootVisualElement.Add(label_CardValue_Dealer);
