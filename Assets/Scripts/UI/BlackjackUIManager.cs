@@ -42,6 +42,15 @@ public class BlackjackUIManager : MonoBehaviour
     private Label label_CardValue_Dealer;
     private List<Label> list_label_CardValue_Player = new();
 
+    [Header("Leave Room Button")]
+    [SerializeField] private UIDocument _uiLeaveRoom;
+    private Button _button_leaveRoom;
+
+    private void Awake()
+    {
+        GetLeaveRoomItems();
+    }
+
     public void ChangeToBetPanel()
     {
         uiPanel.visualTreeAsset = betPanel;
@@ -499,5 +508,27 @@ public class BlackjackUIManager : MonoBehaviour
     public void UnsubscribeButtonDoubleDownClicked(Action action)
     {
         button_DoubleDown.clicked += action;
+    }
+
+    private void GetLeaveRoomItems()
+    {
+        var root = _uiLeaveRoom.rootVisualElement;
+
+        _button_leaveRoom = root.Q<Button>("Button_LeaveRoom");
+    }
+
+    public void SubscribeButtonLeaveRoomClicked(Action action)
+    {
+        _button_leaveRoom.clicked += action;
+    }
+
+    public void UnsubscribeButtonLeaveRoomClicked(Action action)
+    {
+        _button_leaveRoom.clicked -= action;
+    }
+
+    public void SetButtonLeaveRoomText(string text)
+    {
+        _button_leaveRoom.text = text;
     }
 }

@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "com.antonysze.custom-play-button": "https://github.com/antonysze/unity-custom-play-button.git",
     "com.github-glitchenzo.nugetforunity": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
+    "com.marijnzwemmer.unity-toolbar-extender": "https://github.com/marijnz/unity-toolbar-extender.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.6",
     "com.unity.collab-proxy": "2.8.2",

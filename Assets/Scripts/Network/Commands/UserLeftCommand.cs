@@ -8,7 +8,9 @@ public class UserLeftCommand : IGameCommand
     {
         UserLeftDTO dto = Newtonsoft.Json.JsonConvert.DeserializeObject<UserLeftDTO>(payload);
 
-        Debug.Log("UserLeft, " + "ConnectionId: " + dto.connectionId + " 유저가 게임에서 퇴장하였습니다.");
+        Debug.Log("UserLeft, " + "Player Guid: " + dto.playerGuid + " 유저가 게임에서 퇴장하였습니다.");
+
+        GameManager.Instance.HandleUserLeftMessage(dto);
 
         yield return null;
     }

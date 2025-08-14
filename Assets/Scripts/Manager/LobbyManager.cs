@@ -27,13 +27,33 @@ public class LobbyManager : BaseSceneManager
     public override void InitManager()
     {
         Debug.Log("LobbyManager가 초기화되었습니다.");
+
+        _uiManager.Init();
+
+        if (GameManager.Instance.UserId == "")
+        {
+            _uiManager.SubscribeButtonEnterOnClick(ButtonEnterOnClick);
+        }
+        else
+        {
+            _uiManager.SetSignInInvisible();
+
+            _uiManager.SetUserId(GameManager.Instance.UserId);
+            _uiManager.SetPlayerName(GameManager.Instance.UserName);
+            _uiManager.SetPlayerChips(GameManager.Instance.Chips);
+
+            _uiManager.SubscribeButtonNewRoomOnClick(NewRoomButtonOnClick);
+
+            _uiManager.SetRoomsVisible();
+            _uiManager.SetPlayerInfoVisible();
+
+            StartRoomRequestRoutines();
+        }
     }
 
     public void Welcome(WelcomeDTO dto)
     {
         Debug.Log("LobbyManager, Welcome");
-
-        _uiManager.SubscribeButtonEnterOnClick(ButtonEnterOnClick);
     }
 
     public void ButtonEnterOnClick()
@@ -62,6 +82,7 @@ public class LobbyManager : BaseSceneManager
 
         GameManager.Instance.SetUserId(_uiManager.GetUserId());
         GameManager.Instance.SetUserName(_uiManager.GetUserName());
+        GameManager.Instance.SetChips(dto.playerChips);
 
         StartRoomRequestRoutines();
     }

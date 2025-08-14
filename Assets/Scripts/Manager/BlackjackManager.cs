@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BlackjackManager : BaseSceneManager
     , IOnExistingPlayerListMessageHandler
@@ -26,6 +27,7 @@ public class BlackjackManager : BaseSceneManager
     , IOnDealerCardDealtCompleteMessageHandler
     , IOnPayoutMessageHandler
     , IOnGameEndMessageHandler
+    , IUserLeftMessageHandler
 {
     [SerializeField] private BlackjackUIManager _uiManager;
     private CharacterManager _characterManager = new();
@@ -50,6 +52,8 @@ public class BlackjackManager : BaseSceneManager
     private readonly object _lock = new();
     private volatile bool _isCoroutineRunning = false;
 
+    private bool _flagLeaveBooked = false;
+
     public override void InitManager()
     {
         Debug.Log("BlackjackManager가 초기화되었습니다.");
@@ -62,6 +66,8 @@ public class BlackjackManager : BaseSceneManager
         joinRoomDTO.roomName = GameManager.Instance.RoomName;
         string joinRoomJson = Newtonsoft.Json.JsonConvert.SerializeObject(joinRoomDTO);
         NetworkManager.Instance.SignalRClient.Execute("JoinRoom", joinRoomJson);
+
+        _uiManager.SubscribeButtonLeaveRoomClicked(HandleLeaveButtonClicked);
     }
 
     public void UpdateAllPlayerHandPositions()
@@ -176,7 +182,7 @@ public class BlackjackManager : BaseSceneManager
     {
         Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
 
-        player.SetPlayerChips(int.Parse(dto.chips));
+        player.SetPlayerChips(dto.chips);
 
         foreach (var hand in player.Hands)
         {
@@ -186,6 +192,11 @@ public class BlackjackManager : BaseSceneManager
             {
                 _uiManager.PlayerInfoChipSetText((player.Chips).ToString("N0"), handIndex);
             });
+        }
+
+        if (_characterManager.ClientPlayer.Id == player.Id)
+        {
+            GameManager.Instance.SetChips(dto.chips);
         }
     }
 
@@ -884,8 +895,45 @@ public class BlackjackManager : BaseSceneManager
 
         _uiManager.SetButtonJoinInvisible();
 
-        ReadyToNextRoundDTO readyToNextRoundDTO = new();
-        string readyToNextRoundJson = Newtonsoft.Json.JsonConvert.SerializeObject(readyToNextRoundDTO);
-        NetworkManager.Instance.SignalRClient.Execute("ReadyToNextRound", readyToNextRoundJson);
+        if (_flagLeaveBooked)
+        {
+            _uiManager.UnsubscribeButtonLeaveRoomClicked(HandleLeaveButtonClicked);
+
+            // 방 나가기 메시지 송신
+            LeaveGameDTO leaveGameDTO = new();
+            leaveGameDTO.roomId = GameManager.Instance.RoomName;
+            string leaveGameJson = Newtonsoft.Json.JsonConvert.SerializeObject(leaveGameDTO);
+            NetworkManager.Instance.SignalRClient.Execute("LeaveGame", leaveGameJson);
+
+            // 로비로 씬 전환
+            SceneManager.LoadScene("LobbyScene");
+        }
+        else
+        {
+            ReadyToNextRoundDTO readyToNextRoundDTO = new();
+            string readyToNextRoundJson = Newtonsoft.Json.JsonConvert.SerializeObject(readyToNextRoundDTO);
+            NetworkManager.Instance.SignalRClient.Execute("ReadyToNextRound", readyToNextRoundJson);
+        }
+    }
+
+    public void HandleLeaveButtonClicked()
+    {
+        if (_flagLeaveBooked)
+        {
+            _flagLeaveBooked = false;
+            _uiManager.SetButtonLeaveRoomText("방 나가기");
+        }
+        else
+        {
+            _flagLeaveBooked = true;
+            _uiManager.SetButtonLeaveRoomText("나가기 예약됨");
+        }
+    }
+
+    public void UserLeft(UserLeftDTO dto)
+    {
+        Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
+
+        _characterManager.RemovePlayer(player);
     }
 }

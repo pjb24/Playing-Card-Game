@@ -7,12 +7,15 @@ public class GameManager : PersistentSingleton<GameManager>
 {
     private BaseSceneManager _currentSceneManager;
 
-    private string _userId;
+    private string _userId = "";
     public string UserId => _userId;
-    private string _userName;
+    private string _userName = "";
     public string UserName => _userName;
-    private string _roomName;
+    private string _roomName = "";
     public string RoomName => _roomName;
+
+    private int _chips = 0;
+    public int Chips => _chips;
 
     protected override void Awake()
     {
@@ -30,6 +33,11 @@ public class GameManager : PersistentSingleton<GameManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (SceneManager.GetActiveScene().name == "InitScene")
+        {
+            SceneManager.LoadScene("LobbyScene");
+        }
+
         // 새로 로드된 씬에서 SceneManagerBase를 상속받는 컴포넌트를 찾습니다.
         _currentSceneManager = FindAnyObjectByType<BaseSceneManager>();
 
@@ -393,5 +401,24 @@ public class GameManager : PersistentSingleton<GameManager>
         {
             Debug.LogWarning("OnGameEnd 메시지를 받았지만, 현재 씬 매니저는 해당 메시지를 처리할 수 없습니다.");
         }
+    }
+
+    public void HandleUserLeftMessage(UserLeftDTO dto)
+    {
+        // 현재 씬 매니저가 이 메시지 처리 역할을 수행할 수 있는지 확인
+        if (_currentSceneManager is IUserLeftMessageHandler handler)
+        {
+            // 역할을 수행할 수 있다면, 해당 역할의 함수를 호출
+            handler.UserLeft(dto);
+        }
+        else
+        {
+            Debug.LogWarning("UserLeft 메시지를 받았지만, 현재 씬 매니저는 해당 메시지를 처리할 수 없습니다.");
+        }
+    }
+
+    public void SetChips(int chips)
+    {
+        _chips = chips;
     }
 }

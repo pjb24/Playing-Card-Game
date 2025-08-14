@@ -28,7 +28,7 @@ public class LobbyUIManager : MonoBehaviour
     private TextField _text_playerName;
     private Button _button_enter;
 
-    private void Awake()
+    public void Init()
     {
         GetSignInInfoItems();
         GetRoomsItems();
