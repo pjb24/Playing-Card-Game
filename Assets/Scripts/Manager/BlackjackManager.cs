@@ -54,6 +54,8 @@ public class BlackjackManager : BaseSceneManager
 
     private bool _flagLeaveBooked = false;
 
+    private bool _flagPlayed = false;
+
     public override void InitManager()
     {
         Debug.Log("BlackjackManager가 초기화되었습니다.");
@@ -176,6 +178,8 @@ public class BlackjackManager : BaseSceneManager
     public void OnUserJoined(OnUserJoinedDTO dto)
     {
         _characterManager.AddPlayer(new Player(dto.playerGuid, dto.userName));
+
+        UpdateUI_PlayerInfos();
     }
 
     public void OnPlayerRemainChips(OnPlayerRemainChipsDTO dto)
@@ -225,10 +229,17 @@ public class BlackjackManager : BaseSceneManager
     {
         Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
         player.AddHand(dto.handId);
+
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            UpdateUI_PlayerInfos();
+        });
     }
 
     public void OnTimeToBetting(OnTimeToBettingDTO dto)
     {
+        _flagPlayed = true;
+
         _betAmount = 0;
 
         _player = _characterManager.ClientPlayer;
@@ -897,16 +908,7 @@ public class BlackjackManager : BaseSceneManager
 
         if (_flagLeaveBooked)
         {
-            _uiManager.UnsubscribeButtonLeaveRoomClicked(HandleLeaveButtonClicked);
-
-            // 방 나가기 메시지 송신
-            LeaveGameDTO leaveGameDTO = new();
-            leaveGameDTO.roomId = GameManager.Instance.RoomName;
-            string leaveGameJson = Newtonsoft.Json.JsonConvert.SerializeObject(leaveGameDTO);
-            NetworkManager.Instance.SignalRClient.Execute("LeaveGame", leaveGameJson);
-
-            // 로비로 씬 전환
-            SceneManager.LoadScene("LobbyScene");
+            LeaveRoom();
         }
         else
         {
@@ -914,10 +916,17 @@ public class BlackjackManager : BaseSceneManager
             string readyToNextRoundJson = Newtonsoft.Json.JsonConvert.SerializeObject(readyToNextRoundDTO);
             NetworkManager.Instance.SignalRClient.Execute("ReadyToNextRound", readyToNextRoundJson);
         }
+
+        _flagPlayed = false;
     }
 
     public void HandleLeaveButtonClicked()
     {
+        if (!_flagPlayed)
+        {
+            LeaveRoom();
+        }
+
         if (_flagLeaveBooked)
         {
             _flagLeaveBooked = false;
@@ -935,5 +944,19 @@ public class BlackjackManager : BaseSceneManager
         Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
 
         _characterManager.RemovePlayer(player);
+    }
+
+    private void LeaveRoom()
+    {
+        _uiManager.UnsubscribeButtonLeaveRoomClicked(HandleLeaveButtonClicked);
+
+        // 방 나가기 메시지 송신
+        LeaveGameDTO leaveGameDTO = new();
+        leaveGameDTO.roomId = GameManager.Instance.RoomName;
+        string leaveGameJson = Newtonsoft.Json.JsonConvert.SerializeObject(leaveGameDTO);
+        NetworkManager.Instance.SignalRClient.Execute("LeaveGame", leaveGameJson);
+
+        // 로비로 씬 전환
+        SceneManager.LoadScene("LobbyScene");
     }
 }
