@@ -4,8 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 
 public class BlackjackManager : BaseSceneManager
     , IOnExistingPlayerListMessageHandler
@@ -28,6 +30,8 @@ public class BlackjackManager : BaseSceneManager
     , IOnPayoutMessageHandler
     , IOnGameEndMessageHandler
     , IUserLeftMessageHandler
+    , IOnAddCardToHandMessageHandler
+    , IOnAddCardToDealerHandMessageHandler
 {
     [SerializeField] private BlackjackUIManager _uiManager;
     private CharacterManager _characterManager = new();
@@ -153,7 +157,7 @@ public class BlackjackManager : BaseSceneManager
 
     public void OnJoinSuccess(OnJoinSuccessDTO dto)
     {
-        Player player = new Player(dto.playerGuid, dto.userName);
+        Player player = new(dto.playerGuid, dto.userName);
         _characterManager.AddPlayer(player);
 
         _characterManager.SetClientPlayer(player);
@@ -170,7 +174,7 @@ public class BlackjackManager : BaseSceneManager
     {
         foreach (var item in dto.players)
         {
-            Player player = new Player(item.playerGuid, item.userName);
+            Player player = new(item.playerGuid, item.userName);
             _characterManager.AddPlayer(player);
         }
     }
@@ -195,6 +199,9 @@ public class BlackjackManager : BaseSceneManager
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
                 _uiManager.PlayerInfoChipSetText((player.Chips).ToString("N0"), handIndex);
+
+                Vector3 targetPosition = GetHandPosition(hand);
+                _uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
             });
         }
 
@@ -310,6 +317,9 @@ public class BlackjackManager : BaseSceneManager
         {
             _uiManager.PlayerInfoBetAmountSetText(_betAmount.ToString("N0"), handIndex);
             _uiManager.PlayerInfoChipSetText((_player.Chips - _betAmount).ToString("N0"), handIndex);
+
+            Vector3 targetPosition = GetHandPosition(_hand);
+            _uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
         });
     }
 
@@ -536,6 +546,8 @@ public class BlackjackManager : BaseSceneManager
         _uiManager.PlayerInfoBetAmountSetText(hand.BetAmount.ToString("N0"), handIndex);
         _uiManager.PlayerInfoNameSetText(player.DisplayName, handIndex);
         _uiManager.PlayerInfoChipSetText(player.Chips.ToString("N0"), handIndex);
+
+        _uiManager.RequestPlayerInfoPositionUpdate(targetPosition, handIndex);
     }
 
     public void OnCardDealt(OnCardDealtDTO dto)
@@ -738,6 +750,11 @@ public class BlackjackManager : BaseSceneManager
 
     private void RemoveListeners()
     {
+        if (!_flagPlayed)
+        {
+            return;
+        }
+
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             // Unsubscribe function
@@ -870,6 +887,11 @@ public class BlackjackManager : BaseSceneManager
             yield return null;
         }
 
+        if (!_flagPlayed)
+        {
+            yield break;
+        }
+
         DealerBehaviorDoneDTO dealerBehaviorDoneDTO = new();
         string dealerBehaviorDoneJson = Newtonsoft.Json.JsonConvert.SerializeObject(dealerBehaviorDoneDTO);
         NetworkManager.Instance.SignalRClient.Execute("DealerBehaviorDone", dealerBehaviorDoneJson);
@@ -943,7 +965,11 @@ public class BlackjackManager : BaseSceneManager
     {
         Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
 
+        player.ClearHands();
+
         _characterManager.RemovePlayer(player);
+
+        UpdateUI_PlayerInfos();
     }
 
     private void LeaveRoom()
@@ -958,5 +984,110 @@ public class BlackjackManager : BaseSceneManager
 
         // 로비로 씬 전환
         SceneManager.LoadScene("LobbyScene");
+    }
+
+    public void OnAddCardToHand(OnAddCardToHandDTO dto)
+    {
+        Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
+
+        PlayerHand hand = player.GetHandByGuid(dto.handId);
+
+        Card card = new(dto.cardSuit, dto.cardRank);
+        hand.AddCard(card);
+
+        if (hand.Cards.Count == 1)
+        {
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                InstancingCardToPlayerDontMove(card, hand);
+
+                int handIndex = _characterManager.GetHandIndex(hand);
+                _uiManager.CreateLabelCardValuePlayer(handIndex);
+                _uiManager.CardValuePlayerVisible(handIndex);
+
+                Vector3 targetPosition = GetHandPosition(hand);
+                _uiManager.RequestCardValueUIPositionUpdate_Register(targetPosition, handIndex);
+                _uiManager.RequestCardValueUIPositionUpdate_Y_Register(handIndex);
+
+                _uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
+            });
+        }
+        else
+        {
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                InstancingCardToPlayerDontMove(card, hand);
+
+                int handIndex = _characterManager.GetHandIndex(hand);
+
+                if (hand.IsBlackjack())
+                {
+                    _uiManager.CardValuePlayerSetText("Blackjack", handIndex);
+                }
+                else
+                {
+                    _uiManager.CardValuePlayerSetText(hand.GetValue().ToString(), handIndex);
+                }
+            });
+        }
+    }
+
+    public void InstancingCardToPlayerDontMove(Card card, PlayerHand hand)
+    {
+        GameObject cardObj = Instantiate(_cardPrefab, _deckPosition.position, _deckPosition.rotation);
+        CardView view = cardObj.GetComponent<CardView>();
+
+        view.SetCard(card);
+
+        hand.AddCardObject(cardObj);
+
+        int cardObjIndex = hand.CardObjects.IndexOf(cardObj);
+
+        Vector3 targetPosition = GetHandPosition(hand);
+
+        cardObj.transform.position = targetPosition + new Vector3(cardObjIndex * _cardOffsetX, cardObjIndex * _cardOffsetY, 0);
+    }
+
+    public void OnAddCardToDealerHand(OnAddCardToDealerHandDTO dto)
+    {
+        Dealer dealer = _characterManager.Dealer;
+
+        if (dealer.Hand.Cards.Count == 0)
+        {
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                Card dealerCard = new(dto.cardSuit, dto.cardRank);
+                dealer.Hand.AddCard(dealerCard);
+
+                InstancingCardToDealerDontMove(dealerCard, dealer.Hand);
+
+                _uiManager.CreateLabelCardValueDealer();
+                _uiManager.RequestUpdateCardValueDealerPosition();
+                _uiManager.CardValueDealerSetText(dealer.Hand.GetValue().ToString());
+            });
+        }
+        else
+        {
+            Card dealerCard = new(dto.cardSuit, dto.cardRank);
+            
+            InstancingCardToDealerDontMove(dealerCard, _characterManager.Dealer.Hand);
+            
+            _characterManager.Dealer.Hand.AddCard(dealerCard);
+            _uiManager.CardValueDealerSetText(_characterManager.Dealer.Hand.GetValue().ToString());
+        }
+    }
+
+    public void InstancingCardToDealerDontMove(Card card, Hand hand, bool hidden = false)
+    {
+        GameObject cardObj = Instantiate(_cardPrefab, _deckPosition.position, _deckPosition.rotation);
+        CardView view = cardObj.GetComponent<CardView>();
+
+        view.SetCard(card, hidden);
+
+        hand.AddCardObject(cardObj);
+
+        int cardObjIndex = hand.CardObjects.IndexOf(cardObj);
+
+        cardObj.transform.position = _dealerHandPosition.position + new Vector3(cardObjIndex * _cardOffsetX, cardObjIndex * _cardOffsetY, 0);
     }
 }

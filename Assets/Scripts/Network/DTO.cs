@@ -70,6 +70,20 @@ public class OnExistingPlayerListDTO
     public List<PlayerInfoDTO> players { get; set; }
 }
 
+public class OnAddCardToHandDTO
+{
+    public string playerGuid { get; set; }
+    public string handId { get; set; }
+    public E_CardRank cardRank { get; set; }
+    public E_CardSuit cardSuit { get; set; }
+}
+
+public class OnAddCardToDealerHandDTO
+{
+    public E_CardRank cardRank { get; set; }
+    public E_CardSuit cardSuit { get; set; }
+}
+
 public class OnJoinSuccessDTO
 {
     public string userName { get; set; }
@@ -215,7 +229,7 @@ public class RequestFullRoomListDTO
 
 public class RequestRoomChangesDTO
 {
-    public List<RoomInfoDTO> roomList {get;set;}
+    public List<RoomInfoDTO> roomList { get; set; }
 }
 
 public class JoinRoomDTO

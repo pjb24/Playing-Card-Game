@@ -46,7 +46,7 @@ public class CardView : MonoBehaviour
     private Texture2D GetBackTexture()
     {
         // Resources 폴더 아래에서 검색
-        return Resources.Load<Texture2D>($"Textures/PlayingCards/Back");
+        return Resources.Load<Texture2D>($"Textures/PlayingCards/Back_of_Back");
     }
 
     public override string ToString()

@@ -137,6 +137,34 @@ public class GameManager : PersistentSingleton<GameManager>
         }
     }
 
+    public void HandleOnAddCardToHandMessage(OnAddCardToHandDTO dto)
+    {
+        // 현재 씬 매니저가 이 메시지 처리 역할을 수행할 수 있는지 확인
+        if (_currentSceneManager is IOnAddCardToHandMessageHandler handler)
+        {
+            // 역할을 수행할 수 있다면, 해당 역할의 함수를 호출
+            handler.OnAddCardToHand(dto);
+        }
+        else
+        {
+            Debug.LogWarning("OnAddCardToHand 메시지를 받았지만, 현재 씬 매니저는 해당 메시지를 처리할 수 없습니다.");
+        }
+    }
+
+    public void HandleOnAddCardToDealerHandMessage(OnAddCardToDealerHandDTO dto)
+    {
+        // 현재 씬 매니저가 이 메시지 처리 역할을 수행할 수 있는지 확인
+        if (_currentSceneManager is IOnAddCardToDealerHandMessageHandler handler)
+        {
+            // 역할을 수행할 수 있다면, 해당 역할의 함수를 호출
+            handler.OnAddCardToDealerHand(dto);
+        }
+        else
+        {
+            Debug.LogWarning("OnAddCardToDealerHand 메시지를 받았지만, 현재 씬 매니저는 해당 메시지를 처리할 수 없습니다.");
+        }
+    }
+
     public void HandleOnRoomCreateSuccessMessage(OnRoomCreateSuccessDTO dto)
     {
         // 현재 씬 매니저가 이 메시지 처리 역할을 수행할 수 있는지 확인

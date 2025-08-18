@@ -44,6 +44,11 @@ public class Player
         _hands.Add(hand);
     }
 
+    public void ClearHands()
+    {
+        _hands.Clear();
+    }
+
     public void SetPlayerChips(int chips)
     {
         _chips = chips;

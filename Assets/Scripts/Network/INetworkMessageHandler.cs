@@ -85,6 +85,16 @@ public interface IOnExistingPlayerListMessageHandler
     void OnExistingPlayerList(OnExistingPlayerListDTO dto);
 }
 
+public interface IOnAddCardToHandMessageHandler
+{
+    void OnAddCardToHand(OnAddCardToHandDTO dto);
+}
+
+public interface IOnAddCardToDealerHandMessageHandler
+{
+    void OnAddCardToDealerHand(OnAddCardToDealerHandDTO dto);
+}
+
 public interface IOnDealerHoleCardRevealedMessageHandler
 {
     void OnDealerHoleCardRevealed(OnDealerHoleCardRevealedDTO dto);

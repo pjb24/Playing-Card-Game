@@ -133,7 +133,14 @@ public class BlackjackUIManager : MonoBehaviour
         label.visible = false;
         uiCardValue.rootVisualElement.Add(label);
 
-        list_label_CardValue_Player.Insert(index, label);
+        if (list_label_CardValue_Player.Count >= index)
+        {
+            list_label_CardValue_Player.Insert(index, label);
+        }
+        else
+        {
+            list_label_CardValue_Player.Add(label);
+        }
     }
 
     public void RemoveAllLabelCardValue()
@@ -188,26 +195,43 @@ public class BlackjackUIManager : MonoBehaviour
 
     public void CreatePlayerInfo(int index)
     {
+        bool isIndexValid = false;
+        if (list_section_text.Count >= index)
+        {
+            isIndexValid = true;
+        }
+
         VisualElement section = new();
         section.AddToClassList("section_text");
         section.visible = false;
         uiPlayerInfo.rootVisualElement.Add(section);
-        list_section_text.Insert(index, section);
 
         Label label_BetAmount = new();
         label_BetAmount.AddToClassList("label");
         section.Add(label_BetAmount);
-        list_label_BetAmount.Insert(index, label_BetAmount);
 
         Label label_PlayerName = new();
         label_PlayerName.AddToClassList("label");
         section.Add(label_PlayerName);
-        list_label_PlayerName.Insert(index, label_PlayerName);
 
         Label label_PlayerChip = new();
         label_PlayerChip.AddToClassList("label");
         section.Add(label_PlayerChip);
-        list_label_PlayerChip.Insert(index, label_PlayerChip);
+
+        if (isIndexValid)
+        {
+            list_section_text.Insert(index, section);
+            list_label_BetAmount.Insert(index, label_BetAmount);
+            list_label_PlayerName.Insert(index, label_PlayerName);
+            list_label_PlayerChip.Insert(index, label_PlayerChip);
+        }
+        else
+        {
+            list_section_text.Add(section);
+            list_label_BetAmount.Add(label_BetAmount);
+            list_label_PlayerName.Add(label_PlayerName);
+            list_label_PlayerChip.Add(label_PlayerChip);
+        }
     }
 
     public void PlayerInfoBetAmountSetText(string text, int index)
@@ -306,6 +330,7 @@ public class BlackjackUIManager : MonoBehaviour
 
     public void RequestPlayerInfoPositionUpdate(Vector3 objectPosition, int index)
     {
+        //RequestPlayerInfoPositionUpdate_Register(objectPosition, index);
         list_section_text[index].schedule.Execute(() => UpdatePlayerInfoPosition(objectPosition, index)).ExecuteLater(0);
     }
 

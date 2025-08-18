@@ -74,6 +74,8 @@ public class SignalRClient
     private void RegisterCommands()
     {
         _dispatcher.RegisterCommand("OnActionDone", new OnActionDoneCommand());
+        _dispatcher.RegisterCommand("OnAddCardToDealerHand", new OnAddCardToDealerHandCommand());
+        _dispatcher.RegisterCommand("OnAddCardToHand", new OnAddCardToHandCommand());
         _dispatcher.RegisterCommand("OnAddHandToPlayer", new OnAddHandToPlayerCommand());
         _dispatcher.RegisterCommand("OnBetPlaced", new OnBetPlacedCommand());
         _dispatcher.RegisterCommand("OnCardDealt", new OnCardDealtCommand());
