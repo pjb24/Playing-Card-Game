@@ -12,3 +12,14 @@
     top: 737px;
     left: -500px;
 }
+
+.section_highlight {
+    border-left-color: rgb(207, 207, 81);
+    border-right-color: rgb(207, 207, 81);
+    border-top-color: rgb(207, 207, 81);
+    border-bottom-color: rgb(207, 207, 81);
+    border-top-width: 6px;
+    border-right-width: 6px;
+    border-bottom-width: 6px;
+    border-left-width: 6px;
+}

@@ -196,7 +196,7 @@ public class BlackjackUIManager : MonoBehaviour
     public void CreatePlayerInfo(int index)
     {
         bool isIndexValid = false;
-        if (list_section_text.Count >= index)
+        if (list_section_text.Count > index)
         {
             isIndexValid = true;
         }
@@ -280,7 +280,7 @@ public class BlackjackUIManager : MonoBehaviour
 
     public void PlayerInfoVisible(int index)
     {
-        if (list_section_text.Count < index + 1)
+        if (list_section_text.Count <= index)
         {
             CreatePlayerInfo(index);
         }
@@ -290,7 +290,7 @@ public class BlackjackUIManager : MonoBehaviour
 
     private void UpdatePlayerInfoPosition(Vector3 objectPosition, int index)
     {
-        if (list_section_text.Count < index + 1)
+        if (list_section_text.Count <= index)
         {
             return;
         }
@@ -555,5 +555,35 @@ public class BlackjackUIManager : MonoBehaviour
     public void SetButtonLeaveRoomText(string text)
     {
         _button_leaveRoom.text = text;
+    }
+
+    public void SetPlayerInfoHighlight(int index)
+    {
+        if (index < 0)
+        {
+            return;
+        }
+
+        if (list_section_text.Count <= index)
+        {
+            return;
+        }
+
+        list_section_text[index].AddToClassList("section_highlight");
+    }
+
+    public void ResetPlayerInfoHighlight(int index)
+    {
+        if (index < 0)
+        {
+            return;
+        }
+
+        if (list_section_text.Count <= index)
+        {
+            return;
+        }
+
+        list_section_text[index].RemoveFromClassList("section_highlight");
     }
 }

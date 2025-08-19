@@ -4,10 +4,8 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.XR;
 
 public class BlackjackManager : BaseSceneManager
     , IOnExistingPlayerListMessageHandler
@@ -678,6 +676,14 @@ public class BlackjackManager : BaseSceneManager
 
         _player = _characterManager.ClientPlayer;
 
+        Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
+        PlayerHand hand = player.GetHandByGuid(dto.handId);
+        int index = _characterManager.GetHandIndex(hand);
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            _uiManager.SetPlayerInfoHighlight(index);
+        });
+
         if (_player.Id == dto.playerGuid)
         {
             _hand = _player.GetHandByGuid(dto.handId);
@@ -781,6 +787,14 @@ public class BlackjackManager : BaseSceneManager
 
     public void OnActionDone(OnActionDoneDTO dto)
     {
+        Player player = _characterManager.GetPlayerByGuid(dto.playerGuid);
+        PlayerHand hand = player.GetHandByGuid(dto.handId);
+        int index = _characterManager.GetHandIndex(hand);
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            _uiManager.ResetPlayerInfoHighlight(index);
+        });
+
         RemoveListeners();
     }
 
