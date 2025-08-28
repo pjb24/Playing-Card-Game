@@ -8,7 +8,7 @@ Unity로 제작된 멀티플레이어 블랙잭 카드 게임입니다.
 
 ## 🎮 게임 스크린샷
 
-*여기에 게임 플레이 스크린샷이나 GIF를 추가하세요.*
+![Blackjack Gameplay](./Blackjack.gif)
 
 ## 🌐 서버
 
